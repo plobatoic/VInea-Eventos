@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { getEntry, render } from 'astro:content';
+
+export function getStaticPaths() {
+  return [
+    { params: { legal: 'aviso-legal' }, props: { id: 'aviso-legal' } },
+    { params: { legal: 'politica-privacidad' }, props: { id: 'privacidad' } },
+    { params: { legal: 'politica-cookies' }, props: { id: 'cookies' } },
+    { params: { legal: 'accesibilidad-web' }, props: { id: 'accesibilidad-web' } },
+  ];
+}
+const { id } = Astro.props;
+const pagina = await getEntry('paginas', id);
+if (!pagina) throw new Error(`Falta la página legal ${id}`);
+const { Content } = await render(pagina);
+---
+
+<Base titulo={pagina.data.seo?.title ?? pagina.data.titulo} descripcion={pagina.data.seo?.description ?? pagina.data.resumen}>
+  <CabeceraPagina etiqueta="Información legal" titulo={pagina.data.titulo} migas={[{ texto: pagina.data.titulo }]} />
+  <div class="seccion" style="padding-top:0">
+    <div class="contenedor--estrecho prosa"><Content /></div>
+  </div>
+</Base>

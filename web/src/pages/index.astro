@@ -1,0 +1,440 @@
+---
+import Base from '../layouts/Base.astro';
+import Foto from '../components/Foto.astro';
+import TarjetaServicio from '../components/TarjetaServicio.astro';
+import TarjetaProyecto from '../components/TarjetaProyecto.astro';
+import { getCollection } from 'astro:content';
+import { fecha } from '../data/sitio';
+import home from '../content/home.json';
+
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.orden - b.data.orden);
+const proyectos = (await getCollection('proyectos'))
+  .filter((p) => p.data.destacado)
+  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
+  .slice(0, 5);
+const hoy = new Date('2026-11-17');
+const eventos = (await getCollection('eventos'))
+  .filter((e) => e.data.estado !== 'pasado' && e.data.fecha >= hoy)
+  .sort((a, b) => a.data.fecha.getTime() - b.data.fecha.getTime())
+  .slice(0, 3);
+
+// El titular resalta "emocionales" en cursiva naranja
+const claim = home.claim.replace(/(emocionales)/i, '<em>$1</em>');
+
+const fotoPortal = 'Gran-Teatre-Liceu-Premios-Ondas-2024.jpg';
+const momentos = [
+  { src: 'DJI_0063-2-scaled.jpg', alt: 'Vista aérea de una masía entre viñedos con Montserrat al fondo' },
+  { src: 'Port-Barcelona-Musica-scaled.jpg', alt: 'Grupo de rumba catalana tocando en directo ante el público en el Port de Barcelona' },
+  { src: 'Ruta-en-bici-fira-Pals-Vineaeventos-scaled.jpg', alt: 'Ruta en bicicleta entre campos de flores amarillas con el pueblo de Pals al fondo' },
+  { src: 'Oller-del-Mas_128-scaled.jpg', alt: 'Persona catando una copa de vino blanco' },
+  { src: '30-aniversario-Montana-Colors-scaled.jpg', alt: 'Invitados escuchando un discurso en una celebración de empresa' },
+];
+---
+
+<Base
+  titulo="Vinea Eventos y Turismo · Agencia de eventos en Barcelona"
+  descripcion="Agencia de eventos en Barcelona para empresas e instituciones. Congresos, ferias, galas, team building y experiencias accesibles con producción integral."
+  imagen={fotoPortal}
+>
+  <!-- ============ HERO 3D ============ -->
+  <section class="hero" data-hero aria-labelledby="hero-titulo">
+    <div class="hero__brillo" aria-hidden="true"></div>
+    <div class="hero__gota-css" aria-hidden="true" data-gota-css></div>
+    <canvas class="hero__gota" aria-hidden="true" data-gota></canvas>
+
+    <div class="hero__texto contenedor" data-hero-texto>
+      <p class="etiqueta">Agencia de eventos y turismo · Barcelona</p>
+      <h1 id="hero-titulo" class="titulo-mega hero__titulo" data-split set:html={claim} />
+      <p class="entradilla hero__sub">{home.subclaim}</p>
+      <div class="hero__acciones">
+        <a class="boton" href="/contacto/">Pide tu propuesta <span class="flecha" aria-hidden="true">→</span></a>
+        <a class="enlace-flecha" href="#servicios">Descubre qué hacemos</a>
+      </div>
+    </div>
+
+    <div class="hero__bajar" aria-hidden="true" data-hero-bajar><span></span>Desliza</div>
+
+    <div class="hero__portal" data-portal>
+      <div class="hero__portal-foto" data-portal-foto>
+        <Foto src={fotoPortal} alt="Patio de butacas lleno en el Gran Teatre del Liceu durante los Premios Ondas 2024" sizes="100vw" anchos={[800, 1200, 1700, 2048]} />
+      </div>
+      <div class="hero__portal-texto contenedor sobre-oscuro" data-portal-texto>
+        <p class="etiqueta">Premios Ondas 2024 · Gran Teatre del Liceu</p>
+        <p class="titulo-1">Producción integral,<br /><em>de la idea al último aplauso.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIÉNES SOMOS ============ -->
+  <section class="seccion intro" aria-labelledby="intro-titulo">
+    <div class="contenedor intro__grid">
+      <div>
+        <p class="etiqueta" data-reveal>Somos Vinea</p>
+        <h2 id="intro-titulo" class="titulo-2" data-split>Eventos con <em>personas</em> en el centro</h2>
+      </div>
+      <div>
+        <p class="entradilla" data-reveal>{home.intro}</p>
+        <a class="enlace-flecha" href="/nuestra-esencia/" data-reveal>Conoce nuestra esencia →</a>
+      </div>
+    </div>
+    <ol class="contenedor pilares">
+      {
+        home.pilares.map((p: { titulo: string; texto: string }, i: number) => (
+          <li class="pilar" data-reveal style={`--d:${i * 120}`}>
+            <span class="pilar__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="titulo-3">{p.titulo}</h3>
+            <p>{p.texto}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- ============ SERVICIOS (scroll horizontal en escritorio) ============ -->
+  <section class="servicios seccion--papel" id="servicios" data-servicios aria-labelledby="servicios-titulo">
+    <div class="servicios__cabeza contenedor">
+      <p class="etiqueta" data-reveal>Qué hacemos</p>
+      <h2 id="servicios-titulo" class="titulo-1" data-split>Servicios a <em>medida</em></h2>
+      <p class="entradilla" data-reveal>De un congreso con cientos de asistentes a una experiencia íntima para tu equipo. Lo diseñamos, lo producimos y lo cuidamos de principio a fin.</p>
+    </div>
+    <div class="servicios__ventana">
+      <ul class="servicios__pista" data-pista>
+        {
+          servicios.map((s, i) => (
+            <li class="servicios__item" data-servicio>
+              <TarjetaServicio
+                slug={s.id}
+                titulo={s.data.titulo}
+                resumen={s.data.resumen}
+                imagen={s.data.imagen}
+                imagenAlt={s.data.imagenAlt}
+                etiqueta={s.data.etiqueta}
+                numero={i + 1}
+                tipo={s.data.tipo}
+              />
+            </li>
+          ))
+        }
+        <li class="servicios__item servicios__item--final">
+          <a class="servicios__todos" href="/servicios/">
+            <span class="titulo-2">Ver todos los servicios</span>
+            <span class="servicios__todos-flecha" aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ CIFRAS ============ -->
+  <section class="seccion seccion--oscura cifras" aria-labelledby="cifras-titulo">
+    <div class="gota-deco cifras__gota" aria-hidden="true" data-parallax="-0.25"></div>
+    <div class="contenedor">
+      <p class="etiqueta" data-reveal>En números</p>
+      <h2 id="cifras-titulo" class="titulo-2 cifras__titulo" data-split>Lo que ya hemos <em>hecho realidad</em></h2>
+      <dl class="cifras__lista">
+        {
+          home.cifras.map((c: { valor: string; etiqueta: string }, i: number) => (
+            <div class="cifra" data-reveal style={`--d:${i * 100}`}>
+              <dt class="cifra__valor" data-count={c.valor}>{c.valor}</dt>
+              <dd class="cifra__texto">{c.etiqueta}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ PROYECTOS ============ -->
+  <section class="seccion proyectos" aria-labelledby="proyectos-titulo">
+    <div class="contenedor">
+      <div class="proyectos__cabeza">
+        <div>
+          <p class="etiqueta" data-reveal>Proyectos</p>
+          <h2 id="proyectos-titulo" class="titulo-1" data-split>Historias que <em>hemos producido</em></h2>
+        </div>
+        <a class="boton boton--linea" href="/proyectos/" data-reveal>Ver todos los proyectos <span class="flecha" aria-hidden="true">→</span></a>
+      </div>
+      <div class="proyectos__grid">
+        {
+          proyectos.map((p, i) => (
+            <div class={`proyectos__celda proyectos__celda--${i}`} data-reveal style={`--d:${(i % 2) * 120}`}>
+              <TarjetaProyecto
+                slug={p.id}
+                titulo={p.data.titulo}
+                resumen={p.data.resumen}
+                imagen={p.data.imagen}
+                imagenAlt={p.data.imagenAlt}
+                lugar={p.data.lugar}
+                cliente={p.data.cliente}
+                date={p.data.fecha}
+                cifra={p.data.cifras[0]}
+                grande={i === 0}
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ACCESIBILIDAD ============ -->
+  <section class="accesible" aria-labelledby="accesible-titulo">
+    <div class="contenedor accesible__grid">
+      <div class="accesible__texto">
+        <p class="etiqueta accesible__etiqueta" data-reveal>Accesibilidad e inclusión</p>
+        <h2 id="accesible-titulo" class="titulo-1" data-split>Eventos para <em>todas</em> las personas</h2>
+        <p class="accesible__p" data-reveal>Catas para personas sordas con intérprete de lengua de signos, recorridos en silla de ruedas por el centro de Manresa, el evento de CrossFit inclusivo más grande del mundo… La accesibilidad no es un añadido: es nuestra forma de trabajar.</p>
+        <a class="boton" href="/accesibilidad-e-inclusion/" data-reveal>Nuestro compromiso <span class="flecha" aria-hidden="true">→</span></a>
+      </div>
+      <div class="accesible__foto con-gota" data-reveal="escala">
+        <Foto src="Business-Events-Port-Aventura.jpg" alt="Gran grupo de personas reunidas en una acción de responsabilidad social corporativa" sizes="(max-width: 900px) 90vw, 45vw" anchos={[600, 900, 1300]} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOMENTOS (collage con profundidad) ============ -->
+  <section class="seccion momentos" aria-labelledby="momentos-titulo">
+    <div class="contenedor momentos__cabeza">
+      <p class="etiqueta" data-reveal>Momentos Vinea</p>
+      <h2 id="momentos-titulo" class="titulo-mega" data-split>Cada evento, <em>una historia</em></h2>
+    </div>
+    <div class="momentos__collage">
+      {
+        momentos.map((m, i) => (
+          <figure class={`momento momento--${i}`} data-parallax={[0.12, -0.18, 0.26, -0.08, 0.18][i]}>
+            <Foto src={m.src} alt={m.alt} sizes="(max-width: 900px) 70vw, 34vw" anchos={[480, 800, 1100]} />
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ============ CLIENTES + TESTIMONIO ============ -->
+  <section class="seccion seccion--arena confianza" aria-labelledby="confianza-titulo">
+    <h2 id="confianza-titulo" class="sr-only">Han confiado en nosotras</h2>
+    <div class="marquesina" aria-label="Clientes y entidades con las que hemos trabajado">
+      <ul class="marquesina__pista">
+        {[...home.clientes, ...home.clientes].map((c: string, i: number) => (
+          <li aria-hidden={i >= home.clientes.length ? 'true' : undefined}>{c}<span class="marquesina__gota" aria-hidden="true"></span></li>
+        ))}
+      </ul>
+    </div>
+    <figure class="contenedor--estrecho testimonio" data-reveal>
+      <blockquote>
+        <p>“{home.testimonio.texto}”</p>
+      </blockquote>
+      <figcaption>{home.testimonio.autor}</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ PRÓXIMOS EVENTOS ============ -->
+  {
+    eventos.length > 0 && (
+      <section class="seccion proximos" aria-labelledby="proximos-titulo">
+        <div class="contenedor">
+          <div class="proyectos__cabeza">
+            <div>
+              <p class="etiqueta" data-reveal>Agenda</p>
+              <h2 id="proximos-titulo" class="titulo-2" data-split>Próximos <em>eventos</em></h2>
+            </div>
+            <a class="enlace-flecha" href="/eventos/" data-reveal>Ver la agenda completa →</a>
+          </div>
+          <ul class="proximos__lista">
+            {eventos.map((e, i) => (
+              <li class="proximo" data-reveal style={`--d:${i * 100}`}>
+                <a href={e.data.enlace ?? '/eventos/'} {...(e.data.enlace?.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
+                  <time class="proximo__fecha" datetime={e.data.fecha.toISOString().slice(0, 10)}>
+                    <strong>{fecha(e.data.fecha, { day: 'numeric' })}</strong>
+                    <span>{fecha(e.data.fecha, { month: 'short' })}</span>
+                  </time>
+                  <span class="proximo__info">
+                    <span class="titulo-3">{e.data.titulo}</span>
+                    <span class="proximo__lugar">{e.data.lugar}</span>
+                  </span>
+                  <span class="proximo__estado">{e.data.estado === 'agotado' ? 'Agotado' : 'Más información'} <span aria-hidden="true">→</span></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  import '../scripts/inicio';
+</script>
+
+<style>
+  /* ---------- HERO ---------- */
+  .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; background: var(--hueso); }
+  .hero__brillo {
+    position: absolute; inset: -20%; pointer-events: none;
+    background: radial-gradient(40% 45% at 72% 48%, rgba(255, 138, 102, 0.28), transparent 70%),
+      radial-gradient(30% 35% at 20% 80%, rgba(234, 226, 183, 0.6), transparent 70%);
+  }
+  .hero__gota, .hero__gota-css { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .hero__gota { opacity: 0; transition: opacity 1.2s var(--ease-out); }
+  :global(.gota-lista) .hero__gota { transition: none; }
+  .hero__gota-css {
+    inset: auto; width: min(46vh, 40vw); aspect-ratio: 1; height: auto; right: 9vw; top: 50%; translate: 0 -50%;
+    background: var(--degradado); -webkit-mask: var(--gota) center / contain no-repeat; mask: var(--gota) center / contain no-repeat;
+    filter: drop-shadow(0 30px 60px rgba(255, 86, 17, 0.25)); transition: opacity 0.8s;
+  }
+  :global(.gota-lista) .hero__gota-css { opacity: 0; }
+  .hero__texto { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: center; padding-top: 80px; }
+  .hero__titulo { max-width: 12ch; font-size: clamp(2.7rem, min(6.4vw, 10.5vh), 6.6rem); }
+  .hero__sub { margin-top: 24px; max-width: 34ch; }
+  .hero__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 32px; margin-top: 36px; }
+  .hero__bajar {
+    position: absolute; left: 50%; bottom: 26px; translate: -50% 0; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris);
+  }
+  .hero__bajar span { width: 1.5px; height: 46px; background: linear-gradient(var(--naranja), transparent); animation: bajar 2.2s var(--ease) infinite; transform-origin: top; }
+  @keyframes bajar { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* Portal: sin 3D/animación es un bloque normal con la foto dentro de la gota */
+  .hero__portal { position: relative; }
+  .hero__portal-foto { position: relative; overflow: hidden; }
+  .hero__portal-foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  :global(html:not(.portal-animado)) .hero { height: auto; min-height: 0; }
+  :global(html:not(.portal-animado)) .hero__texto { min-height: 100svh; }
+  :global(html:not(.portal-animado)) .hero__bajar { display: none; }
+  :global(html:not(.portal-animado)) .hero__portal { margin: 0 var(--gutter) var(--gutter); border-radius: var(--radio-lg); overflow: hidden; height: 80vh; }
+  :global(html:not(.portal-animado)) .hero__portal-foto { position: absolute; inset: 0; }
+  :global(html:not(.portal-animado)) .hero__portal-texto { position: absolute; inset: auto 0 0 0; padding-bottom: 40px; color: #fff; z-index: 1; }
+  :global(html:not(.portal-animado)) .hero__portal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(10, 8, 6, 0.75)); }
+
+  /* Con animación: el portal se superpone y se abre con la máscara de la gota */
+  :global(.portal-animado) .hero__portal {
+    --m: 0px;
+    position: absolute; inset: 0; z-index: 3; visibility: hidden; background: #0d0b09;
+    -webkit-mask: var(--gota) center / var(--m) var(--m) no-repeat; mask: var(--gota) center / var(--m) var(--m) no-repeat;
+  }
+  :global(.portal-animado) .hero__portal-foto { position: absolute; inset: 0; will-change: transform; }
+  :global(.portal-animado) .hero__portal::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 8, 6, 0.1) 30%, rgba(10, 8, 6, 0.72)); pointer-events: none; }
+  :global(.portal-animado) .hero__portal-texto { position: absolute; inset: auto 0 0 0; z-index: 1; padding-bottom: clamp(40px, 8vh, 90px); color: #fff; }
+  .hero__portal-texto .titulo-1 { margin: 0; max-width: 16ch; }
+
+  @media (max-width: 760px) {
+    .hero__texto { justify-content: flex-end; padding-bottom: 96px; }
+    .hero__titulo { font-size: clamp(2.4rem, 10.5vw, 3.4rem); }
+    .hero__gota-css { width: 44vw; right: 10vw; top: 20%; }
+    .hero__acciones .enlace-flecha { display: none; }
+  }
+
+  /* ---------- INTRO ---------- */
+  .intro__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 110px); align-items: end; }
+  .intro__grid .entradilla { margin-bottom: 28px; max-width: 44ch; }
+  .pilares { list-style: none; padding: 0; margin-top: clamp(64px, 9vw, 120px); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 3vw, 48px); }
+  .pilar { border-top: 1px solid var(--linea); padding-top: 28px; }
+  .pilar__n { font-family: var(--ff-display); font-style: italic; color: var(--naranja-texto); font-size: 1.1rem; display: block; margin-bottom: 18px; }
+  .pilar h3 { margin-bottom: 14px; }
+  .pilar p { color: var(--tinta-2); margin: 0; }
+  @media (max-width: 860px) { .intro__grid, .pilares { grid-template-columns: 1fr; } }
+
+  /* ---------- SERVICIOS ---------- */
+  .servicios { padding-top: var(--seccion); overflow: hidden; }
+  .servicios__cabeza { display: grid; grid-template-columns: 1fr 1fr; column-gap: 60px; align-items: end; margin-bottom: clamp(48px, 6vw, 80px); }
+  .servicios__cabeza .etiqueta { grid-column: 1 / -1; }
+  .servicios__cabeza .entradilla { margin: 0; justify-self: end; }
+  .servicios__ventana { overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: thin; scrollbar-color: var(--naranja) transparent; }
+  :global(.pista-horizontal) .servicios__ventana { overflow: visible; }
+  .servicios__item { scroll-snap-align: start; }
+  .servicios__pista { list-style: none; margin: 0; padding: 0 var(--gutter) var(--seccion); display: flex; gap: clamp(28px, 3.5vw, 56px); width: max-content; }
+  .servicios__item { width: clamp(280px, 27vw, 400px); flex: none; }
+  .servicios__item--final { display: flex; align-items: center; width: clamp(240px, 22vw, 340px); }
+  .servicios__todos { display: flex; flex-direction: column; gap: 22px; text-decoration: none; padding: 32px 0; }
+  .servicios__todos .titulo-2 { max-width: 7ch; }
+  .servicios__todos-flecha { width: 84px; height: 84px; border-radius: 50%; background: var(--naranja); display: grid; place-items: center; font-size: 1.8rem; transition: transform 0.5s var(--ease-out); }
+  .servicios__todos:hover .servicios__todos-flecha { transform: rotate(-45deg) scale(1.08); }
+  :global(.pista-horizontal) .servicios { height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 110px; }
+  :global(.pista-horizontal) .servicios__cabeza { margin-bottom: clamp(28px, 4vh, 56px); }
+  :global(.pista-horizontal) .servicios__pista { padding-bottom: 0; will-change: transform; }
+  :global(.pista-horizontal) .servicios__item { width: clamp(260px, 22vw, 360px); }
+  :global(.pista-horizontal) .servicios__item :global(.tarjeta-s__foto) { width: min(100%, 40vh); }
+  @media (max-width: 899px) {
+    .servicios__cabeza { grid-template-columns: 1fr; }
+    .servicios__cabeza .entradilla { justify-self: start; margin-top: 20px; }
+    .servicios__ventana { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .servicios__ventana::-webkit-scrollbar { display: none; }
+    .servicios__item { width: 78vw; scroll-snap-align: center; }
+  }
+
+  /* ---------- CIFRAS ---------- */
+  .cifras { overflow: hidden; }
+  .cifras__gota { width: clamp(260px, 38vw, 560px); right: -10vw; top: -6%; opacity: 0.22; }
+  .cifras .contenedor { position: relative; z-index: 1; }
+  .cifras__titulo { max-width: 14ch; position: relative; }
+  .cifras__lista { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin: clamp(56px, 8vw, 110px) 0 0; position: relative; }
+  .cifra { border-top: 1px solid rgba(255, 255, 255, 0.18); padding-top: 26px; }
+  .cifra__valor { font-family: var(--ff-display); font-size: clamp(2.8rem, 5.4vw, 5rem); line-height: 1; letter-spacing: -0.03em; color: var(--coral); font-variant-numeric: tabular-nums; }
+  .cifra__texto { margin: 14px 0 0; color: #cfc7bc; max-width: 24ch; }
+  @media (max-width: 900px) { .cifras__lista { grid-template-columns: 1fr 1fr; } }
+
+  /* ---------- PROYECTOS ---------- */
+  .proyectos__cabeza { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: clamp(48px, 6vw, 80px); }
+  .proyectos__grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(28px, 3vw, 48px) clamp(20px, 3vw, 48px); }
+  .proyectos__celda--0 { grid-column: 1 / 8; grid-row: span 2; }
+  .proyectos__celda--1 { grid-column: 8 / 13; }
+  .proyectos__celda--2 { grid-column: 8 / 13; }
+  .proyectos__celda--3 { grid-column: 1 / 6; }
+  .proyectos__celda--4 { grid-column: 6 / 13; margin-top: 80px; }
+  @media (max-width: 900px) { .proyectos__grid > * { grid-column: 1 / -1 !important; margin-top: 0 !important; } }
+
+  /* ---------- ACCESIBILIDAD ---------- */
+  .accesible { background: var(--naranja); color: #111; padding-block: var(--seccion); overflow: hidden; }
+  .accesible__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(40px, 6vw, 100px); align-items: center; }
+  .accesible__etiqueta { color: #111; }
+  .accesible__etiqueta::before { background: #111; }
+  .accesible :global(em) { color: #fff; }
+  .accesible__p { font-size: var(--t-grande); line-height: 1.5; margin: 28px 0 36px; max-width: 44ch; }
+  .accesible__foto { aspect-ratio: 1; }
+  .accesible__foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  @media (max-width: 860px) { .accesible__grid { grid-template-columns: 1fr; } }
+
+  /* ---------- MOMENTOS ---------- */
+  .momentos { overflow: hidden; }
+  .momentos__cabeza { text-align: center; position: relative; z-index: 2; }
+  .momentos__cabeza h2 { max-width: 12ch; margin-inline: auto; }
+  .momentos__collage { position: relative; height: clamp(560px, 80vw, 1100px); margin-top: clamp(32px, 5vw, 80px); width: min(100%, 1500px); margin-inline: auto; }
+  .momento { position: absolute; margin: 0; border-radius: var(--radio); overflow: hidden; box-shadow: 0 30px 80px -30px rgba(20, 18, 16, 0.35); will-change: transform; }
+  .momento :global(img), .momento :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  .momento--0 { width: 30%; aspect-ratio: 4/5; left: 4%; top: 8%; }
+  .momento--1 { width: 34%; aspect-ratio: 4/3; left: 36%; top: 0; z-index: 1; }
+  .momento--2 { width: 26%; aspect-ratio: 3/4; right: 4%; top: 14%; }
+  .momento--3 { width: 24%; aspect-ratio: 1; left: 18%; top: 56%; z-index: 1; -webkit-mask: var(--gota) center / 100% 100% no-repeat; mask: var(--gota) center / 100% 100% no-repeat; border-radius: 0; box-shadow: none; }
+  .momento--4 { width: 32%; aspect-ratio: 16/10; left: 48%; top: 58%; }
+  @media (max-width: 760px) {
+    .momentos__collage { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 40px var(--gutter) 0; }
+    .momento { position: relative; inset: auto !important; width: auto !important; }
+    .momento--1, .momento--4 { grid-column: 1 / -1; }
+  }
+
+  /* ---------- CONFIANZA ---------- */
+  .confianza { overflow: hidden; }
+  .marquesina { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .marquesina__pista { list-style: none; margin: 0; padding: 0; display: flex; width: max-content; animation: marquesina 48s linear infinite; }
+  .marquesina:hover .marquesina__pista { animation-play-state: paused; }
+  .marquesina li { display: flex; align-items: center; gap: clamp(28px, 4vw, 64px); padding-right: clamp(28px, 4vw, 64px); font-family: var(--ff-display); font-size: clamp(1.8rem, 3.6vw, 3.2rem); white-space: nowrap; letter-spacing: -0.02em; }
+  .marquesina__gota { width: 0.5em; height: 0.5em; background: var(--degradado); -webkit-mask: var(--gota) center / contain no-repeat; mask: var(--gota) center / contain no-repeat; }
+  @keyframes marquesina { to { transform: translateX(-50%); } }
+  .testimonio { margin: clamp(72px, 9vw, 130px) auto 0; text-align: center; }
+  .testimonio blockquote { margin: 0; }
+  .testimonio p { font-family: var(--ff-display); font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: 1.35; letter-spacing: -0.01em; font-style: italic; }
+  .testimonio figcaption { margin-top: 24px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--naranja-texto); }
+
+  /* ---------- PRÓXIMOS ---------- */
+  .proximos__lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linea); }
+  .proximo a { display: grid; grid-template-columns: 110px 1fr auto; align-items: center; gap: 28px; padding: 28px 0; border-bottom: 1px solid var(--linea); text-decoration: none; transition: padding 0.5s var(--ease-out), background 0.5s; }
+  .proximo a:hover { padding-inline: 20px; background: var(--papel); }
+  .proximo__fecha { display: flex; flex-direction: column; line-height: 1; }
+  .proximo__fecha strong { font-family: var(--ff-display); font-size: 3rem; font-weight: 400; color: var(--naranja-texto); }
+  .proximo__fecha span { text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.8rem; font-weight: 600; margin-top: 6px; }
+  .proximo__info { display: flex; flex-direction: column; gap: 6px; }
+  .proximo__lugar { color: var(--gris); }
+  .proximo__estado { font-weight: 500; white-space: nowrap; }
+  @media (max-width: 640px) { .proximo a { grid-template-columns: 76px 1fr; } .proximo__estado { grid-column: 2; } .proximo__fecha strong { font-size: 2.2rem; } }
+</style>

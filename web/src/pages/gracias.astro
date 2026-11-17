@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Mensaje enviado" descripcion="Gracias por escribirnos.">
+  <meta slot="head" name="robots" content="noindex" />
+  <section class="gracias contenedor">
+    <div class="gota-deco gracias__gota" aria-hidden="true"></div>
+    <p class="etiqueta">Mensaje enviado</p>
+    <h1 class="titulo-mega" data-split>¡Gracias! <em>Te respondemos muy pronto</em></h1>
+    <p class="entradilla">Hemos recibido tu mensaje. Normalmente contestamos en uno o dos días laborables.</p>
+    <a class="boton" href="/">Volver al inicio <span class="flecha" aria-hidden="true">→</span></a>
+  </section>
+</Base>
+
+<style>
+  .gracias { min-height: 90svh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 26px; padding-top: 120px; position: relative; }
+  .gracias h1 { max-width: 13ch; }
+  .gracias__gota { width: clamp(160px, 26vw, 360px); right: 0; top: 30%; animation: flotar-g 8s ease-in-out infinite; }
+  @keyframes flotar-g { 50% { transform: translateY(-20px) rotate(6deg); } }
+</style>

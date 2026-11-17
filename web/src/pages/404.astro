@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Página no encontrada" descripcion="Esta página no existe o ha cambiado de sitio.">
+  <section class="error contenedor">
+    <p class="error__num" aria-hidden="true">4<span class="error__gota"></span>4</p>
+    <h1 class="titulo-1" data-split>Esta página se ha ido <em>de evento</em></h1>
+    <p class="entradilla">Puede que haya cambiado de dirección con la web nueva. Prueba desde aquí:</p>
+    <div class="error__acciones">
+      <a class="boton" href="/">Ir al inicio <span class="flecha" aria-hidden="true">→</span></a>
+      <a class="boton boton--linea" href="/servicios/">Ver servicios</a>
+      <a class="boton boton--linea" href="/contacto/">Contacto</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .error { min-height: 92svh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 24px; padding-top: 120px; }
+  .error__num { display: flex; align-items: center; gap: 0.08em; margin: 0; font-family: var(--ff-display); font-size: clamp(6rem, 22vw, 16rem); line-height: 0.9; letter-spacing: -0.05em; }
+  .error__gota { width: 0.78em; height: 0.78em; background: var(--degradado); -webkit-mask: var(--gota) center / contain no-repeat; mask: var(--gota) center / contain no-repeat; animation: girar 6s ease-in-out infinite; }
+  @keyframes girar { 50% { transform: rotate(-14deg) translateY(-0.06em); } }
+  .error__acciones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+</style>

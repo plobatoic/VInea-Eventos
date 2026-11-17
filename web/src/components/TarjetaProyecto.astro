@@ -1,0 +1,58 @@
+---
+import Foto from './Foto.astro';
+import { fecha } from '../data/sitio';
+interface Props {
+  slug: string;
+  titulo: string;
+  resumen: string;
+  imagen?: string;
+  imagenAlt?: string;
+  lugar?: string;
+  cliente?: string;
+  date: Date;
+  cifra?: { valor: string; etiqueta: string };
+  grande?: boolean;
+}
+const { slug, titulo, resumen, imagen, imagenAlt, lugar, cliente, date, cifra, grande = false } = Astro.props;
+---
+
+<a class:list={['tarjeta-p', { 'tarjeta-p--grande': grande }]} href={`/proyectos/${slug}/`} data-tilt>
+  <div class="tarjeta-p__foto" style={`view-transition-name: proyecto-${slug}`}>
+    <Foto src={imagen} alt={imagenAlt ?? titulo} sizes={grande ? '(max-width: 900px) 92vw, 60vw' : '(max-width: 900px) 92vw, 30vw'} anchos={[480, 800, 1200]} />
+    {
+      cifra && (
+        <p class="tarjeta-p__cifra">
+          <strong>{cifra.valor}</strong> <span>{cifra.etiqueta}</span>
+        </p>
+      )
+    }
+  </div>
+  <div class="tarjeta-p__texto">
+    <p class="tarjeta-p__meta">{[cliente, lugar].filter(Boolean).join(' · ') || fecha(date, { month: 'long', year: 'numeric' })}</p>
+    <h3 class="tarjeta-p__titulo">{titulo}</h3>
+    <p class="tarjeta-p__resumen">{resumen}</p>
+  </div>
+</a>
+
+<style>
+  .tarjeta-p {
+    --rx: 0deg; --ry: 0deg;
+    display: flex; flex-direction: column; gap: 18px; text-decoration: none; color: inherit;
+    transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 0.6s var(--ease-out);
+  }
+  .tarjeta-p__foto { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radio); overflow: hidden; background: var(--arena); }
+  .tarjeta-p--grande .tarjeta-p__foto { aspect-ratio: 16 / 10; }
+  .tarjeta-p__foto :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease-out); }
+  .tarjeta-p:hover .tarjeta-p__foto :global(img) { transform: scale(1.06); }
+  .tarjeta-p__cifra {
+    position: absolute; left: 14px; bottom: 14px; margin: 0; padding: 10px 16px; border-radius: 999px;
+    background: rgba(255, 253, 249, 0.92); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; align-items: baseline; gap: 8px; font-size: 0.85rem; max-width: calc(100% - 28px);
+  }
+  .tarjeta-p__cifra strong { font-family: var(--ff-display); font-size: 1.35rem; font-weight: 600; color: var(--naranja-texto); }
+  .tarjeta-p__meta { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gris); margin-bottom: 8px; }
+  .tarjeta-p__titulo { font-size: clamp(1.4rem, 2vw, 1.8rem); line-height: 1.1; margin-bottom: 8px; transition: color 0.3s; }
+  .tarjeta-p--grande .tarjeta-p__titulo { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .tarjeta-p:hover .tarjeta-p__titulo { color: var(--naranja-texto); }
+  .tarjeta-p__resumen { color: var(--tinta-2); margin: 0; font-size: 1rem; max-width: 52ch; }
+</style>

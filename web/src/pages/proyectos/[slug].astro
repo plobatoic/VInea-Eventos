@@ -1,0 +1,116 @@
+---
+import Base from '../../layouts/Base.astro';
+import Foto from '../../components/Foto.astro';
+import TarjetaProyecto from '../../components/TarjetaProyecto.astro';
+import BandaCTA from '../../components/BandaCTA.astro';
+import { getCollection, render } from 'astro:content';
+import { fecha } from '../../data/sitio';
+
+export async function getStaticPaths() {
+  const proyectos = await getCollection('proyectos');
+  return proyectos.map((p) => ({ params: { slug: p.id }, props: { proyecto: p } }));
+}
+const { proyecto } = Astro.props;
+const d = proyecto.data;
+const { Content } = await render(proyecto);
+const servicio = d.categoria ? (await getCollection('servicios')).find((s) => s.id === d.categoria) : undefined;
+const otros = (await getCollection('proyectos'))
+  .filter((p) => p.id !== proyecto.id)
+  .sort((a, b) => Number(b.data.categoria === d.categoria) - Number(a.data.categoria === d.categoria) || b.data.fecha.getTime() - a.data.fecha.getTime())
+  .slice(0, 2);
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.titulo,
+  datePublished: d.fecha.toISOString(),
+  author: { '@type': 'Organization', name: 'Vinea Eventos y Turismo' },
+};
+---
+
+<Base titulo={d.titulo} descripcion={d.resumen} imagen={d.imagen} tipo="article" jsonld={jsonld}>
+  <article>
+    <header class="cab contenedor">
+      <nav class="migas" aria-label="Ruta de navegación">
+        <ol>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/proyectos/">Proyectos</a></li>
+          <li><span aria-current="page">{d.titulo}</span></li>
+        </ol>
+      </nav>
+      <p class="etiqueta" data-reveal>{servicio?.data.titulo ?? 'Proyecto'} · <time datetime={d.fecha.toISOString().slice(0, 10)}>{fecha(d.fecha, { month: 'long', year: 'numeric' })}</time></p>
+      <h1 class="titulo-1 cab__titulo" data-split>{d.titulo}</h1>
+      <dl class="cab__datos" data-reveal style="--d:300">
+        {d.cliente && <div><dt>Cliente</dt><dd>{d.cliente}</dd></div>}
+        {d.lugar && <div><dt>Lugar</dt><dd>{d.lugar}</dd></div>}
+        {d.cifras.slice(0, 2).map((c) => <div><dt>{c.etiqueta}</dt><dd class="cab__cifra">{c.valor}</dd></div>)}
+      </dl>
+    </header>
+
+    <div class="portada contenedor" style={`view-transition-name: proyecto-${proyecto.id}`}>
+      <Foto src={d.imagen} alt={d.imagenAlt ?? d.titulo} prioridad sizes="(max-width: 1400px) 92vw, 1360px" anchos={[800, 1200, 1700, 2200]} />
+    </div>
+
+    <div class="seccion cuerpo">
+      <div class="contenedor--estrecho">
+        <p class="cuerpo__resumen" data-reveal>{d.resumen}</p>
+        <div class="prosa" data-reveal><Content /></div>
+      </div>
+    </div>
+
+    {
+      d.galeria.length > 0 && (
+        <section class="galeria contenedor" aria-label="Galería de fotos">
+          {d.galeria.map((g, i) => (
+            <figure class={`galeria__f galeria__f--${i % 5}`} data-reveal="escala" style={`--d:${(i % 3) * 90}`}>
+              <Foto src={g.src} alt={g.alt} sizes="(max-width: 760px) 92vw, 45vw" anchos={[480, 800, 1200]} />
+            </figure>
+          ))}
+        </section>
+      )
+    }
+  </article>
+
+  {
+    otros.length > 0 && (
+      <section class="seccion mas" aria-labelledby="mas-titulo">
+        <div class="contenedor">
+          <h2 id="mas-titulo" class="titulo-2" data-split>Más <em>proyectos</em></h2>
+          <div class="mas__grid">
+            {otros.map((p) => (
+              <TarjetaProyecto slug={p.id} titulo={p.data.titulo} resumen={p.data.resumen} imagen={p.data.imagen} imagenAlt={p.data.imagenAlt} lugar={p.data.lugar} cliente={p.data.cliente} date={p.data.fecha} cifra={p.data.cifras[0]} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <BandaCTA titulo="¿Creamos juntos tu próximo evento?" href={servicio ? `/contacto/?interes=${servicio.id}` : '/contacto/'} />
+</Base>
+
+<style>
+  .cab { padding-top: clamp(130px, 17vh, 190px); padding-bottom: clamp(40px, 5vw, 64px); }
+  .cab__titulo { max-width: 20ch; }
+  .migas ol { list-style: none; margin: 0 0 26px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.88rem; color: var(--gris); }
+  .migas li + li::before { content: '/'; margin-right: 6px; opacity: 0.5; }
+  .migas a { text-decoration: none; }
+  .cab__datos { display: flex; flex-wrap: wrap; gap: 20px 56px; margin: 40px 0 0; }
+  .cab__datos dt { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gris); }
+  .cab__datos dd { margin: 6px 0 0; font-size: 1.1rem; font-weight: 500; }
+  .cab__cifra { font-family: var(--ff-display); font-size: 2rem !important; color: var(--naranja-texto); line-height: 1; }
+  .portada { aspect-ratio: 16 / 8; border-radius: var(--radio-lg); overflow: hidden; }
+  .portada :global(img), .portada :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  .cuerpo__resumen { font-family: var(--ff-display); font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.35; letter-spacing: -0.01em; margin-bottom: 1.6em; }
+  .galeria { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; padding-bottom: var(--seccion); }
+  .galeria__f { margin: 0; border-radius: var(--radio); overflow: hidden; aspect-ratio: 4/3; grid-column: span 3; }
+  .galeria__f--2, .galeria__f--3, .galeria__f--4 { grid-column: span 2; aspect-ratio: 1; }
+  .galeria__f :global(img), .galeria__f :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  .mas { background: var(--papel); }
+  .mas__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 48px; }
+  @media (max-width: 760px) {
+    .portada { aspect-ratio: 4/3; }
+    .galeria { grid-template-columns: 1fr 1fr; }
+    .galeria__f { grid-column: span 2 !important; }
+    .mas__grid { grid-template-columns: 1fr; }
+  }
+</style>

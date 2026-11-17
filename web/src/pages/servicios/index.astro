@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import TarjetaServicio from '../../components/TarjetaServicio.astro';
+import BandaCTA from '../../components/BandaCTA.astro';
+import { getCollection } from 'astro:content';
+
+const todos = (await getCollection('servicios')).sort((a, b) => a.data.orden - b.data.orden);
+const servicios = todos.filter((s) => s.data.tipo === 'servicio');
+const experiencias = todos.filter((s) => s.data.tipo === 'experiencia');
+---
+
+<Base
+  titulo="Servicios de organización de eventos"
+  descripcion="Eventos corporativos, congresos, ferias, galas de premios, team building, espacios únicos y formación. Producción integral de eventos en Barcelona."
+>
+  <CabeceraPagina
+    etiqueta="Servicios"
+    titulo="Eventos <em>auténticos</em> de principio a fin"
+    entradilla="Organizamos conferencias, jornadas, ferias y convenciones para empresas e instituciones, con una planificación cuidada y una ejecución fluida."
+    migas={[{ texto: 'Servicios' }]}
+  />
+
+  <section class="seccion lista" aria-label="Servicios">
+    <ul class="contenedor lista__grid">
+      {
+        servicios.map((s, i) => (
+          <li data-reveal style={`--d:${(i % 3) * 110}`}>
+            <TarjetaServicio slug={s.id} titulo={s.data.titulo} resumen={s.data.resumen} imagen={s.data.imagen} imagenAlt={s.data.imagenAlt} etiqueta={s.data.etiqueta} numero={i + 1} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    experiencias.length > 0 && (
+      <section class="seccion seccion--oscura experiencias" aria-labelledby="exp-titulo">
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>Experiencias Vinea</p>
+          <h2 id="exp-titulo" class="titulo-1" data-split>Propuestas <em>listas para vivir</em></h2>
+          <p class="entradilla" data-reveal>Experiencias diseñadas por nosotras para empresas y grupos, con todo incluido.</p>
+          <ul class="lista__grid experiencias__grid">
+            {experiencias.map((s, i) => (
+              <li data-reveal style={`--d:${i * 120}`}>
+                <TarjetaServicio slug={s.id} titulo={s.data.titulo} resumen={s.data.resumen} imagen={s.data.imagen} imagenAlt={s.data.imagenAlt} tipo="experiencia" />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <BandaCTA titulo="¿No ves lo que buscas? Lo diseñamos contigo" texto="Cada evento es diferente. Cuéntanos tu idea y te preparamos una propuesta a medida." />
+</Base>
+
+<style>
+  .lista { padding-top: 0; }
+  .lista__grid { list-style: none; padding: 0; margin-inline: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(48px, 6vw, 90px) clamp(28px, 3.5vw, 56px); }
+  .lista__grid > li:nth-child(3n + 2) { margin-top: clamp(0px, 6vw, 90px); }
+  .experiencias .entradilla { margin: 24px 0 clamp(48px, 6vw, 80px); }
+  .experiencias__grid { grid-template-columns: repeat(2, minmax(0, 420px)); }
+  .experiencias__grid > li:nth-child(3n + 2) { margin-top: 0; }
+  @media (max-width: 960px) { .lista__grid { grid-template-columns: 1fr 1fr; } .lista__grid > li:nth-child(3n + 2) { margin-top: 0; } .lista__grid > li:nth-child(2n) { margin-top: 60px; } }
+  @media (max-width: 600px) { .lista__grid, .experiencias__grid { grid-template-columns: 1fr; } .lista__grid > li:nth-child(2n) { margin-top: 0; } }
+</style>

@@ -1,0 +1,85 @@
+{
+  "claim": "Creamos experiencias emocionales para que sean recordadas",
+  "claimAlternativo": "Eventos que se viven con todos los sentidos",
+  "subclaim": "Agencia de eventos en Barcelona para empresas e instituciones",
+  "intro": "En Vinea diseñamos y organizamos eventos con una mirada creativa, cercana y estratégica. Somos Mirian y Lara, amantes de los eventos y el turismo, con un compromiso firme con la sociedad. Cada proyecto es accesible, sostenible y pensado para conectar con las personas.",
+  "pilares": [
+    {
+      "titulo": "Producción integral",
+      "texto": "Nos encargamos de todo el proceso, de la idea inicial a la ejecución. Espacios, proveedores, logística y tecnología, con un solo equipo."
+    },
+    {
+      "titulo": "Personas en el centro",
+      "texto": "Priorizamos las relaciones personales y las conexiones profundas con cada cliente. Escuchamos, asesoramos y cuidamos hasta el último detalle."
+    },
+    {
+      "titulo": "Accesible y sostenible",
+      "texto": "Integramos la accesibilidad y la sostenibilidad en cada evento. Colaboramos con CASMACS y tenemos el certificado Biosphere Sustainable."
+    }
+  ],
+  "cifras": [
+    { "valor": "+10", "etiqueta": "años de trayectoria de Lara Roca en el sector MICE" },
+    { "valor": "30.000", "etiqueta": "visitantes en las jornadas de puertas abiertas del Port de Barcelona" },
+    { "valor": "2.800", "etiqueta": "asistentes a la gira de 3 SUD EST en España" },
+    { "valor": "1.600", "etiqueta": "personas en una acción de RSC en PortAventura" }
+  ],
+  "clientes": [
+    "Port de Barcelona",
+    "PortAventura",
+    "Fundació FC Barcelona",
+    "Fundació «la Caixa»",
+    "Grupo Tramuntana",
+    "Ayuntamiento de Pals",
+    "Premios Ondas",
+    "Premis Notworking",
+    "Consell Comarcal de la Cerdanya",
+    "Micenexus Hoteles, Bodegas & Espacios",
+    "Escampa Hotels",
+    "Oller del Mas"
+  ],
+  "clientesLogos": [
+    { "nombre": "Port de Barcelona", "logo": "port-de-barcelona-vineaeventos.png" },
+    { "nombre": "Premios Ondas", "logo": "ondas_vineaeventos.png" },
+    { "nombre": "Heretat Oller del Mas", "logo": "ollerdelmas_vineaeventos.png" },
+    { "nombre": "Amazon", "logo": "amazon_vineaeventos.png" },
+    { "nombre": "BMW Motorrad", "logo": "bmwmotorrad_vineaeventos.png" },
+    { "nombre": "SEAT", "logo": "seat_vineaeventos.png" },
+    { "nombre": "Škoda", "logo": "skoda_vineaeventos.png" },
+    { "nombre": "Wallbox", "logo": "wallbox_vineaeventos.png" },
+    { "nombre": "Eurecat", "logo": "eurocat_vineaeventos.png" },
+    { "nombre": "Fusion for Energy", "logo": "fusionforenergy_vineaeventos.png" },
+    { "nombre": "ACX Music", "logo": "acxmusic_vineaeventos.png" },
+    { "nombre": "Eigenmann & Veronelli", "logo": "eigenmann_veronelli_vineaeventos.png" },
+    { "nombre": "Mondobert", "logo": "mondobert_vineaeventos.png" }
+  ],
+  "testimonio": {
+    "texto": "Lara y Mirian son un equipo de profesionales muy top. Han acompañado a Walaweb desde sus inicios y no podría estar más orgullosa de todo el valor que han aportado. Desde Workshop, reuniones informales, team buildings, siempre desde un lado humano muy cercano y un perfeccionismo impecable.",
+    "autor": "Alba · Agencia Walaweb"
+  },
+  "testimonios": [
+    {
+      "texto": "Lara y su equipo hacen que no sufras por nada! Siempre encuentran la solución a todo lo que te venga en mente.",
+      "autor": "Marta G"
+    },
+    {
+      "texto": "Muy recomendable trabajar con Vinea, he coincidido a nivel profesional con ellas en un gran evento y tanto Miriam, como Lara son muy profesionales, cuidan hasta el último detalle y se desviven porque todo salga perfecto.",
+      "autor": "Jonathan Fernández"
+    },
+    {
+      "texto": "Superaron mis expectativas 100%! Saben escuchar y comprender exactamente lo que estás buscando, siempre dándote su consejo como profesionales que son pero intentándo ceñirse al máximo con la idea que tienes!",
+      "autor": "Cristina Rebollo"
+    },
+    {
+      "texto": "Excelentes profesionales. Colaboraron con mi evento, y se implicaron al 100% con nuestro proyecto pese a ser un ámbito nuevo para ellas. Recomiendo!",
+      "autor": "Pau Fresquet Delgado"
+    },
+    {
+      "texto": "Muy recomendable! Un equipo muy profesional y ágiles en las gestiones, mi experiencia totalmente positiva.",
+      "autor": "Concepcion Merina"
+    }
+  ],
+  "ctaFinal": {
+    "titulo": "Cuéntanos tu idea",
+    "texto": "Estaremos encantadas de escucharte. Te ayudamos a convertir tu proyecto en un evento que se recuerde."
+  }
+}

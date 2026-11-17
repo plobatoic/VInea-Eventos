@@ -1,0 +1,106 @@
+---
+import { menu } from '../data/sitio';
+const ruta = Astro.url.pathname;
+const activo = (href: string) => ruta === href || (href !== '/' && ruta.startsWith(href));
+---
+
+<header class="cabecera" data-cabecera>
+  <div class="cabecera__in">
+    <a href="/" class="cabecera__logo" aria-label="Vinea Eventos y Turismo, ir al inicio">
+      <img src="/img/logo-vinea.svg" alt="" width="1353" height="435" />
+    </a>
+
+    <nav class="cabecera__nav" id="menu-principal" aria-label="Principal" data-menu>
+      <ul>
+        {
+          menu.map((m, i) => (
+            <li style={`--i:${i}`}>
+              <a href={m.href} aria-current={activo(m.href) ? 'page' : undefined}>
+                {m.texto}
+              </a>
+            </li>
+          ))
+        }
+        <li class="cabecera__solo-movil" style={`--i:${menu.length}`}>
+          <a href="/contacto/" aria-current={activo('/contacto/') ? 'page' : undefined}>Contacto</a>
+        </li>
+      </ul>
+      <p class="cabecera__solo-movil cabecera__dato">
+        <a href="mailto:info@vineaeventos.com">info@vineaeventos.com</a>
+      </p>
+    </nav>
+
+    <a class="boton boton--naranja cabecera__cta" href="/contacto/">Pide tu propuesta <span class="flecha" aria-hidden="true">→</span></a>
+
+    <button class="cabecera__boton" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-boton>
+      <span class="sr-only" data-menu-texto>Abrir menú</span>
+      <span class="hamb" aria-hidden="true"><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    position: fixed; inset: 0 0 auto 0; z-index: 100;
+    padding: 14px var(--gutter);
+    transition: transform 0.5s var(--ease-out);
+    view-transition-name: cabecera;
+  }
+  .cabecera__in {
+    display: flex; align-items: center; gap: 24px;
+    max-width: calc(var(--max) + 40px); margin-inline: auto;
+    padding: 10px 10px 10px 22px; border-radius: 999px;
+    transition: background 0.4s, box-shadow 0.4s, backdrop-filter 0.4s;
+  }
+  :global(.cabecera.solida) .cabecera__in {
+    background: rgba(255, 253, 249, 0.82);
+    backdrop-filter: blur(14px) saturate(1.4); -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 1px 0 var(--linea), 0 12px 40px -18px rgba(20, 18, 16, 0.25);
+  }
+  :global(.cabecera.oculta) { transform: translateY(-120%); }
+  .cabecera__logo { flex: none; display: block; width: clamp(104px, 10vw, 132px); }
+  .cabecera__nav { margin-left: auto; }
+  .cabecera__nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(14px, 2vw, 30px); }
+  .cabecera__nav a {
+    position: relative; text-decoration: none; font-weight: 500; font-size: 0.98rem; padding: 6px 0;
+  }
+  .cabecera__nav a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px;
+    background: var(--naranja); transform: scaleX(0); transform-origin: right; transition: transform 0.45s var(--ease-out);
+  }
+  .cabecera__nav a:hover::after, .cabecera__nav a[aria-current='page']::after { transform: scaleX(1); transform-origin: left; }
+  .cabecera__cta { padding: 0.85em 1.3em; font-size: 0.95rem; }
+  .cabecera__boton, .cabecera__solo-movil { display: none; }
+
+  @media (max-width: 1020px) {
+    .cabecera__in { padding: 8px 8px 8px 18px; }
+    .cabecera__cta { display: none; }
+    .cabecera__boton {
+      display: grid; place-items: center; margin-left: auto; width: 52px; height: 52px; border-radius: 50%;
+      border: 0; background: var(--tinta); position: relative; z-index: 2;
+    }
+    .hamb { width: 20px; height: 10px; position: relative; }
+    .hamb span { position: absolute; left: 0; right: 0; height: 2px; background: #fff; border-radius: 2px; transition: transform 0.45s var(--ease-out), top 0.45s var(--ease-out); }
+    .hamb span:first-child { top: 0; }
+    .hamb span:last-child { top: 8px; }
+    [aria-expanded='true'] .hamb span:first-child { top: 4px; transform: rotate(45deg); }
+    [aria-expanded='true'] .hamb span:last-child { top: 4px; transform: rotate(-45deg); }
+    .cabecera__nav {
+      position: fixed; inset: 0; z-index: 1; margin: 0;
+      background: var(--noche); color: #f4efe8;
+      display: flex; flex-direction: column; justify-content: center; padding: 110px var(--gutter) 40px;
+      clip-path: circle(0% at calc(100% - 46px) 46px); visibility: hidden;
+      transition: clip-path 0.7s var(--ease-out), visibility 0s 0.7s;
+    }
+    :global(.menu-abierto) .cabecera__nav { clip-path: circle(150% at calc(100% - 46px) 46px); visibility: visible; transition: clip-path 0.8s var(--ease-out), visibility 0s; }
+    :global(.menu-abierto) .cabecera__logo { filter: invert(1) hue-rotate(180deg) brightness(1.6); position: relative; z-index: 2; }
+    .cabecera__nav ul { flex-direction: column; gap: 6px; }
+    .cabecera__nav li { opacity: 0; transform: translateY(24px); transition: opacity 0.5s, transform 0.6s var(--ease-out); transition-delay: calc(var(--i) * 50ms + 150ms); }
+    :global(.menu-abierto) .cabecera__nav li { opacity: 1; transform: none; }
+    .cabecera__nav a { font-family: var(--ff-display); font-size: clamp(2.1rem, 9vw, 3.4rem); font-weight: 400; letter-spacing: -0.02em; }
+    .cabecera__nav a::after { height: 3px; }
+    .cabecera__solo-movil { display: block; }
+    .cabecera__dato { margin-top: 32px; }
+    .cabecera__dato a { font-family: var(--ff-texto); font-size: 1.05rem; color: var(--coral); }
+  }
+</style>

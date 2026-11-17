@@ -1,0 +1,29 @@
+---
+interface Props {
+  titulo: string;
+  texto?: string;
+  href?: string;
+  boton?: string;
+}
+const { titulo, texto, href = '/contacto/', boton = 'Pide tu propuesta' } = Astro.props;
+---
+
+<section class="banda">
+  <div class="contenedor banda__in">
+    <div>
+      <h2 class="titulo-2" data-split>{titulo}</h2>
+      {texto && <p class="banda__texto" data-reveal>{texto}</p>}
+    </div>
+    <a class="boton banda__boton" href={href} data-reveal>{boton} <span class="flecha" aria-hidden="true">→</span></a>
+  </div>
+  <div class="gota-deco banda__gota" aria-hidden="true"></div>
+</section>
+
+<style>
+  .banda { position: relative; overflow: hidden; background: var(--naranja); color: #111; padding-block: clamp(70px, 9vw, 130px); }
+  .banda__in { display: grid; grid-template-columns: 1fr auto; gap: 32px 60px; align-items: end; position: relative; z-index: 1; }
+  .banda h2 { max-width: 18ch; }
+  .banda__texto { margin: 22px 0 0; font-size: var(--t-grande); max-width: 48ch; }
+  .banda__gota { width: clamp(220px, 32vw, 460px); right: -6vw; bottom: -30%; background: linear-gradient(225deg, #fff6, #fff1); }
+  @media (max-width: 760px) { .banda__in { grid-template-columns: 1fr; } .banda__boton { justify-self: start; } }
+</style>

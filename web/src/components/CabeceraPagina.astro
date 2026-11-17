@@ -1,0 +1,67 @@
+---
+import Foto from './Foto.astro';
+interface Props {
+  etiqueta?: string;
+  titulo: string; // admite <em>
+  entradilla?: string;
+  imagen?: string;
+  imagenAlt?: string;
+  vt?: string; // nombre de view-transition para la foto
+  migas?: { texto: string; href?: string }[];
+}
+const { etiqueta, titulo, entradilla, imagen, imagenAlt = '', vt, migas = [] } = Astro.props;
+---
+
+<section class:list={['cab', { 'cab--sin-foto': !imagen }]}>
+  <div class="gota-deco cab__gota" aria-hidden="true"></div>
+  <div class="contenedor cab__grid">
+    <div class="cab__texto">
+      {
+        migas.length > 0 && (
+          <nav class="migas" aria-label="Ruta de navegación" data-reveal>
+            <ol>
+              <li><a href="/">Inicio</a></li>
+              {migas.map((m) => (
+                <li>{m.href ? <a href={m.href}>{m.texto}</a> : <span aria-current="page">{m.texto}</span>}</li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+      {etiqueta && <p class="etiqueta" data-reveal>{etiqueta}</p>}
+      <h1 class="titulo-1 cab__titulo" data-split set:html={titulo} />
+      {entradilla && <p class="entradilla cab__entradilla" data-reveal style="--d:350">{entradilla}</p>}
+      <slot />
+    </div>
+    {
+      imagen && (
+        <div class="cab__foto" style={vt ? `view-transition-name:${vt}` : undefined}>
+          <Foto src={imagen} alt={imagenAlt} prioridad sizes="(max-width: 860px) 92vw, 46vw" anchos={[600, 900, 1300, 1700]} />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .cab { position: relative; padding: clamp(130px, 17vh, 190px) 0 clamp(60px, 8vw, 110px); overflow: hidden; }
+  .cab__gota { width: clamp(80px, 9vw, 150px); left: -50px; bottom: 6%; opacity: 0.8; animation: flotar-c 10s ease-in-out infinite; }
+  @keyframes flotar-c { 50% { transform: translateY(24px) rotate(-6deg); } }
+  .cab__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(36px, 6vw, 100px); align-items: center; position: relative; }
+  .cab--sin-foto .cab__grid { grid-template-columns: 1fr; }
+  .cab--sin-foto .cab__titulo { max-width: 18ch; }
+  .cab__titulo { max-width: 13ch; }
+  .cab__entradilla { margin-top: 26px; }
+  .cab__foto { aspect-ratio: 1; position: relative; -webkit-mask: var(--gota) center / 100% 100% no-repeat; mask: var(--gota) center / 100% 100% no-repeat; background: var(--arena); }
+  .cab__foto :global(img), .cab__foto :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  :global(.movimiento) .cab__foto :global(img) { animation: cab-zoom 1.8s var(--ease-out) both; }
+  @keyframes cab-zoom { from { transform: scale(1.18); } }
+  .migas ol { list-style: none; margin: 0 0 26px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.88rem; color: var(--gris); }
+  .migas li + li::before { content: '/'; margin-right: 6px; opacity: 0.5; }
+  .migas a { text-decoration: none; }
+  .migas a:hover { color: var(--naranja-texto); text-decoration: underline; }
+  @media (max-width: 860px) {
+    .cab__grid { grid-template-columns: 1fr; }
+    .cab__foto { width: min(100%, 520px); justify-self: end; }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import { sitio } from '../data/sitio';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  imagen?: string;
+  tipo?: 'website' | 'article';
+  jsonld?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const { titulo, descripcion = sitio.descripcion, imagen, tipo = 'website', jsonld } = Astro.props;
+const tituloCompleto = titulo.includes('Vinea') ? titulo : `${titulo} · Vinea Eventos`;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+
+const imgs = import.meta.glob<{ default: ImageMetadata }>('/src/assets/img/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', { eager: true });
+let og = new URL('/img/logo-vinea-completo.png', Astro.site).href;
+const modOg = imagen ? imgs['/src/assets/img/' + imagen] : undefined;
+if (modOg) {
+  const r = await getImage({ src: modOg.default, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 75 });
+  og = new URL(r.src, Astro.site).href;
+}
+
+const organizacion = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: sitio.nombre,
+  url: sitio.url,
+  logo: new URL('/img/logo-vinea-completo.png', Astro.site).href,
+  email: sitio.email,
+  telephone: sitio.telefonos.map((t) => t.texto),
+  areaServed: ['Barcelona', 'Cataluña', 'España'],
+  address: { '@type': 'PostalAddress', addressLocality: 'Manresa', addressRegion: 'Barcelona', addressCountry: 'ES' },
+  sameAs: sitio.redes.map((r) => r.href),
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <meta name="theme-color" content="#f7f3ec" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta property="og:type" content={tipo} />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:image" content={og} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement, pref = null;
+        try { pref = localStorage.getItem('vinea-movimiento'); } catch (e) {}
+        var reducido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        d.classList.add(pref === 'off' || (reducido && pref !== 'on') ? 'sin-movimiento' : 'movimiento');
+        if (d.classList.contains('movimiento')) d.classList.add('portal-animado');
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(organizacion)} />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Cabecera />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Pie />
+    <script>
+      import '../scripts/sitio';
+    </script>
+  </body>
+</html>

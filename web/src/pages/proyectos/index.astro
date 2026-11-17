@@ -1,0 +1,90 @@
+---
+import Base from '../../layouts/Base.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import TarjetaProyecto from '../../components/TarjetaProyecto.astro';
+import BandaCTA from '../../components/BandaCTA.astro';
+import { getCollection } from 'astro:content';
+
+const proyectos = (await getCollection('proyectos')).sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const servicios = await getCollection('servicios');
+const nombreCategoria = (c?: string) =>
+  servicios.find((s) => s.id === c)?.data.titulo ?? (c === 'institucional' ? 'Institucional' : c === 'experiencia' ? 'Experiencias' : 'Otros');
+const categorias = [...new Set(proyectos.map((p) => p.data.categoria ?? 'otros'))];
+---
+
+<Base
+  titulo="Proyectos y eventos realizados"
+  descripcion="Congresos, ferias, galas, eventos de empresa y experiencias que hemos producido: Port de Barcelona, Premios Ondas, PortAventura, Fira de l'Arròs de Pals y más."
+>
+  <CabeceraPagina
+    etiqueta="Proyectos"
+    titulo="Historias que <em>hemos producido</em>"
+    entradilla="Una selección de los eventos que hemos diseñado y producido para empresas, instituciones y ayuntamientos."
+    migas={[{ texto: 'Proyectos' }]}
+  />
+
+  <section class="seccion proyectos" aria-label="Listado de proyectos">
+    <div class="contenedor">
+      <div class="filtros" role="group" aria-label="Filtrar por tipo de evento" data-filtros>
+        <button type="button" aria-pressed="true" data-filtro="todos">Todos</button>
+        {categorias.map((c) => <button type="button" aria-pressed="false" data-filtro={c}>{nombreCategoria(c)}</button>)}
+      </div>
+      <p class="sr-only" aria-live="polite" data-filtro-estado></p>
+      <ul class="rejilla">
+        {
+          proyectos.map((p, i) => (
+            <li data-categoria={p.data.categoria ?? 'otros'} data-reveal style={`--d:${(i % 3) * 100}`}>
+              <TarjetaProyecto
+                slug={p.id}
+                titulo={p.data.titulo}
+                resumen={p.data.resumen}
+                imagen={p.data.imagen}
+                imagenAlt={p.data.imagenAlt}
+                lugar={p.data.lugar}
+                cliente={p.data.cliente}
+                date={p.data.fecha}
+                cifra={p.data.cifras[0]}
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <BandaCTA titulo="El próximo proyecto puede ser el tuyo" />
+</Base>
+
+<script>
+  const botones = document.querySelectorAll<HTMLButtonElement>('[data-filtro]');
+  const items = document.querySelectorAll<HTMLElement>('[data-categoria]');
+  const estado = document.querySelector<HTMLElement>('[data-filtro-estado]');
+  botones.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filtro;
+      botones.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let n = 0;
+      const aplicar = () =>
+        items.forEach((it) => {
+          const ver = f === 'todos' || it.dataset.categoria === f;
+          it.hidden = !ver;
+          if (ver) { n++; it.classList.add('visible'); }
+        });
+      const doc = document as any;
+      if (doc.startViewTransition && !document.documentElement.classList.contains('sin-movimiento')) doc.startViewTransition(aplicar);
+      else aplicar();
+      setTimeout(() => { if (estado) estado.textContent = `${n} proyectos`; }, 50);
+    }),
+  );
+</script>
+
+<style>
+  .proyectos { padding-top: 0; }
+  .filtros { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(40px, 5vw, 64px); }
+  .filtros button { border: 0; padding: 11px 20px; border-radius: 999px; background: var(--papel); box-shadow: inset 0 0 0 1px var(--linea); font-weight: 500; transition: background 0.3s, color 0.3s; }
+  .filtros button:hover { box-shadow: inset 0 0 0 1.5px var(--tinta); }
+  .filtros button[aria-pressed='true'] { background: var(--tinta); color: #fff; box-shadow: none; }
+  .rejilla { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(40px, 5vw, 70px) clamp(24px, 3vw, 44px); }
+  @media (max-width: 960px) { .rejilla { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .rejilla { grid-template-columns: 1fr; } }
+</style>

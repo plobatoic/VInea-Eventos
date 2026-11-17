@@ -1,0 +1,52 @@
+---
+/**
+ * Foto optimizada: busca la imagen por nombre en src/assets/img/ y genera
+ * versiones WebP en varios tamaños con <picture>. Si no existe, pinta un bloque de marca.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+const imagenes = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/img/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}',
+  { eager: true },
+);
+
+interface Props {
+  src?: string;
+  alt: string;
+  anchos?: number[];
+  sizes?: string;
+  class?: string;
+  prioridad?: boolean;
+  style?: string;
+}
+
+const { src, alt, anchos = [480, 800, 1200, 1700], sizes = '100vw', class: clase, prioridad = false, style } = Astro.props;
+const mod = src ? imagenes['/src/assets/img/' + src] : undefined;
+if (src && !mod) console.warn(`[Foto] No se encuentra la imagen: ${src}`);
+const ancho = mod?.default.width ?? 0;
+let widths = anchos.filter((w) => w < ancho);
+if (!widths.length || widths[widths.length - 1] < Math.min(ancho, Math.max(...anchos))) widths.push(Math.min(ancho, Math.max(...anchos)));
+widths = [...new Set(widths)];
+---
+
+{
+  mod ? (
+    <Picture
+      src={mod.default}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      formats={['webp']}
+      fallbackFormat="webp"
+      quality={72}
+      class={clase}
+      style={style}
+      loading={prioridad ? 'eager' : 'lazy'}
+      decoding={prioridad ? 'sync' : 'async'}
+      fetchpriority={prioridad ? 'high' : undefined}
+    />
+  ) : (
+    <div class:list={['foto-falta', clase]} role="img" aria-label={alt} style={style} />
+  )
+}

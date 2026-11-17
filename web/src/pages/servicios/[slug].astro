@@ -1,0 +1,320 @@
+---
+import Base from '../../layouts/Base.astro';
+import CabeceraPagina from '../../components/CabeceraPagina.astro';
+import Foto from '../../components/Foto.astro';
+import TarjetaProyecto from '../../components/TarjetaProyecto.astro';
+import BandaCTA from '../../components/BandaCTA.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const servicios = await getCollection('servicios');
+  return servicios.map((s) => ({ params: { slug: s.id }, props: { servicio: s } }));
+}
+
+const { servicio } = Astro.props;
+const d = servicio.data;
+const { Content } = await render(servicio);
+
+const proyectos = (await getCollection('proyectos'))
+  .filter((p) => p.data.categoria === servicio.id)
+  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
+  .slice(0, 3);
+const otros = (await getCollection('servicios')).filter((s) => s.id !== servicio.id).sort((a, b) => a.data.orden - b.data.orden);
+
+const titular = d.titular.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+const esExperiencia = d.tipo === 'experiencia';
+
+const jsonld: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: d.titulo,
+    description: d.resumen,
+    provider: { '@type': 'Organization', name: 'Vinea Eventos y Turismo', url: 'https://vineaeventos.com' },
+    areaServed: 'Barcelona',
+  },
+];
+if (d.faq.length) {
+  jsonld.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: d.faq.map((f) => ({ '@type': 'Question', name: f.pregunta, acceptedAnswer: { '@type': 'Answer', text: f.respuesta } })),
+  });
+}
+---
+
+<Base titulo={d.seo?.title ?? d.titulo} descripcion={d.seo?.description ?? d.resumen} imagen={d.imagen} jsonld={jsonld}>
+  <CabeceraPagina
+    etiqueta={d.etiqueta ?? (esExperiencia ? 'Experiencia Vinea' : 'Servicio')}
+    titulo={titular}
+    entradilla={d.resumen}
+    imagen={d.imagen}
+    imagenAlt={d.imagenAlt}
+    vt={`foto-${servicio.id}`}
+    migas={[{ texto: 'Servicios', href: '/servicios/' }, { texto: d.titulo }]}
+  >
+    <div class="acciones" data-reveal style="--d:500">
+      <a class="boton" href={`/contacto/?interes=${servicio.id}`}>{esExperiencia ? 'Quiero esta experiencia' : 'Pide tu propuesta'} <span class="flecha" aria-hidden="true">→</span></a>
+    </div>
+  </CabeceraPagina>
+
+  <!-- Introducción -->
+  <section class="seccion seccion--papel">
+    <div class="contenedor intro">
+      <h2 class="etiqueta intro__h">{d.titulo}</h2>
+      <div class="prosa intro__prosa" data-reveal><Content /></div>
+      {
+        d.cifras.length > 0 && (
+          <dl class="intro__cifras">
+            {d.cifras.map((c, i) => (
+              <div data-reveal style={`--d:${i * 100}`}>
+                <dt data-count={c.valor}>{c.valor}</dt>
+                <dd>{c.etiqueta}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Destacados -->
+  {
+    d.destacados.length > 0 && (
+      <section class="seccion destacados">
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>{esExperiencia ? 'La experiencia' : 'Qué incluye'}</p>
+          <h2 class="titulo-2 destacados__titulo" data-split>
+            {esExperiencia ? 'Todo pensado para que solo tengáis que disfrutar' : 'Lo cuidamos todo, tú disfrutas del resultado'}
+          </h2>
+          <ul class="destacados__grid">
+            {d.destacados.map((x, i) => (
+              <li class="destacado" data-reveal data-tilt style={`--d:${(i % 3) * 110}`}>
+                <span class="destacado__n">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="titulo-3">{x.titulo}</h3>
+                <p>{x.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Incluye -->
+  {
+    d.incluye.length > 0 && (
+      <section class="seccion seccion--arena incluye">
+        <div class="contenedor incluye__grid">
+          <div>
+            <p class="etiqueta" data-reveal>Incluye</p>
+            <h2 class="titulo-2" data-split>Todo lo que <em>necesitas</em></h2>
+          </div>
+          <ul class="incluye__lista">
+            {d.incluye.map((x, i) => (
+              <li data-reveal style={`--d:${i * 60}`}>{x}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Proceso -->
+  {
+    d.proceso.length > 0 && (
+      <section class="seccion seccion--oscura proceso">
+        <div class="contenedor proceso__grid">
+          <div class="proceso__cabeza">
+            <p class="etiqueta" data-reveal>Cómo trabajamos</p>
+            <h2 class="titulo-2" data-split>Paso a paso, <em>sin sorpresas</em></h2>
+          </div>
+          <ol class="proceso__lista">
+            {d.proceso.map((x, i) => (
+              <li class="paso" data-reveal>
+                <span class="paso__n" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3 class="titulo-3">{x.titulo}</h3>
+                  <p>{x.texto}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Galería -->
+  {
+    d.galeria.length > 0 && (
+      <section class="seccion galeria" aria-label={`Fotos de ${d.titulo}`}>
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>En imágenes</p>
+        </div>
+        <ul class="galeria__pista">
+          {d.galeria.map((g, i) => (
+            <li class={`galeria__item galeria__item--${i % 4}`} data-reveal="escala" style={`--d:${(i % 4) * 90}`}>
+              <Foto src={g.src} alt={g.alt} sizes="(max-width: 760px) 80vw, 36vw" anchos={[480, 800, 1100]} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <!-- Preguntas -->
+  {
+    d.faq.length > 0 && (
+      <section class="seccion seccion--papel faq">
+        <div class="contenedor faq__grid">
+          <div>
+            <p class="etiqueta" data-reveal>Preguntas frecuentes</p>
+            <h2 class="titulo-2" data-split>Lo que nos <em>suelen preguntar</em></h2>
+          </div>
+          <div class="faq__lista">
+            {d.faq.map((f) => (
+              <details class="pregunta" data-reveal>
+                <summary>
+                  <span>{f.pregunta}</span>
+                  <span class="pregunta__icono" aria-hidden="true" />
+                </summary>
+                <p>{f.respuesta}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Proyectos relacionados -->
+  {
+    proyectos.length > 0 && (
+      <section class="seccion relacionados">
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>Proyectos</p>
+          <h2 class="titulo-2" data-split>Así lo hemos <em>hecho</em></h2>
+          <div class="relacionados__grid">
+            {proyectos.map((p, i) => (
+              <div data-reveal style={`--d:${i * 110}`}>
+                <TarjetaProyecto
+                  slug={p.id}
+                  titulo={p.data.titulo}
+                  resumen={p.data.resumen}
+                  imagen={p.data.imagen}
+                  imagenAlt={p.data.imagenAlt}
+                  lugar={p.data.lugar}
+                  cliente={p.data.cliente}
+                  date={p.data.fecha}
+                  cifra={p.data.cifras[0]}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <BandaCTA
+    titulo={d.cta?.titulo ?? '¿Hablamos de tu evento?'}
+    texto={d.cta?.texto}
+    href={`/contacto/?interes=${servicio.id}`}
+    boton={esExperiencia ? 'Quiero esta experiencia' : 'Pide tu propuesta'}
+  />
+
+  <!-- Otros servicios -->
+  <nav class="seccion otros" aria-label="Otros servicios">
+    <div class="contenedor">
+      <p class="etiqueta">Otros servicios</p>
+      <ul class="otros__lista">
+        {
+          otros.map((s) => (
+            <li>
+              <a href={`/servicios/${s.id}/`}>
+                <span>{s.data.titulo}</span>
+                <span class="otros__flecha" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </nav>
+</Base>
+
+<style>
+  .acciones { margin-top: 34px; }
+  .intro { display: grid; grid-template-columns: 240px 1fr 280px; gap: clamp(28px, 4vw, 70px); align-items: start; }
+  .intro__h { margin: 6px 0 0; }
+  .intro__prosa { font-size: var(--t-grande); max-width: 62ch; }
+  .intro__prosa :global(p:first-child) { font-family: var(--ff-display); font-size: clamp(1.4rem, 2.2vw, 1.9rem); line-height: 1.35; color: var(--tinta); letter-spacing: -0.01em; }
+  .intro__cifras { margin: 0; display: grid; gap: 28px; }
+  .intro__cifras div { border-top: 1px solid var(--linea); padding-top: 16px; }
+  .intro__cifras dt { font-family: var(--ff-display); font-size: clamp(2.4rem, 4vw, 3.4rem); line-height: 1; color: var(--naranja-texto); }
+  .intro__cifras dd { margin: 8px 0 0; color: var(--tinta-2); }
+  @media (max-width: 1000px) { .intro { grid-template-columns: 1fr; } }
+
+  .destacados__titulo { max-width: 18ch; margin-bottom: clamp(48px, 6vw, 80px); }
+  .destacados__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 20px; }
+  .destacado {
+    --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+    position: relative; overflow: hidden; padding: 34px 30px 30px; border-radius: var(--radio); background: var(--papel);
+    box-shadow: 0 1px 0 var(--linea); transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 0.6s var(--ease-out), box-shadow 0.4s;
+  }
+  .destacado::before { content: ''; position: absolute; inset: 0; background: radial-gradient(260px circle at var(--mx) var(--my), rgba(255, 138, 102, 0.22), transparent 60%); opacity: 0; transition: opacity 0.4s; }
+  .destacado:hover::before { opacity: 1; }
+  .destacado:hover { box-shadow: 0 30px 60px -30px rgba(20, 18, 16, 0.3); }
+  .destacado__n { display: block; font-family: var(--ff-display); font-style: italic; color: var(--naranja-texto); margin-bottom: 40px; font-size: 1.1rem; }
+  .destacado h3 { margin-bottom: 12px; position: relative; }
+  .destacado p { margin: 0; color: var(--tinta-2); position: relative; }
+
+  .incluye__grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; }
+  .incluye__lista { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px; }
+  .incluye__lista li { padding: 14px 22px; border-radius: 999px; background: var(--papel); box-shadow: inset 0 0 0 1px var(--linea); font-weight: 500; }
+  @media (max-width: 860px) { .incluye__grid { grid-template-columns: 1fr; } }
+
+  .proceso__grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(40px, 6vw, 100px); }
+  .proceso__cabeza { position: sticky; top: 140px; align-self: start; }
+  .proceso__lista { list-style: none; margin: 0; padding: 0; position: relative; }
+  .proceso__lista::before { content: ''; position: absolute; left: 27px; top: 10px; bottom: 10px; width: 1.5px; background: rgba(255, 255, 255, 0.15); }
+  .proceso__lista::after { content: ''; position: absolute; left: 27px; top: 10px; bottom: 10px; width: 1.5px; background: var(--naranja); transform-origin: top; transform: scaleY(1); }
+  @supports (animation-timeline: view()) {
+    :global(.movimiento) .proceso__lista::after { animation: linea linear both; animation-timeline: view(); animation-range: entry 30% cover 70%; }
+  }
+  @keyframes linea { from { transform: scaleY(0); } }
+  .paso { display: grid; grid-template-columns: 56px 1fr; gap: 26px; padding-bottom: 54px; position: relative; }
+  .paso:last-child { padding-bottom: 0; }
+  .paso__n { width: 56px; height: 56px; border-radius: 50%; background: var(--noche); box-shadow: inset 0 0 0 1.5px var(--naranja); display: grid; place-items: center; font-family: var(--ff-display); font-size: 1.3rem; color: var(--coral); position: relative; z-index: 1; }
+  .paso h3 { margin: 12px 0 10px; }
+  .paso p { color: #cfc7bc; margin: 0; }
+  @media (max-width: 860px) { .proceso__grid { grid-template-columns: 1fr; } .proceso__cabeza { position: static; } }
+
+  .galeria__pista { list-style: none; margin: 28px 0 0; padding: 0 var(--gutter); display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding-bottom: 14px; }
+  .galeria__item { flex: none; width: clamp(240px, 34vw, 520px); aspect-ratio: 4/3; border-radius: var(--radio); overflow: hidden; scroll-snap-align: start; }
+  .galeria__item--1 { aspect-ratio: 3/4; width: clamp(200px, 24vw, 380px); }
+  .galeria__item--2 { -webkit-mask: var(--gota) center / 100% 100% no-repeat; mask: var(--gota) center / 100% 100% no-repeat; aspect-ratio: 1; border-radius: 0; width: clamp(220px, 28vw, 440px); }
+  .galeria__item :global(img), .galeria__item :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+
+  .faq__grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(40px, 6vw, 100px); }
+  .pregunta { border-bottom: 1px solid var(--linea); }
+  .pregunta summary { list-style: none; display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 26px 0; cursor: pointer; font-family: var(--ff-display); font-size: clamp(1.15rem, 1.6vw, 1.4rem); }
+  .pregunta summary::-webkit-details-marker { display: none; }
+  .pregunta__icono { flex: none; width: 34px; height: 34px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--tinta); position: relative; transition: background 0.3s, transform 0.4s var(--ease-out); }
+  .pregunta__icono::before, .pregunta__icono::after { content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 1.5px; background: currentColor; translate: -50% -50%; }
+  .pregunta__icono::after { rotate: 90deg; transition: rotate 0.4s var(--ease-out); }
+  .pregunta[open] .pregunta__icono { background: var(--naranja); box-shadow: none; }
+  .pregunta[open] .pregunta__icono::after { rotate: 0deg; }
+  .pregunta p { margin: 0 0 26px; color: var(--tinta-2); max-width: 60ch; }
+  @media (max-width: 860px) { .faq__grid { grid-template-columns: 1fr; } }
+
+  .relacionados__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 36px; margin-top: 48px; }
+
+  .otros { padding-block: clamp(70px, 8vw, 110px); }
+  .otros__lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linea); display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); column-gap: 40px; }
+  .otros__lista a { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--linea); text-decoration: none; font-family: var(--ff-display); font-size: 1.3rem; transition: color 0.3s, padding 0.4s var(--ease-out); }
+  .otros__lista a:hover { color: var(--naranja-texto); padding-left: 10px; }
+  .otros__flecha { transition: transform 0.4s var(--ease-out); }
+  .otros__lista a:hover .otros__flecha { transform: rotate(-45deg); }
+</style>

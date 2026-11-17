@@ -1,0 +1,105 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Foto from '../components/Foto.astro';
+import BandaCTA from '../components/BandaCTA.astro';
+import { getEntry, render } from 'astro:content';
+
+const pagina = await getEntry('paginas', 'esencia');
+if (!pagina) throw new Error('Falta paginas/esencia.md');
+const d = pagina.data;
+const { Content } = await render(pagina);
+const titular = (d.titular ?? 'Personas que <em>crean experiencias</em>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
+---
+
+<Base titulo={d.seo?.title ?? 'Nuestra esencia'} descripcion={d.seo?.description ?? d.resumen} imagen={d.imagen}>
+  <CabeceraPagina
+    etiqueta={d.etiqueta ?? 'Nuestra esencia'}
+    titulo={titular}
+    entradilla={d.resumen}
+    imagen={d.imagen}
+    imagenAlt={d.imagenAlt}
+    migas={[{ texto: 'Nuestra esencia' }]}
+  />
+
+  <section class="seccion seccion--papel">
+    <div class="contenedor--estrecho prosa esencia" data-reveal><Content /></div>
+  </section>
+
+  {
+    d.equipo.length > 0 && (
+      <section class="seccion equipo" aria-labelledby="equipo-t">
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>El equipo</p>
+          <h2 id="equipo-t" class="titulo-1" data-split>Quiénes <em>somos</em></h2>
+          <ul class="equipo__grid">
+            {d.equipo.map((p, i) => (
+              <li class="persona" data-reveal data-tilt style={`--d:${i * 120}`}>
+                <span class="persona__inicial" aria-hidden="true">{p.nombre.charAt(0)}</span>
+                <h3 class="titulo-3">{p.nombre}</h3>
+                {p.rol && <p class="persona__rol">{p.rol}</p>}
+                {p.texto && <p>{p.texto}</p>}
+              </li>
+            ))}
+          </ul>
+          <div class="equipo__foto" data-reveal="escala">
+            <Foto src="Premios-Ondas-Vinea-2024.jpg" alt="Mirian y Lara, de Vinea Eventos, en la organización de los Premios Ondas 2024" sizes="(max-width: 760px) 92vw, 50vw" anchos={[480, 800]} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.valores.length > 0 && (
+      <section class="seccion seccion--oscura valores" aria-labelledby="valores-t">
+        <div class="contenedor">
+          <p class="etiqueta" data-reveal>Lo que nos mueve</p>
+          <h2 id="valores-t" class="titulo-1" data-split>Nuestros <em>valores</em></h2>
+          <ol class="valores__lista">
+            {d.valores.map((v, i) => (
+              <li class="valor" data-reveal style={`--d:${i * 90}`}>
+                <span class="valor__n">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="titulo-2">{v.titulo}</h3>
+                <p>{v.texto}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.testimonio && (
+      <section class="seccion seccion--arena">
+        <figure class="contenedor--estrecho cita" data-reveal>
+          <blockquote><p>“{d.testimonio.texto}”</p></blockquote>
+          {d.testimonio.autor && <figcaption>{d.testimonio.autor}</figcaption>}
+        </figure>
+      </section>
+    )
+  }
+
+  <BandaCTA titulo="Nos encantará conocerte" texto="Cuéntanos qué tienes en mente y te llamamos." />
+</Base>
+
+<style>
+  .esencia :global(p:first-child) { font-family: var(--ff-display); font-size: clamp(1.5rem, 2.6vw, 2.2rem); line-height: 1.3; color: var(--tinta); }
+  .equipo__grid { list-style: none; margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
+  .persona { --rx: 0deg; --ry: 0deg; padding: 36px 32px; border-radius: var(--radio); background: var(--papel); box-shadow: 0 1px 0 var(--linea); transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 0.6s var(--ease-out); }
+  .persona__inicial { width: 72px; height: 72px; display: grid; place-items: center; margin-bottom: 26px; font-family: var(--ff-display); font-size: 2.2rem; color: #111; background: var(--degradado); -webkit-mask: var(--gota) center / contain no-repeat; mask: var(--gota) center / contain no-repeat; }
+  .persona__rol { color: var(--naranja-texto); font-weight: 500; margin: 8px 0 14px; }
+  .persona p:last-child { color: var(--tinta-2); margin: 0; }
+  .equipo__foto { margin-top: 40px; max-width: 720px; border-radius: var(--radio-lg); overflow: hidden; aspect-ratio: 3/2; }
+  .equipo__foto :global(img), .equipo__foto :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  .valores__lista { list-style: none; margin: clamp(48px, 6vw, 80px) 0 0; padding: 0; }
+  .valor { display: grid; grid-template-columns: 80px 1fr 1fr; gap: 24px 40px; align-items: baseline; padding: 34px 0; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+  .valor__n { font-family: var(--ff-display); font-style: italic; color: var(--coral); }
+  .valor p { margin: 0; color: #cfc7bc; }
+  .cita { text-align: center; }
+  .cita blockquote { margin: 0; }
+  .cita p { font-family: var(--ff-display); font-style: italic; font-size: clamp(1.3rem, 2.2vw, 1.9rem); line-height: 1.4; }
+  .cita figcaption { margin-top: 22px; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--naranja-texto); }
+  @media (max-width: 760px) { .valor { grid-template-columns: 1fr; } }
+</style>

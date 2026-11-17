@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import Foto from '../components/Foto.astro';
+import BandaCTA from '../components/BandaCTA.astro';
+import { getCollection } from 'astro:content';
+import { fecha } from '../data/sitio';
+
+const hoy = new Date('2026-11-17');
+const todos = (await getCollection('eventos')).map((e) => ({
+  ...e,
+  pasado: e.data.estado === 'pasado' || e.data.fecha < hoy,
+}));
+const proximos = todos.filter((e) => !e.pasado).sort((a, b) => a.data.fecha.getTime() - b.data.fecha.getTime());
+const pasados = todos.filter((e) => e.pasado).sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const externo = (u?: string) => (u?.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {});
+const jsonld = proximos.map((e) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: e.data.titulo,
+  startDate: e.data.fecha.toISOString().slice(0, 10),
+  location: e.data.lugar ? { '@type': 'Place', name: e.data.lugar } : undefined,
+  description: e.data.resumen,
+  organizer: { '@type': 'Organization', name: 'Vinea Eventos y Turismo', url: 'https://vineaeventos.com' },
+}));
+---
+
+<Base titulo="Agenda de eventos y entradas" descripcion="Próximos eventos abiertos al público organizados por Vinea: catas, jornadas, experiencias y actividades accesibles. Reserva tu plaza." jsonld={jsonld}>
+  <CabeceraPagina
+    etiqueta="Agenda"
+    titulo="Eventos a los que <em>puedes venir</em>"
+    entradilla="Además de producir eventos para empresas, organizamos experiencias abiertas al público. Reserva tu plaza antes de que se agoten."
+    migas={[{ texto: 'Eventos' }]}
+  />
+
+  <section class="seccion" style="padding-top:0" aria-labelledby="proximos-t">
+    <div class="contenedor">
+      <h2 id="proximos-t" class="sr-only">Próximos eventos</h2>
+      {proximos.length === 0 && <p class="entradilla">Ahora mismo no hay eventos abiertos. Síguenos en Instagram para enterarte de los próximos.</p>}
+      <ul class="eventos">
+        {
+          proximos.map((e, i) => (
+            <li class="evento" data-reveal style={`--d:${i * 100}`}>
+              <div class="evento__foto">
+                <Foto src={e.data.imagen} alt={e.data.imagenAlt ?? e.data.titulo} sizes="(max-width: 760px) 92vw, 34vw" anchos={[480, 800, 1100]} />
+                <time class="evento__fecha" datetime={e.data.fecha.toISOString().slice(0, 10)}>
+                  <strong>{fecha(e.data.fecha, { day: 'numeric' })}</strong>
+                  <span>{fecha(e.data.fecha, { month: 'short' })}</span>
+                </time>
+              </div>
+              <div class="evento__texto">
+                {e.data.estado === 'agotado' && <p class="evento__agotado">Agotado</p>}
+                <h3 class="titulo-3">{e.data.titulo}</h3>
+                {e.data.lugar && <p class="evento__lugar">{e.data.lugar} · {fecha(e.data.fecha, { weekday: 'long', day: 'numeric', month: 'long' })}</p>}
+                <p>{e.data.resumen}</p>
+                <a class="boton boton--naranja" href={e.data.enlace ?? '/contacto/'} {...externo(e.data.enlace)}>
+                  {e.data.estado === 'agotado' ? 'Ver detalles' : 'Reservar plaza'} <span class="flecha" aria-hidden="true">→</span>
+                  {e.data.enlace?.startsWith('http') && <span class="sr-only">(se abre en otra pestaña)</span>}
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    pasados.length > 0 && (
+      <section class="seccion seccion--papel" aria-labelledby="pasados-t">
+        <div class="contenedor">
+          <p class="etiqueta">Ya celebrados</p>
+          <h2 id="pasados-t" class="titulo-2" data-split>Eventos <em>anteriores</em></h2>
+          <ul class="pasados">
+            {pasados.map((e) => (
+              <li data-reveal>
+                <time datetime={e.data.fecha.toISOString().slice(0, 10)}>{fecha(e.data.fecha)}</time>
+                <span class="titulo-3">{e.data.titulo}</span>
+                <span class="pasados__lugar">{e.data.lugar}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <BandaCTA titulo="¿Quieres organizar un evento abierto al público?" texto="Nos encargamos de todo: espacio, programa, comunicación y venta de entradas." />
+</Base>
+
+<style>
+  .eventos { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(40px, 5vw, 70px); }
+  .evento { display: grid; grid-template-columns: minmax(0, 0.9fr) 1fr; gap: clamp(28px, 4vw, 70px); align-items: center; }
+  .evento:nth-child(even) .evento__foto { order: 2; }
+  .evento__foto { position: relative; aspect-ratio: 4/3; border-radius: var(--radio-lg); overflow: hidden; background: var(--degradado); }
+  .evento__foto :global(img), .evento__foto :global(picture) { width: 100%; height: 100%; object-fit: cover; }
+  .evento__fecha { position: absolute; top: 18px; left: 18px; width: 92px; height: 92px; border-radius: 50%; background: var(--papel); display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3); }
+  .evento__fecha strong { font-family: var(--ff-display); font-size: 2.2rem; font-weight: 400; color: var(--naranja-texto); }
+  .evento__fecha span { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; margin-top: 4px; }
+  .evento__texto h3 { font-size: clamp(1.7rem, 3vw, 2.6rem); margin-bottom: 12px; }
+  .evento__lugar { font-weight: 500; color: var(--naranja-texto); text-transform: capitalize; }
+  .evento__texto > p:not(.evento__lugar):not(.evento__agotado) { color: var(--tinta-2); margin-bottom: 28px; max-width: 52ch; }
+  .evento__agotado { display: inline-block; padding: 6px 14px; border-radius: 999px; background: var(--tinta); color: #fff; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .pasados { list-style: none; margin: 40px 0 0; padding: 0; border-top: 1px solid var(--linea); }
+  .pasados li { display: grid; grid-template-columns: 200px 1fr auto; gap: 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--linea); }
+  .pasados time { color: var(--gris); }
+  .pasados__lugar { color: var(--gris); }
+  @media (max-width: 760px) {
+    .evento { grid-template-columns: 1fr; }
+    .evento:nth-child(even) .evento__foto { order: 0; }
+    .pasados li { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

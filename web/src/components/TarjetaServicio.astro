@@ -1,0 +1,64 @@
+---
+import Foto from './Foto.astro';
+interface Props {
+  slug: string;
+  titulo: string;
+  resumen: string;
+  imagen: string;
+  imagenAlt: string;
+  etiqueta?: string;
+  numero?: number;
+  tipo?: string;
+  class?: string;
+}
+const { slug, titulo, resumen, imagen, imagenAlt, etiqueta, numero, tipo, class: clase } = Astro.props;
+---
+
+<a class:list={['tarjeta-s', clase]} href={`/servicios/${slug}/`} data-tilt>
+  <div class="tarjeta-s__foto" style={`view-transition-name: foto-${slug}`}>
+    <Foto src={imagen} alt={imagenAlt} sizes="(max-width: 900px) 90vw, 420px" anchos={[420, 640, 900]} />
+  </div>
+  <div class="tarjeta-s__texto">
+    <p class="tarjeta-s__meta">
+      {numero !== undefined && <span>{String(numero).padStart(2, '0')}</span>}
+      {tipo === 'experiencia' ? 'Experiencia' : etiqueta}
+    </p>
+    <h3 class="tarjeta-s__titulo">{titulo}</h3>
+    <p class="tarjeta-s__resumen">{resumen}</p>
+    <span class="tarjeta-s__ir" aria-hidden="true">→</span>
+  </div>
+</a>
+
+<style>
+  .tarjeta-s {
+    --rx: 0deg; --ry: 0deg;
+    display: flex; flex-direction: column; gap: 22px; text-decoration: none; color: inherit;
+    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d; transition: transform 0.6s var(--ease-out);
+  }
+  .tarjeta-s__foto {
+    aspect-ratio: 1; position: relative; overflow: hidden;
+    -webkit-mask: var(--gota) center / 100% 100% no-repeat; mask: var(--gota) center / 100% 100% no-repeat;
+    background: var(--arena);
+  }
+  .tarjeta-s__foto :global(img) { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 1.2s var(--ease-out); }
+  .tarjeta-s:hover .tarjeta-s__foto :global(img), .tarjeta-s:focus-visible .tarjeta-s__foto :global(img) { transform: scale(1.12); }
+  .tarjeta-s__foto::after {
+    content: ''; position: absolute; inset: 0; background: var(--degradado); mix-blend-mode: multiply;
+    opacity: 0; transition: opacity 0.6s var(--ease-out);
+  }
+  .tarjeta-s:hover .tarjeta-s__foto::after { opacity: 0.35; }
+  .tarjeta-s__texto { position: relative; padding-right: 48px; transform: translateZ(30px); }
+  .tarjeta-s__meta { display: flex; gap: 12px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--naranja-texto); margin-bottom: 10px; }
+  .tarjeta-s__meta span { color: var(--gris); }
+  .tarjeta-s__titulo { font-size: clamp(1.6rem, 2.3vw, 2.1rem); line-height: 1.05; margin-bottom: 10px; }
+  .tarjeta-s__resumen { color: var(--tinta-2); font-size: 1rem; margin: 0; max-width: 38ch; }
+  .tarjeta-s__ir {
+    position: absolute; right: 0; top: 0; width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center; box-shadow: inset 0 0 0 1.5px var(--tinta);
+    transition: background 0.4s, color 0.4s, transform 0.5s var(--ease-out);
+  }
+  .tarjeta-s:hover .tarjeta-s__ir { background: var(--naranja); box-shadow: none; transform: rotate(-45deg); }
+  :global(.seccion--oscura) .tarjeta-s__resumen { color: #c9c1b6; }
+  :global(.seccion--oscura) .tarjeta-s__ir { box-shadow: inset 0 0 0 1.5px #fff; }
+</style>

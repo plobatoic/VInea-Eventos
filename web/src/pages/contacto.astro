@@ -1,0 +1,171 @@
+---
+import Base from '../layouts/Base.astro';
+import CabeceraPagina from '../components/CabeceraPagina.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import { sitio } from '../data/sitio';
+
+const pagina = await getEntry('paginas', 'contacto');
+const servicios = (await getCollection('servicios')).sort((a, b) => a.data.orden - b.data.orden);
+const Content = pagina ? (await render(pagina)).Content : null;
+---
+
+<Base
+  titulo={pagina?.data.seo?.title ?? 'Contacto'}
+  descripcion={pagina?.data.seo?.description ?? 'Cuéntanos tu proyecto y te preparamos una propuesta a medida.'}
+>
+  <CabeceraPagina
+    etiqueta="Contacto"
+    titulo="Cuéntanos tu <em>proyecto</em>"
+    entradilla={pagina?.data.resumen ?? 'Escríbenos o llámanos y te orientamos sin compromiso.'}
+    migas={[{ texto: 'Contacto' }]}
+  />
+
+  <section class="seccion contacto" style="padding-top:0">
+    <div class="contenedor contacto__grid">
+      <form class="formulario" name="contacto" method="POST" action="/gracias/" data-netlify="true" netlify-honeypot="web" data-formulario novalidate>
+        <input type="hidden" name="form-name" value="contacto" />
+        <p class="sr-only"><label>No rellenes este campo: <input name="web" tabindex="-1" autocomplete="off" /></label></p>
+
+        <div class="campo" data-reveal>
+          <label for="f-nombre">Nombre completo <span aria-hidden="true">*</span></label>
+          <input id="f-nombre" name="nombre" type="text" autocomplete="name" required aria-describedby="e-nombre" />
+          <p class="campo__error" id="e-nombre" hidden>Escribe tu nombre.</p>
+        </div>
+        <div class="campo__fila">
+          <div class="campo" data-reveal style="--d:60">
+            <label for="f-email">Email <span aria-hidden="true">*</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required aria-describedby="e-email" />
+            <p class="campo__error" id="e-email" hidden>Escribe un email válido, por ejemplo nombre@empresa.com.</p>
+          </div>
+          <div class="campo" data-reveal style="--d:120">
+            <label for="f-movil">Móvil <span class="campo__opc">(opcional)</span></label>
+            <input id="f-movil" name="movil" type="tel" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="campo" data-reveal>
+          <label for="f-empresa">Empresa o entidad <span class="campo__opc">(opcional)</span></label>
+          <input id="f-empresa" name="empresa" type="text" autocomplete="organization" />
+        </div>
+        <fieldset class="campo campo--chips" data-reveal>
+          <legend>¿Qué te interesa?</legend>
+          <div class="chips">
+            <label class="chip"><input type="radio" name="interes" value="informacion-general" checked /><span>Información general</span></label>
+            {
+              servicios.map((s) => (
+                <label class="chip">
+                  <input type="radio" name="interes" value={s.id} />
+                  <span>{s.data.titulo}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <div class="campo" data-reveal>
+          <label for="f-mensaje">Cuéntanos tu idea <span aria-hidden="true">*</span></label>
+          <textarea id="f-mensaje" name="mensaje" rows="6" required aria-describedby="e-mensaje f-mensaje-ayuda"></textarea>
+          <p class="campo__ayuda" id="f-mensaje-ayuda">Fecha aproximada, número de personas, lugar… cualquier detalle nos ayuda.</p>
+          <p class="campo__error" id="e-mensaje" hidden>Cuéntanos un poco sobre tu evento.</p>
+        </div>
+        <div class="campo campo--check" data-reveal>
+          <input id="f-privacidad" name="privacidad" type="checkbox" required aria-describedby="e-privacidad" />
+          <label for="f-privacidad">He leído y acepto la <a href="/politica-privacidad/">política de privacidad</a>.</label>
+          <p class="campo__error" id="e-privacidad" hidden>Necesitamos tu consentimiento para responderte.</p>
+        </div>
+        <button class="boton boton--naranja formulario__enviar" type="submit" data-reveal>Enviar mensaje <span class="flecha" aria-hidden="true">→</span></button>
+        <p class="formulario__estado" role="status" aria-live="polite" data-estado></p>
+      </form>
+
+      <aside class="datos" aria-label="Datos de contacto">
+        <div class="datos__tarjeta" data-reveal style="--d:200">
+          <p class="etiqueta">Escríbenos</p>
+          <a class="datos__grande" href={`mailto:${sitio.email}`}>{sitio.email}</a>
+          <p class="etiqueta datos__sep">Llámanos</p>
+          <ul>{sitio.telefonos.map((t) => <li><a class="datos__tel" href={t.href}>{t.texto}</a></li>)}</ul>
+          <p class="etiqueta datos__sep">Dónde estamos</p>
+          <p>{sitio.zona}</p>
+          <p class="etiqueta datos__sep">Síguenos</p>
+          <ul class="datos__redes">
+            {sitio.redes.map((r) => <li><a href={r.href} target="_blank" rel="noopener">{r.nombre}<span class="sr-only"> (se abre en otra pestaña)</span></a></li>)}
+          </ul>
+          <div class="gota-deco datos__gota" aria-hidden="true"></div>
+        </div>
+        {Content && <div class="prosa datos__texto" data-reveal><Content /></div>}
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Preselecciona el servicio si se llega desde una página de servicio (?interes=slug)
+  const interes = new URLSearchParams(location.search).get('interes');
+  if (interes) {
+    const radio = document.querySelector<HTMLInputElement>(`input[name="interes"][value="${CSS.escape(interes)}"]`);
+    if (radio) radio.checked = true;
+  }
+
+  // Validación accesible: mensajes junto al campo y foco en el primer error
+  const form = document.querySelector<HTMLFormElement>('[data-formulario]');
+  const estado = document.querySelector<HTMLElement>('[data-estado]');
+  form?.addEventListener('submit', (e) => {
+    let primero: HTMLElement | null = null;
+    form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]').forEach((campo) => {
+      const ok = campo.type === 'checkbox' ? (campo as HTMLInputElement).checked : campo.checkValidity() && campo.value.trim() !== '';
+      const err = document.getElementById('e-' + campo.id.replace('f-', ''));
+      campo.setAttribute('aria-invalid', String(!ok));
+      if (err) err.hidden = ok;
+      if (!ok && !primero) primero = campo;
+    });
+    if (primero) {
+      e.preventDefault();
+      (primero as HTMLElement).focus();
+      if (estado) estado.textContent = 'Revisa los campos marcados.';
+    } else if (estado) {
+      estado.textContent = 'Enviando…';
+    }
+  });
+</script>
+
+<style>
+  .contacto__grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(40px, 6vw, 100px); align-items: start; }
+  .formulario { display: grid; gap: 26px; }
+  .campo { display: grid; gap: 8px; border: 0; margin: 0; padding: 0; min-width: 0; }
+  .campo__fila { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .campo label, .campo legend { font-weight: 500; }
+  .campo label span[aria-hidden], .campo__opc { color: var(--gris); font-weight: 400; }
+  .campo input:not([type='radio']):not([type='checkbox']), .campo textarea {
+    width: 100%; padding: 16px 18px; border-radius: 14px; border: 1.5px solid var(--linea); background: var(--papel);
+    font-size: 1.05rem; transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .campo textarea { resize: vertical; min-height: 150px; }
+  .campo input:focus, .campo textarea:focus { outline: none; border-color: var(--naranja); box-shadow: 0 0 0 4px rgba(255, 86, 17, 0.18); }
+  .campo [aria-invalid='true'] { border-color: #b3261e !important; }
+  .campo__error { margin: 0; color: #b3261e; font-size: 0.92rem; font-weight: 500; }
+  .campo__ayuda { margin: 0; color: var(--gris); font-size: 0.92rem; }
+  .campo--chips legend { margin-bottom: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { position: relative; cursor: pointer; }
+  .chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .chip span { display: inline-block; padding: 10px 18px; border-radius: 999px; background: var(--papel); box-shadow: inset 0 0 0 1.5px var(--linea); font-weight: 500; font-size: 0.95rem; transition: background 0.3s, box-shadow 0.3s, color 0.3s; }
+  .chip:hover span { box-shadow: inset 0 0 0 1.5px var(--tinta); }
+  .chip input:checked + span { background: var(--tinta); color: #fff; box-shadow: none; }
+  .chip input:focus-visible + span { outline: 3px solid var(--naranja); outline-offset: 2px; }
+  .campo--check { grid-template-columns: auto 1fr; align-items: start; gap: 12px; }
+  .campo--check input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--naranja); }
+  .campo--check .campo__error { grid-column: 1 / -1; }
+  .campo--check a { color: var(--naranja-texto); }
+  .formulario__enviar { justify-self: start; }
+  .formulario__estado { margin: 0; font-weight: 500; }
+  .datos { position: sticky; top: 120px; display: grid; gap: 32px; }
+  .datos__tarjeta { position: relative; overflow: hidden; padding: clamp(28px, 3vw, 44px); border-radius: var(--radio-lg); background: var(--noche); color: #f4efe8; }
+  .datos__tarjeta .etiqueta { color: var(--coral); margin-bottom: 10px; }
+  .datos__sep { margin-top: 28px; }
+  .datos__tarjeta ul { list-style: none; margin: 0; padding: 0; }
+  .datos__tarjeta p { margin: 0; }
+  .datos__grande { font-family: var(--ff-display); font-size: clamp(1.4rem, 2.2vw, 1.9rem); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.3); word-break: break-word; }
+  .datos__tel { font-size: 1.25rem; text-decoration: none; }
+  .datos__tarjeta a:hover { color: var(--coral); }
+  .datos__redes { display: flex; gap: 20px; }
+  .datos__gota { width: 160px; right: -40px; bottom: -40px; opacity: 0.9; }
+  .datos__texto { font-size: 1rem; }
+  @media (max-width: 900px) { .contacto__grid { grid-template-columns: 1fr; } .datos { position: static; } .campo__fila { grid-template-columns: 1fr; } }
+</style>
