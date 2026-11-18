@@ -95,7 +95,8 @@ const fotoCristal = fotos[0]?.querySelector('img');
 
 let gota3d = false;
 const iniciarGota = () => {
-  if (!canvas || !m0) return;
+  // Sin animaciones se queda el logo tal cual (con su gota plana): el 3D solo tiene sentido en movimiento
+  if (!canvas || !m0 || !movimiento) return;
   const g = crearGota(canvas, estado);
   if (!g) return;
   // Se cambia de la gota plana a la 3D cuando la 3D ya ha pintado (sin parpadeo)

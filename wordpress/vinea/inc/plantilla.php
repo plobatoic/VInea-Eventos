@@ -151,6 +151,10 @@ function vinea_primera_imagen( string $html ) {
 		if ( preg_match( '/\bclass\s*=\s*(["\'])[^"\']*\bwp-image-(\d+)\b/i', $tag, $c ) ) {
 			return (int) $c[2];
 		}
+		// Fotos que no se pudieron importar (rotas también en la web original): no sirven de portada.
+		if ( false === strpos( $src, (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ) {
+			continue;
+		}
 		return $src;
 	}
 	return '';

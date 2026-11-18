@@ -360,4 +360,11 @@ document.querySelectorAll<HTMLFormElement>('[data-formulario]').forEach((form) =
   });
 });
 
+/* ---------- Fotos que no cargan: se oculta su marco en vez de mostrar el icono roto ---------- */
+const ocultarRota = (img: HTMLImageElement) => (img.closest('figure, .tarjeta-p__foto, .tarjeta-s__foto') ?? img).classList.add('foto-rota');
+document.querySelectorAll<HTMLImageElement>('main img').forEach((img) => {
+  if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) ocultarRota(img);
+  else img.addEventListener('error', () => ocultarRota(img), { once: true });
+});
+
 export {};

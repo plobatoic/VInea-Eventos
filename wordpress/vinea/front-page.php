@@ -83,7 +83,7 @@ $tema      = get_template_directory_uri();
 
 <!-- ============ FRANJA: nombres de los servicios ============ -->
 <?php if ( $servicios_hijos ) : ?>
-<section class="franja" aria-label="Servicios" data-skew>
+<section class="franja" aria-hidden="true" data-skew>
 	<p class="franja__fila" data-franja="-1">
 		<?php for ( $r = 0; $r < 2; $r++ ) : foreach ( $servicios_hijos as $s ) : ?><span><?php echo esc_html( get_the_title( $s ) ); ?><i class="franja__gota" aria-hidden="true"></i></span><?php endforeach; endfor; ?>
 	</p>
@@ -114,69 +114,24 @@ $tema      = get_template_directory_uri();
 	</div>
 </section>
 
-<!-- ============ CONCIENCIA SOCIAL Y MEDIOAMBIENTAL ============ -->
+<!-- ============ CONCIENCIA SOCIAL Y MEDIOAMBIENTAL (con las 4 fotos del carrusel original) ============ -->
+<?php $carrusel = array_merge( array( $v( 'conciencia_imagen' ) ), array_map( $url_de, array_slice( $momentos, 0, 3 ) ) ); ?>
 <section class="accesible" aria-labelledby="conciencia-titulo">
-	<div class="contenedor accesible__grid">
-		<div class="accesible__texto">
-			<h2 id="conciencia-titulo" class="titulo-1" data-split><?php echo esc_html( $v( 'conciencia_titulo' ) ); ?></h2>
-			<p class="accesible__p" data-reveal><?php echo esc_html( $v( 'conciencia_texto' ) ); ?></p>
-		</div>
-		<figure class="accesible__figura" data-reveal="foto">
-			<div class="accesible__foto con-gota"><?php $img( $v( 'conciencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 90vw, 45vw', 'alt' => '' ) ); ?></div>
-			<figcaption class="accesible__pie"><?php echo esc_html( $v( 'conciencia_proyecto' ) ); ?></figcaption>
-		</figure>
+	<div class="contenedor accesible__cabeza">
+		<h2 id="conciencia-titulo" class="titulo-1" data-split><?php echo esc_html( $v( 'conciencia_titulo' ) ); ?></h2>
+		<p class="accesible__p" data-reveal><?php echo esc_html( $v( 'conciencia_texto' ) ); ?></p>
 	</div>
-</section>
-
-<!-- ============ MOMENTOS (fotos con profundidad) ============ -->
-<?php if ( $momentos ) : ?>
-<section class="seccion momentos" aria-label="Momentos Vinea">
-	<div class="momentos__collage">
-		<?php foreach ( array_slice( $momentos, 0, 5 ) as $i => $m ) : ?>
-			<figure class="momento momento--<?php echo (int) $i; ?>" data-parallax="<?php echo esc_attr( array( 0.12, -0.18, 0.26, -0.08, 0.18 )[ $i ] ); ?>">
-				<?php $img( $url_de( $m ), 'medium_large', array( 'sizes' => '(max-width: 900px) 70vw, 34vw', 'alt' => '' ) ); ?>
-			</figure>
-		<?php endforeach; ?>
-	</div>
-	<div class="contenedor--estrecho momentos__cierre">
-		<p class="relleno" data-relleno><?php echo esc_html( $v( 'cierre' ) ); ?></p>
-	</div>
-</section>
-<?php endif; ?>
-
-<!-- ============ PROYECTOS (entradas del blog) ============ -->
-<?php
-$proyectos = new WP_Query( array( 'post_type' => 'post', 'posts_per_page' => 5, 'ignore_sticky_posts' => true ) );
-if ( $proyectos->have_posts() ) :
-	?>
-<section class="seccion proyectos" aria-labelledby="proyectos-titulo">
-	<div class="contenedor">
-		<div class="proyectos__cabeza">
-			<h2 id="proyectos-titulo" class="titulo-1" data-split>Proyectos</h2>
-			<a class="boton boton--linea" href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/blog/' ) ); ?>" data-reveal>Proyectos <span class="flecha" aria-hidden="true">→</span></a>
-		</div>
-		<div class="proyectos__grid">
-			<?php
-			$i = 0;
-			while ( $proyectos->have_posts() ) :
-				$proyectos->the_post();
-				?>
-				<div class="proyectos__celda proyectos__celda--<?php echo (int) $i; ?>" data-reveal style="--d:<?php echo (int) ( ( $i % 2 ) * 120 ); ?>">
-					<?php
-					if ( function_exists( 'vinea_tarjeta_proyecto' ) ) {
-						vinea_tarjeta_proyecto( get_post(), 0 === $i );
-					}
-					?>
+	<figure class="carrusel-proyecto">
+		<div class="momentos__collage">
+			<?php foreach ( array_filter( $carrusel ) as $i => $foto ) : ?>
+				<div class="momento momento--<?php echo (int) $i; ?>" data-parallax="<?php echo esc_attr( array( 0.12, -0.18, 0.24, -0.1 )[ $i ] ?? 0 ); ?>">
+					<?php $img( $foto, 'medium_large', array( 'sizes' => '(max-width: 900px) 70vw, 34vw', 'alt' => '' ) ); ?>
 				</div>
-				<?php
-				$i++;
-			endwhile;
-			wp_reset_postdata();
-			?>
+			<?php endforeach; ?>
 		</div>
-	</div>
+		<figcaption class="accesible__pie contenedor"><?php echo esc_html( $v( 'conciencia_proyecto' ) ); ?></figcaption>
+	</figure>
 </section>
-<?php endif; ?>
 
 <!-- ============ LA ESENCIA DE VINEA ============ -->
 <section class="seccion esencia-portada" aria-labelledby="esencia-titulo">
@@ -218,5 +173,12 @@ if ( $proyectos->have_posts() ) :
 	</div>
 </section>
 <?php endif; ?>
+
+<!-- ============ CIERRE (último texto de la Home original) ============ -->
+<section class="seccion cierre" aria-label="Nuestra forma de trabajar">
+	<div class="contenedor--estrecho">
+		<h2 class="cierre__texto relleno" data-relleno><?php echo esc_html( $v( 'cierre' ) ); ?></h2>
+	</div>
+</section>
 
 <?php get_footer(); ?>

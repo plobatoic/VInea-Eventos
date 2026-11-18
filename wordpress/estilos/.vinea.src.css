@@ -963,7 +963,7 @@ body::after {
 .pg-inicio .hero__particulas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .pg-inicio .hero__escena { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; padding: 70px var(--gutter) 22vh; }
 .pg-inicio .hero__logo { width: min(90vw, 1500px, 150vh); color: #f4efe8; }
-.pg-inicio .hero__logo .logo { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.35)); }
+.pg-inicio .hero__logo .logo { width: 100%; height: auto; overflow: visible; }
 .pg-inicio .hero__pie { position: absolute; left: 0; right: 0; bottom: clamp(26px, 6vh, 64px); z-index: 2; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px 48px; flex-wrap: wrap; margin-inline: auto; }
 .pg-inicio .hero__textos { max-width: 640px; }
 .pg-inicio .hero__h1 { font-family: var(--ff-texto); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--coral); margin: 0 0 14px; line-height: 1.5; }
@@ -1235,3 +1235,42 @@ img[data-ampliar] { cursor: zoom-in; }
 
 /* ---------- Ocultar estilos de bloques que no usamos ---------- */
 .wp-block-image img { height: auto; }
+
+/* ---------- Portada reordenada como la Home original ---------- */
+.pg-inicio .accesible { padding-bottom: clamp(60px, 8vw, 120px); }
+.pg-inicio .accesible__cabeza { max-width: 980px; }
+.pg-inicio .accesible__cabeza .titulo-1 { max-width: 18ch; }
+.pg-inicio .carrusel-proyecto { margin: clamp(30px, 5vw, 70px) 0 0; }
+.pg-inicio .carrusel-proyecto .momentos__collage { height: clamp(420px, 56vw, 820px); margin-top: 0; }
+.pg-inicio .carrusel-proyecto .momento { box-shadow: 0 30px 70px -30px rgba(60, 20, 0, 0.45); }
+.pg-inicio .carrusel-proyecto .momento--0 { width: 38%; aspect-ratio: 4 / 3; left: 4%; top: 4%; }
+.pg-inicio .carrusel-proyecto .momento--1 { width: 26%; aspect-ratio: 3 / 4; left: 46%; top: 0; z-index: 1; }
+.pg-inicio .carrusel-proyecto .momento--2 { width: 24%; aspect-ratio: 1; right: 4%; top: 22%; -webkit-mask: var(--gota) center / 100% 100% no-repeat; mask: var(--gota) center / 100% 100% no-repeat; border-radius: 0; box-shadow: none; }
+.pg-inicio .carrusel-proyecto .momento--3 { width: 30%; aspect-ratio: 16 / 10; left: 26%; top: 56%; }
+.pg-inicio .accesible__pie { margin-top: 26px; font-family: var(--ff-display); font-size: clamp(1.2rem, 2vw, 1.6rem); text-align: left; font-weight: 400; }
+@media (max-width: 760px) {
+  .pg-inicio .carrusel-proyecto .momentos__collage { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 var(--gutter); }
+  .pg-inicio .carrusel-proyecto .momento { position: relative; inset: auto !important; width: auto !important; }
+}
+.pg-inicio .cierre { padding-top: clamp(70px, 9vw, 140px); }
+.pg-inicio .cierre__texto { font-size: clamp(1.6rem, 3.4vw, 3rem); line-height: 1.25; text-align: center; margin-inline: auto; max-width: 30ch; }
+
+/* Fotos que no cargan (rotas también en la web original): se ocultan */
+.foto-rota { display: none !important; }
+
+/* Rendimiento en móvil: sin desenfoque de fondo en la cabecera */
+@media (max-width: 760px) { .cabecera.solida .cabecera__in { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255, 253, 249, 0.96); } }
+
+/* ---------- Portada sin animaciones (sistema o botón «Reducir animaciones») ---------- */
+html:not(.portal-animado) .pg-inicio .hero { height: auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+html:not(.portal-animado) .pg-inicio .hero__escena { position: relative; inset: auto; min-height: 62svh; padding-bottom: 30px; }
+html:not(.portal-animado) .pg-inicio .hero__pie { position: relative; inset: auto; bottom: auto; padding-bottom: clamp(40px, 6vh, 70px); }
+html:not(.portal-animado) .pg-inicio .hero__portal { margin: 0 var(--gutter) var(--gutter); height: 80vh; border-radius: var(--radio-lg); overflow: hidden; }
+html:not(.portal-animado) .pg-inicio .hero__portal-texto { opacity: 1; }
+
+/* Móvil: las 4 fotos del proyecto en mosaico ordenado */
+@media (max-width: 760px) {
+  .pg-inicio .carrusel-proyecto .momento { aspect-ratio: 1 !important; -webkit-mask: none !important; mask: none !important; border-radius: var(--radio) !important; }
+  .pg-inicio .carrusel-proyecto .momento--0 { grid-column: 1 / -1; aspect-ratio: 16 / 10 !important; }
+  .pg-inicio .carrusel-proyecto .momento--3 { grid-column: 1 / -1; aspect-ratio: 16 / 10 !important; }
+}

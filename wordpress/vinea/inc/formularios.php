@@ -160,7 +160,7 @@ function vinea_limpiar_cabecera( string $s ): string {
 add_action( 'admin_post_nopriv_vinea_contacto', 'vinea_procesar_contacto' );
 add_action( 'admin_post_vinea_contacto', 'vinea_procesar_contacto' );
 function vinea_procesar_contacto(): void {
-	if ( ! isset( $_POST['vinea_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['vinea_nonce'] ) ), 'vinea_contacto' ) ) {
+	if ( ! vinea_firma_valida( 'vinea_contacto' ) ) {
 		vinea_redirigir( array( 'error' => 'seguridad' ), 'formulario' );
 	}
 
@@ -221,7 +221,7 @@ function vinea_procesar_contacto(): void {
 add_action( 'admin_post_nopriv_vinea_newsletter', 'vinea_procesar_newsletter' );
 add_action( 'admin_post_vinea_newsletter', 'vinea_procesar_newsletter' );
 function vinea_procesar_newsletter(): void {
-	if ( ! isset( $_POST['vinea_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['vinea_nonce'] ) ), 'vinea_newsletter' ) ) {
+	if ( ! vinea_firma_valida( 'vinea_newsletter' ) ) {
 		vinea_redirigir( array( 'error_nl' => 'seguridad' ), 'newsletter' );
 	}
 	if ( ! empty( $_POST['web'] ) ) {
@@ -301,7 +301,7 @@ function vinea_formulario_contacto(): void {
 	?>
 	<form class="formulario" id="formulario" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-formulario novalidate>
 		<input type="hidden" name="action" value="vinea_contacto">
-		<?php wp_nonce_field( 'vinea_contacto', 'vinea_nonce' ); ?>
+		<?php vinea_campo_firma( 'vinea_contacto' ); ?>
 		<div class="campo__fila">
 			<div class="campo">
 				<label for="f-nombre">Nombre completo</label>
@@ -353,7 +353,7 @@ function vinea_formulario_newsletter(): void {
 	<form class="newsletter" id="newsletter" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-formulario novalidate>
 		<h2 class="newsletter__titulo">apúntate a la newsletter</h2>
 		<input type="hidden" name="action" value="vinea_newsletter">
-		<?php wp_nonce_field( 'vinea_newsletter', 'vinea_nonce' ); ?>
+		<?php vinea_campo_firma( 'vinea_newsletter' ); ?>
 		<div class="newsletter__campos">
 			<div class="campo">
 				<label for="n-nombre">Tu nombre</label>
@@ -373,4 +373,27 @@ function vinea_formulario_newsletter(): void {
 		<p class="formulario__estado<?php echo '' !== $clase ? ' formulario__estado--' . esc_attr( $clase ) : ''; ?>" role="status" aria-live="polite" data-estado><?php echo esc_html( $estado ); ?></p>
 	</form>
 	<?php
+}
+
+
+/**
+ * Firma del formulario compatible con la caché de páginas: a diferencia del nonce de
+ * WordPress (caduca en 24 h), vale 30 días, así que un formulario servido desde la caché
+ * sigue funcionando. Junto con el campo trampa, frena envíos automáticos (y los de < 2 s).
+ */
+function vinea_campo_firma( string $accion ): void {
+	$t = time();
+	printf( '<input type="hidden" name="vinea_firma" value="%s">', esc_attr( $t . '.' . hash_hmac( 'sha256', $accion . '|' . $t, wp_salt( 'nonce' ) ) ) );
+}
+
+function vinea_firma_valida( string $accion ): bool {
+	$firma = isset( $_POST['vinea_firma'] ) ? sanitize_text_field( wp_unslash( $_POST['vinea_firma'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
+	if ( ! preg_match( '/^(\d+)\.([a-f0-9]{64})$/', $firma, $m ) ) {
+		return false;
+	}
+	$edad = time() - (int) $m[1];
+	if ( $edad < 2 || $edad > 30 * DAY_IN_SECONDS ) {
+		return false;
+	}
+	return hash_equals( hash_hmac( 'sha256', $accion . '|' . $m[1], wp_salt( 'nonce' ) ), $m[2] );
 }
