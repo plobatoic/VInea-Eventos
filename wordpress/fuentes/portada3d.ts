@@ -31,35 +31,21 @@ if (hero && movimiento) {
   }, { passive: true });
 }
 
-/* La esencia: el dron vuela solo al llegar a la sección (animación CSS) */
-const sala = document.querySelector<HTMLElement>('[data-sala]');
-if (sala) {
-  const ajuste = sala.querySelector<HTMLElement>('[data-sala-ajuste]')!;
-  // Encaje: en ordenador la foto cubre la pantalla con ellas a la derecha; en móvil, ellas centradas arriba
-  const encajar = () => {
-    const W = sala.clientWidth, H = sala.clientHeight;
-    if (W < 900) {
-      const k = Math.min((W * 1.15) / 784, (H * 0.8) / 1066);
-      ajuste.style.setProperty('--k', k.toFixed(4));
-      ajuste.style.setProperty('--ax', `${(-190 * k).toFixed(1)}px`);
-      ajuste.style.setProperty('--ay', `${(-H * 0.12).toFixed(1)}px`);
-    } else {
-      const k = Math.max(W / 1600, H / 1066) * 1.02;
-      ajuste.style.setProperty('--k', k.toFixed(4));
-      ajuste.style.setProperty('--ax', `${Math.min(0, (W * 0.5 - (800 + 190) * k + 1600 * k * 0.5) * 0)}px`);
-      ajuste.style.setProperty('--ay', '0px');
-    }
-  };
-  encajar();
-  addEventListener('resize', encajar, { passive: true });
-  if (movimiento) {
-    const cam = sala.querySelector<HTMLElement>('.sala__camara')!;
-    cam.addEventListener('animationend', () => sala.classList.add('llego'));
-    const io2 = new IntersectionObserver(([en]) => {
-      if (en.isIntersecting) { sala.classList.add('vuela'); io2.disconnect(); }
-    }, { threshold: 0.45 });
-    io2.observe(sala);
-    io.observe(sala);
+/* La esencia: entrada al aparecer y leve paralaje con el ratón (solo variables CSS) */
+const ese = document.querySelector<HTMLElement>('[data-ese]');
+if (ese) {
+  const io2 = new IntersectionObserver(([en]) => {
+    if (en.isIntersecting) { ese.classList.add('visible'); io2.disconnect(); setTimeout(() => ese.classList.add('listo'), 2000); }
+  }, { threshold: 0.3 });
+  io2.observe(ese);
+  if (movimiento && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let raf = 0, x = 0, y = 0;
+    ese.addEventListener('pointermove', (ev) => {
+      const r = ese.getBoundingClientRect();
+      x = (ev.clientX - r.left) / r.width - 0.5; y = (ev.clientY - r.top) / r.height - 0.5;
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; ese.style.setProperty('--mx', x.toFixed(3)); ese.style.setProperty('--my', y.toFixed(3)); });
+    }, { passive: true });
+    ese.addEventListener('pointerleave', () => { ese.style.setProperty('--mx', '0'); ese.style.setProperty('--my', '0'); });
   }
 }
 

@@ -286,46 +286,50 @@ body { background: var(--hueso); }
   .resenas:not(.todas) .resena:nth-child(n + 4) { display: none; }
 }
 
-/* ---------- 5. LA ESENCIA: vuelo de dron hasta Mirian y Lara ----------
-   Mundo = la foto a 1600×1066 px. La pared del fondo y la lateral llevan la foto limpia (sin ellas);
-   la lateral se dobla en la esquina real de la foto (x=510). Ellas están 300 px por delante, ajustadas
-   para que, al final del vuelo, la imagen coincida con la foto original. Animación CSS de 4,6 s. */
-.sala { --k: 0.9; --P: 1600px; position: relative; height: max(640px, 100svh); overflow: hidden; background: #121110; color: #f4efe8; }
-.sala__escena { position: absolute; inset: 0; perspective: var(--P); perspective-origin: 50% 50%; }
-.sala__ajuste { position: absolute; left: 50%; top: 50%; width: 1600px; height: 1066px; margin: -533px 0 0 -800px; transform: translate(var(--ax, 0px), var(--ay, 0px)) scale(var(--k)); transform-style: preserve-3d; }
-.sala__camara { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 800px 533px; will-change: transform;
-  transform: translate3d(-200px, 500px, -4600px) rotateX(-58deg) rotateZ(-18deg); }
-.sala.vuela .sala__camara { animation: sala-vuelo 4.6s cubic-bezier(0.55, 0.05, 0.25, 1) forwards; }
-@keyframes sala-vuelo {
-  0% { transform: translate3d(-200px, 500px, -4600px) rotateX(-58deg) rotateZ(-18deg); }
-  45% { transform: translate3d(120px, 260px, -2000px) rotateX(-32deg) rotateY(-14deg) rotateZ(-6deg); }
-  78% { transform: translate3d(40px, 20px, -500px) rotateX(-8deg) rotateY(-5deg) rotateZ(0deg); }
-  100% { transform: none; }
-}
-.sala__camara > * { position: absolute; transform-origin: 0 0; }
-.sala__pared { top: -900px; height: 1966px; background: var(--foto) no-repeat, linear-gradient(180deg, #121111, #2b2b2c 46%); }
-.sala__pared--fondo { left: 510px; width: 1090px; background-position: -510px 900px, 0 0; background-size: 1600px 1066px, 100% 100%; }
-.sala__pared--izq { left: -510px; width: 1020px; transform-origin: 100% 0; transform: rotateY(60deg); background-position: 0 900px, 0 0; background-size: 3200px 1066px, 100% 100%; }
-.sala__pared--der { left: 1600px; width: 1400px; background: linear-gradient(180deg, #121111, #2b2b2c 46%, #29231d 92%, #b98a45 92.2%, #b98a45 92.4%, #141210 92.6%); }
-.sala__suelo { left: -1500px; top: 1066px; width: 1150px; height: 650px; transform: rotateX(90deg) scale(4);
-  background: radial-gradient(22% 30% at 50% 4%, rgba(140, 105, 70, 0.35), transparent 70%), linear-gradient(180deg, #151312, #0d0c0b); }
-/* Ellas: a 300 px de la pared, con la escala que hace que al final coincidan con la foto */
-.sala__jefas { left: 636px; top: 154px; width: 637px; max-width: none; height: 812px; transform: translateZ(300px); }
-.sala__humo { left: 380px; top: 700px; width: 1200px; height: 320px; transform: translateZ(310px);
-  background: radial-gradient(60% 100% at 50% 100%, rgba(18, 16, 15, 0.95) 30%, rgba(18, 16, 15, 0.6) 60%, transparent 90%); }
-/* Texto: aparece cuando el dron llega */
-.sala__capa { position: relative; height: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; pointer-events: none; }
-.sala__texto { pointer-events: auto; max-width: 450px; background: rgba(18, 15, 13, 0.82); border: 1px solid rgba(212, 166, 90, 0.35); border-radius: 26px; padding: clamp(24px, 3vw, 40px); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7); }
-.sala__texto .inicio-seccion__titulo { color: #f4efe8; margin-bottom: 18px; }
-.sala__texto .inicio-esencia__texto { color: #d8cfc4; margin-bottom: 24px; }
-.movimiento .sala__texto { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.9s var(--ease-out); }
-.movimiento .sala.llego .sala__texto { opacity: 1; transform: none; }
-.sala.en-pausa .sala__camara { animation-play-state: paused; }
+/* ---------- 5. LA ESENCIA: Mirian y Lara salen de la gota ----------
+   La gota (ventana) recorta la sala y la parte de abajo de ellas; una segunda copia idéntica de ellas,
+   recortada a su mitad de arriba, va por delante y asoma por encima del borde (efecto «pop-out»).
+   Las dos copias se mueven igual, así que no se nota la unión. */
+.ese { --mx: 0; --my: 0; position: relative; padding: clamp(90px, 11vw, 170px) 0 clamp(70px, 9vw, 130px); overflow: hidden; }
+.ese__grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: clamp(30px, 6vw, 100px); align-items: center; }
+.ese__titulo { font-size: clamp(2.6rem, 6vw, 5.6rem); line-height: 0.98; letter-spacing: -0.035em; margin: 0 0 26px; max-width: 9ch; }
+.ese__texto .inicio-esencia__texto { max-width: 34ch; margin-bottom: 30px; }
+.ese__obra { --W: min(40vw, 540px); position: relative; width: var(--W); aspect-ratio: 1; margin: calc(var(--W) * 0.2) auto 0; }
+.ese__gota, .ese__eco { position: absolute; inset: 0; border-radius: 7% 50% 50% 50%; }
+.ese__gota { overflow: hidden; background: #1b1916; transform: translate(calc(var(--mx) * -6px), calc(var(--my) * -6px)); box-shadow: 0 40px 80px -40px rgba(40, 20, 10, 0.6); }
+.ese__eco { background: linear-gradient(225deg, #ff5611, #ff8a66); transform: translate(calc(26px + var(--mx) * -14px), calc(30px + var(--my) * -14px)); }
+.ese__sala { position: absolute; inset: -8%; background-size: cover; background-position: 32% 50%; transform: translate(calc(var(--mx) * 10px), calc(var(--my) * 8px)); }
+/* Ellas: 88% del ancho, la cabeza por encima del borde de la gota */
+.ese__ellas { position: absolute; left: 4%; top: -19%; width: 92%; max-width: none; height: auto; -webkit-mask: linear-gradient(transparent, #000 5%); mask: linear-gradient(transparent, #000 5%); transform: translate(calc(var(--mx) * -16px), calc(var(--my) * -10px)); }
+.ese__ellas--fuera { clip-path: inset(0 0 52% 0); z-index: 2; pointer-events: none; transform: translate(calc(var(--mx) * -22px), calc(var(--my) * -16px)); } /* = gota + ellas */
+.ese__sombra { position: absolute; left: 10%; right: 10%; bottom: -9%; height: 14%; border-radius: 50%; background: radial-gradient(closest-side, rgba(60, 25, 10, 0.28), transparent); }
+.ese__chispa { position: absolute; z-index: 3; width: 22px; aspect-ratio: 1; background: #d9a752;
+  clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%); }
+.ese__chispa--a { left: -6%; top: 14%; }
+.ese__chispa--b { right: -4%; top: 40%; width: 14px; }
+.ese__chispa--c { left: 18%; bottom: -4%; width: 12px; background: var(--naranja); }
+
+/* Entrada (una vez, al aparecer) */
+.movimiento .ese__gota, .movimiento .ese__eco { transform-origin: 30% 70%; }
+.movimiento .ese:not(.visible) .ese__gota { transform: scale(0.35) rotate(-24deg); opacity: 0; }
+.movimiento .ese:not(.visible) .ese__eco { transform: translate(0, 0) scale(0.3) rotate(-30deg); opacity: 0; }
+.movimiento .ese:not(.visible) .ese__sala { transform: scale(1.25); }
+.movimiento .ese:not(.visible) .ese__ellas { transform: translateY(42%); opacity: 0; }
+.movimiento .ese:not(.visible) .ese__chispa { transform: scale(0) rotate(-90deg); }
+.movimiento .ese__gota { transition: transform 1s cubic-bezier(0.2, 0.9, 0.25, 1), opacity 0.6s ease; }
+.movimiento .ese__eco { transition: transform 1.3s cubic-bezier(0.2, 0.9, 0.25, 1.05) 0.12s, opacity 0.6s ease 0.12s; }
+.movimiento .ese__sala { transition: transform 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s; }
+.movimiento .ese__ellas { transition: transform 1.2s cubic-bezier(0.2, 0.85, 0.2, 1) 0.95s, opacity 0.5s ease 0.95s; }
+.movimiento .ese__chispa { transition: transform 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) 1.1s; }
+.movimiento .ese__chispa--b { transition-delay: 1.25s; }
+.movimiento .ese__chispa--c { transition-delay: 1.4s; }
+/* Tras la entrada, el ratón solo cambia variables: transiciones cortas */
+.ese.listo .ese__gota, .ese.listo .ese__eco, .ese.listo .ese__sala, .ese.listo .ese__ellas { transition: transform 0.25s linear; }
+.movimiento .ese.listo .ese__chispa { animation: brilla 2.8s ease-in-out infinite alternate; }
+.movimiento .ese.listo .ese__chispa--b { animation-delay: -1s; }
+@keyframes brilla { from { opacity: 0.35; } to { opacity: 1; } }
 @media (max-width: 900px) {
-  .sala { height: max(640px, 100svh); }
-  .sala__capa { grid-template-columns: 1fr; align-items: end; padding-bottom: clamp(20px, 4vh, 44px); }
-  .sala__texto { padding: 22px 20px; background: rgba(18, 15, 13, 0.9); }
-  .sala__texto .inicio-esencia__texto { font-size: 1.02rem; margin-bottom: 18px; }
+  .ese__grid { grid-template-columns: 1fr; }
+  .ese__obra { --W: min(78vw, 400px); order: -1; margin: calc(var(--W) * 0.2) auto 20px; }
+  .ese__titulo { max-width: 12ch; }
 }
-/* Sin movimiento: directamente el final */
-.sin-movimiento .sala__camara { transform: none; }
