@@ -29,19 +29,25 @@ function vinea_encolar(): void {
 		)
 	);
 
-	// Portada: script mínimo (inclinación 3D con el ratón y pausa fuera de pantalla).
+	// Portada: estilos y animación de la portada (gota 3D, portal, servicios en horizontal…) y entrada con el logo.
 	if ( is_front_page() ) {
-		$inicio = VINEA_DIR . '/assets/js/inicio.js';
-		wp_enqueue_script(
-			'vinea-inicio',
-			VINEA_URL . '/assets/js/inicio.js',
-			array( 'vinea-sitio' ),
-			file_exists( $inicio ) ? (string) filemtime( $inicio ) : VINEA_VERSION,
-			array(
-				'in_footer' => true,
-				'strategy'  => 'defer',
-			)
-		);
+		foreach ( array( 'portada' => 'portada.css' ) as $id => $f ) {
+			$ruta = VINEA_DIR . '/assets/css/' . $f;
+			wp_enqueue_style( 'vinea-' . $id, VINEA_URL . '/assets/css/' . $f, array( 'vinea' ), file_exists( $ruta ) ? (string) filemtime( $ruta ) : VINEA_VERSION );
+		}
+		foreach ( array( 'entrada' => 'entrada.js', 'portada' => 'portada.js' ) as $id => $f ) {
+			$ruta = VINEA_DIR . '/assets/js/' . $f;
+			wp_enqueue_script(
+				'vinea-' . $id,
+				VINEA_URL . '/assets/js/' . $f,
+				array( 'vinea-sitio' ),
+				file_exists( $ruta ) ? (string) filemtime( $ruta ) : VINEA_VERSION,
+				array(
+					'in_footer' => true,
+					'strategy'  => 'defer',
+				)
+			);
+		}
 	}
 
 	// El tema no usa los estilos de bloques de WordPress en el front.

@@ -101,11 +101,11 @@ await esbuild.build({
 
 // --- JavaScript
 await esbuild.build({
-  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), inicio: path.join(WP, 'fuentes/portada3d.ts') },
+  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), entrada: path.join(WP, 'fuentes/entrada.ts') },
   outdir: path.join(TEMA, 'assets/js'),
   bundle: true, minify: true, format: 'iife', nodePaths: [path.join(WEB, 'node_modules')], target: ['es2020'], logLevel: 'warning',
 });
 
-for (const f of ['assets/css/vinea.css', 'assets/js/sitio.js', 'assets/js/inicio.js']) {
+for (const f of ['assets/css/vinea.css', 'assets/js/sitio.js', 'assets/js/entrada.js']) {
   console.log(f, (fs.statSync(path.join(TEMA, f)).size / 1024).toFixed(1) + ' KB');
 }
