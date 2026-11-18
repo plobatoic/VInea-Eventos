@@ -162,7 +162,7 @@ function vinea_portada_metabox( WP_Post $post ): void {
 function vinea_portada_campos(): array {
 	// clave => [etiqueta, tipo (input|textarea), filas, ayuda]
 	return array(
-		'claim'               => array( 'Claim (texto pequeño sobre el título)', 'input', 1, '' ),
+		'claim'               => array( 'Claim (frase grande de la entrada)', 'input', 1, '' ),
 		'h1'                  => array( 'Título principal (H1)', 'input', 1, '' ),
 		'boton_texto'         => array( 'Botón principal: texto', 'input', 1, '' ),
 		'boton_url'           => array( 'Botón principal: enlace', 'input', 1, 'Por ejemplo /contacto/' ),
