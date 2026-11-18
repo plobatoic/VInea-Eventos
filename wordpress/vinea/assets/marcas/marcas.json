@@ -1,0 +1,74 @@
+[
+ {
+  "f": "wallbox.webp",
+  "w": 289,
+  "h": 67,
+  "nombre": "Wallbox"
+ },
+ {
+  "f": "skoda.webp",
+  "w": 204,
+  "h": 140,
+  "nombre": "Škoda"
+ },
+ {
+  "f": "seat.webp",
+  "w": 176,
+  "h": 140,
+  "nombre": "SEAT"
+ },
+ {
+  "f": "ondas.webp",
+  "w": 106,
+  "h": 140,
+  "nombre": "Ondas"
+ },
+ {
+  "f": "ollerdelmas.webp",
+  "w": 236,
+  "h": 140,
+  "nombre": "Heretat Oller del Mas"
+ },
+ {
+  "f": "mondobert.webp",
+  "w": 370,
+  "h": 80,
+  "nombre": "Mondobert"
+ },
+ {
+  "f": "fusionforenergy.webp",
+  "w": 327,
+  "h": 140,
+  "nombre": "Fusion for Energy"
+ },
+ {
+  "f": "eurocat.webp",
+  "w": 283,
+  "h": 93,
+  "nombre": "Eurecat"
+ },
+ {
+  "f": "eigenmann_veronelli.webp",
+  "w": 400,
+  "h": 104,
+  "nombre": "Eigenmann & Veronelli"
+ },
+ {
+  "f": "bmwmotorrad.webp",
+  "w": 400,
+  "h": 85,
+  "nombre": "BMW Motorrad"
+ },
+ {
+  "f": "amazon.webp",
+  "w": 400,
+  "h": 120,
+  "nombre": "Amazon"
+ },
+ {
+  "f": "acxmusic.webp",
+  "w": 196,
+  "h": 103,
+  "nombre": "ACX Music"
+ }
+]

@@ -145,42 +145,98 @@ $resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galer�
 	</div>
 </section>
 
-<!-- ============ 5. LA ESENCIA DE VINEA ============ -->
-<section class="inicio-esencia" aria-labelledby="esencia-titulo">
-	<div class="contenedor inicio-esencia__grid">
-		<div class="esencia3d" data-tilt>
-			<span class="esencia3d__gota" aria-hidden="true"></span>
-			<div class="inicio-esencia__foto"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 80vw, 40vw', 'alt' => '' ) ); ?></div>
+<!-- ============ 5. LA ESENCIA DE VINEA: plano de dron que baja hasta Mirian y Lara ============ -->
+<section class="dron" data-dron aria-labelledby="esencia-titulo">
+	<div class="dron__fijo">
+		<div class="dron__escena">
+			<div class="dron__camara" data-dron-camara>
+				<div class="dron__plano" data-dron-plano aria-hidden="true">
+					<?php
+					$fotos_dron = array_slice( array_keys( $por_nom ), 40, 34 );
+					$k          = 0;
+					for ( $fila = -2; $fila <= 2; $fila++ ) :
+						for ( $col = -3; $col <= 3; $col++ ) :
+							if ( 0 === $fila && 0 === $col ) {
+								continue;
+							}
+							$nombre = $fotos_dron[ $k++ % max( 1, count( $fotos_dron ) ) ] ?? '';
+							?>
+							<div class="dron__tesela" style="--x:<?php echo (int) $col; ?>;--y:<?php echo (int) $fila; ?>"><?php echo $nombre ? $foto_gal( $nombre ) : ''; // phpcs:ignore ?></div>
+						<?php endfor; ?>
+					<?php endfor; ?>
+				</div>
+				<span class="dron__gota" aria-hidden="true"></span>
+				<div class="dron__foto"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 64vw, 520px' ) ); ?></div>
+				<span class="dron__nube" style="--nx:-28%;--ny:-12%;--nz:700px" aria-hidden="true"></span>
+				<span class="dron__nube" style="--nx:30%;--ny:10%;--nz:1300px" aria-hidden="true"></span>
+			</div>
 		</div>
-		<div>
-			<h2 id="esencia-titulo" class="inicio-seccion__titulo" data-split><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
-			<p class="inicio-esencia__texto" data-reveal><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
-			<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>" data-reveal><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
+		<div class="contenedor dron__capa">
+			<div class="dron__texto" data-dron-texto>
+				<h2 id="esencia-titulo" class="inicio-seccion__titulo"><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
+				<p class="inicio-esencia__texto"><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
+				<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>"><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
+			</div>
 		</div>
 	</div>
 </section>
 
-<!-- ============ 6. EMPRESAS QUE CONFÍAN EN VINEA ============ -->
-<?php if ( $opiniones ) : ?>
+<!-- ============ 6. EMPRESAS QUE CONFÍAN EN VINEA: marcas (como en la web original) y reseñas de Google ============ -->
+<?php
+$marcas_dir = get_template_directory() . '/assets/marcas/';
+$marcas     = file_exists( $marcas_dir . 'marcas.json' ) ? json_decode( file_get_contents( $marcas_dir . 'marcas.json' ), true ) : array(); // phpcs:ignore
+$marca_img  = function ( $m ) {
+	return sprintf( '<img src="%s" width="%d" height="%d" alt="%s" loading="lazy" decoding="async">', esc_url( get_template_directory_uri() . '/assets/marcas/' . $m['f'] ), (int) $m['w'], (int) $m['h'], esc_attr( $m['nombre'] ) );
+};
+$g_logo   = '<svg class="g-logo" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.5 5.8c4.4-4 6.8-10 6.8-17.1z"/><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.2-13.5-10l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>';
+$estrellas = '<span class="estrellas" role="img" aria-label="5 de 5 estrellas">' . str_repeat( '<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>', 5 ) . '</span>';
+$colores   = array( '#1a73e8', '#d93025', '#188038', '#e37400', '#8430ce', '#00796b', '#c5221f', '#3949ab', '#ad1457', '#5f6368' );
+?>
 <section class="inicio-opiniones" aria-labelledby="opiniones-titulo">
 	<div class="contenedor">
 		<h2 id="opiniones-titulo" class="inicio-seccion__titulo inicio-opiniones__titulo" data-split><?php echo esc_html( $v( 'opiniones_titulo', 'Empresas que confían en Vinea' ) ); ?></h2>
-		<ul class="inicio-opiniones__lista">
-			<?php foreach ( $opiniones as $i => $o ) : ?>
-				<li class="tarjeta-opinion" data-reveal style="--d:<?php echo (int) ( ( $i % 3 ) * 80 ); ?>">
-					<figure data-tilt>
-						<blockquote><p><?php echo nl2br( esc_html( str_replace( '\n', "\n", $o['texto'] ?? '' ) ) ); ?></p></blockquote>
-						<figcaption>
-							<span class="tarjeta-opinion__inicial" aria-hidden="true"><?php echo esc_html( mb_substr( $o['autor'] ?? '', 0, 1 ) ); ?></span>
-							<span><strong><?php echo esc_html( $o['autor'] ?? '' ); ?></strong><?php if ( ! empty( $o['fecha'] ) ) : ?><time datetime="<?php echo esc_attr( $o['fecha'] ); ?>"><?php echo esc_html( date_i18n( 'j M Y', strtotime( $o['fecha'] ) ) ); ?></time><?php endif; ?></span>
-						</figcaption>
-					</figure>
+
+		<?php if ( $marcas ) : ?>
+		<?php $mitad = (int) ceil( count( $marcas ) / 2 ); ?>
+		<ul class="marcas" data-reveal="fade" aria-label="Algunas empresas que han confiado en Vinea">
+			<?php for ( $t = 0; $t < $mitad; $t++ ) : ?>
+				<li class="marcas__baldosa" style="--t:<?php echo (int) $t; ?>">
+					<div class="marcas__giro">
+						<span class="marcas__cara"><?php echo $marca_img( $marcas[ $t ] ); // phpcs:ignore ?></span>
+						<?php if ( isset( $marcas[ $t + $mitad ] ) ) : ?><span class="marcas__cara marcas__cara--atras"><?php echo $marca_img( $marcas[ $t + $mitad ] ); // phpcs:ignore ?></span><?php endif; ?>
+					</div>
 				</li>
-			<?php endforeach; ?>
+			<?php endfor; ?>
 		</ul>
+		<?php endif; ?>
+
+		<?php if ( $opiniones ) : ?>
+		<div class="resenas" data-resenas>
+			<div class="resenas__cabeza" data-reveal>
+				<?php echo $g_logo; // phpcs:ignore ?>
+				<div><strong>Reseñas en Google</strong><?php echo $estrellas; // phpcs:ignore ?></div>
+			</div>
+			<ul class="resenas__lista">
+				<?php foreach ( $opiniones as $i => $o ) : ?>
+					<li class="resena" data-reveal style="--d:<?php echo (int) ( ( $i % 3 ) * 80 ); ?>">
+						<article>
+							<header class="resena__cabeza">
+								<span class="resena__avatar" style="--c:<?php echo esc_attr( $colores[ $i % count( $colores ) ] ); ?>" aria-hidden="true"><?php echo esc_html( mb_strtoupper( mb_substr( $o['autor'] ?? '', 0, 1 ) ) ); ?></span>
+								<span class="resena__quien"><strong><?php echo esc_html( $o['autor'] ?? '' ); ?></strong><?php if ( ! empty( $o['fecha'] ) ) : ?><time datetime="<?php echo esc_attr( $o['fecha'] ); ?>"><?php echo esc_html( date_i18n( 'j M Y', strtotime( $o['fecha'] ) ) ); ?></time><?php endif; ?></span>
+								<?php echo str_replace( 'class="g-logo"', 'class="g-logo resena__g"', $g_logo ); // phpcs:ignore ?>
+							</header>
+							<?php echo $estrellas; // phpcs:ignore ?>
+							<p class="resena__texto"><?php echo nl2br( esc_html( str_replace( '\n', "\n", $o['texto'] ?? '' ) ) ); ?></p>
+							<button class="resena__mas" type="button" aria-expanded="false" hidden>Leer más</button>
+						</article>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<?php if ( count( $opiniones ) > 3 ) : ?><p class="resenas__pie"><button class="boton resenas__ver" type="button" data-resenas-ver>Ver más reseñas</button></p><?php endif; ?>
+		</div>
+		<?php endif; ?>
 	</div>
 </section>
-<?php endif; ?>
 
 <!-- ============ 7. CIERRE ============ -->
 <section class="inicio-cierre" aria-label="Nuestra forma de trabajar">

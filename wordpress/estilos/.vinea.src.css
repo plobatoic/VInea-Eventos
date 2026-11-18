@@ -1395,3 +1395,86 @@ body { background: var(--hueso); }
 .con-intro .p3d__escena { animation: p3d-oculto 0s linear 2.1s both; }
 .con-intro.intro-fin .p3d__escena { animation: none; }
 @keyframes p3d-oculto { from { visibility: hidden; } }
+
+/* ---------- 6. EMPRESAS QUE CONFÍAN: muro de marcas en 3D + reseñas de Google ---------- */
+.inicio-opiniones__titulo { text-align: center; margin-inline: auto; }
+.marcas { list-style: none; margin: clamp(30px, 4vw, 56px) 0 clamp(60px, 7vw, 100px); padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(10px, 1.4vw, 20px); }
+.marcas__baldosa { perspective: 900px; aspect-ratio: 4 / 3; }
+.marcas__giro { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.6s var(--ease-out); }
+.movimiento .marcas__giro { animation: marca-gira 12s cubic-bezier(0.65, 0, 0.35, 1) infinite; animation-delay: calc(var(--t) * 0.28s + 1s); }
+.marcas.en-pausa .marcas__giro { animation-play-state: paused; }
+@keyframes marca-gira { 0%, 40% { transform: rotateY(0); } 50%, 90% { transform: rotateY(180deg); } 100% { transform: rotateY(360deg); } }
+.marcas__cara { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: clamp(14px, 1.6vw, 22px); background: #fffdf9;
+  border: 1px solid rgba(31, 21, 19, 0.07); box-shadow: 0 18px 40px -28px rgba(60, 25, 10, 0.45); backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.marcas__cara--atras { transform: rotateY(180deg); }
+.marcas__cara::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%); transform: translateX(-120%); }
+.movimiento .marcas__cara::after { animation: marca-brillo 12s ease-in-out infinite; animation-delay: calc(var(--t) * 0.28s + 1.2s); }
+@keyframes marca-brillo { 0%, 38% { transform: translateX(-120%); } 46%, 100% { transform: translateX(120%); } }
+.marcas__cara img { max-width: 74%; max-height: 52%; width: auto; height: auto; object-fit: contain; filter: grayscale(1) contrast(1.15); opacity: 0.78; transition: filter 0.4s, opacity 0.4s; }
+.marcas__baldosa:hover .marcas__cara img { filter: none; opacity: 1; }
+.marcas__baldosa:hover .marcas__giro { animation-play-state: paused; }
+@media (max-width: 900px) { .marcas { grid-template-columns: repeat(3, 1fr); } }
+
+.resenas__cabeza { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: clamp(24px, 3vw, 40px); }
+.resenas__cabeza .g-logo { width: 40px; height: 40px; }
+.resenas__cabeza strong { display: block; font-size: 1.1rem; font-weight: 600; margin-bottom: 2px; }
+.estrellas { display: inline-flex; gap: 2px; color: #fbbc04; vertical-align: middle; }
+.estrellas svg { width: 18px; height: 18px; fill: currentColor; }
+.resenas__lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.6vw, 22px); align-items: start; columns: auto; }
+.resenas:not(.todas) .resena:nth-child(n + 7) { display: none; }
+.resena article { position: relative; background: #fff; border-radius: 20px; padding: 22px 22px 20px; box-shadow: 0 1px 2px rgba(60, 64, 67, 0.12), 0 14px 36px -24px rgba(60, 25, 10, 0.45);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s; }
+.resena article:hover { transform: translateY(-4px); box-shadow: 0 1px 2px rgba(60, 64, 67, 0.12), 0 26px 50px -26px rgba(60, 25, 10, 0.5); }
+.resena__cabeza { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.resena__avatar { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: #fff; font-weight: 600; font-size: 1.05rem; }
+.resena__quien { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.resena__quien strong { font-weight: 600; font-size: 0.98rem; color: #202124; overflow-wrap: anywhere; }
+.resena__quien time { font-size: 0.82rem; color: #5f6368; }
+.resena__g { width: 20px; height: 20px; margin-left: auto; flex: none; }
+.resena .estrellas svg { width: 16px; height: 16px; }
+.resena__texto { margin: 10px 0 0; font-size: 0.95rem; line-height: 1.6; color: #3c4043; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; line-clamp: 5; overflow: hidden; }
+.resena.abierta .resena__texto { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.resena__mas { margin-top: 8px; padding: 0; border: 0; background: none; font: inherit; font-size: 0.9rem; font-weight: 600; color: #1a73e8; cursor: pointer; }
+.resena__mas:hover { text-decoration: underline; }
+.resena__mas:focus-visible { outline: 2px solid #1a73e8; outline-offset: 3px; border-radius: 4px; }
+.resenas__pie { text-align: center; margin: clamp(26px, 3vw, 40px) 0 0; }
+@media (max-width: 1000px) { .resenas__lista { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) {
+  .resenas__lista { grid-template-columns: 1fr; }
+  .resenas:not(.todas) .resena:nth-child(n + 4) { display: none; }
+}
+
+/* ---------- 5. LA ESENCIA: plano de dron ----------
+   Al bajar, la cámara desciende desde el cielo sobre un mosaico de fotos de eventos y aterriza en
+   Mirian y Lara. Solo transform/opacity, movido por el scroll; sin animación si se reducen movimientos. */
+.dron { --f: min(34vw, 470px); --g: clamp(14px, 1.6vw, 26px); position: relative; height: 320svh; background: linear-gradient(180deg, #f5efe6 0%, #f1e3cf 55%, #f5efe6 100%); }
+.dron__fijo { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.dron__escena { position: absolute; inset: 0; perspective: 1000px; perspective-origin: 50% 40%; }
+.dron__camara { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 50%; will-change: transform; }
+.dron__plano { position: absolute; left: 50%; top: 50%; width: 0; height: 0; will-change: transform, opacity; }
+.dron__tesela { --t: calc(var(--f) * 0.62); position: absolute; width: var(--t); aspect-ratio: 4 / 5; border-radius: 14px; overflow: hidden; background: #e4d6c2;
+  left: calc(var(--x) * (var(--t) + var(--g)) - var(--t) / 2); top: calc(var(--y) * (var(--t) * 1.25 + var(--g)) - var(--t) * 0.625); }
+.dron__tesela img { width: 100%; height: 100%; object-fit: cover; }
+.dron__foto, .dron__gota { position: absolute; left: 50%; top: 50%; width: var(--f); aspect-ratio: 4 / 5; margin: calc(var(--f) * -0.625) 0 0 calc(var(--f) / -2); border-radius: 6% 50% 50% 50% / 5% 40% 40% 40%; }
+.dron__foto { overflow: hidden; background: var(--arena); transform: translateZ(2px); box-shadow: 0 40px 80px -40px rgba(60, 25, 10, 0.55); }
+.dron__foto img { width: 100%; height: 100%; object-fit: cover; }
+.dron__gota { background: linear-gradient(225deg, #ff5611, #ff8a66); transform: translate3d(22px, 26px, -1px); }
+.dron__nube { position: absolute; left: 50%; top: 50%; width: 60vw; height: 34vw; margin: -17vw 0 0 -30vw; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 252, 247, 0.95), rgba(255, 252, 247, 0.55) 45%, transparent);
+  transform: translate3d(var(--nx), var(--ny), var(--nz)); }
+.dron__capa { position: relative; height: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; pointer-events: none; }
+.dron__texto { pointer-events: auto; max-width: 520px; }
+.dron__texto .inicio-seccion__titulo { margin-bottom: 20px; }
+.movimiento .dron__texto { opacity: 0; }
+@media (max-width: 900px) {
+  .dron { --f: min(60vw, 300px); height: 280svh; }
+  .dron__capa { grid-template-columns: 1fr; align-items: end; padding-bottom: clamp(28px, 6vh, 60px); }
+  .dron__texto { background: rgba(245, 239, 230, 0.92); border-radius: 22px; padding: 22px 20px; box-shadow: 0 20px 40px -30px rgba(60, 25, 10, 0.4); }
+  .dron__texto .inicio-esencia__texto { margin-bottom: 18px; font-size: 1.02rem; }
+}
+/* Sin movimiento: la escena final, sin recorrido */
+.sin-movimiento .dron { height: auto; }
+.sin-movimiento .dron__fijo { position: relative; height: max(640px, 100svh); }
+.sin-movimiento .dron__plano, .sin-movimiento .dron__nube { display: none; }
+.sin-movimiento .dron__camara { transform: translateX(22vw); }
+@media (max-width: 900px) { .sin-movimiento .dron__camara { transform: translateY(-20svh); } }

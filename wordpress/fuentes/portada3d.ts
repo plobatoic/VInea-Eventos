@@ -30,4 +30,78 @@ if (hero && movimiento) {
     if (v < 1.01) { tsc = v; pedir(); }
   }, { passive: true });
 }
+
+/* La esencia: plano de dron guiado por el scroll */
+const dron = document.querySelector<HTMLElement>('[data-dron]');
+if (dron && movimiento) {
+  const cam = dron.querySelector<HTMLElement>('[data-dron-camara]')!;
+  const plano = dron.querySelector<HTMLElement>('[data-dron-plano]')!;
+  const texto = dron.querySelector<HTMLElement>('[data-dron-texto]')!;
+  const nubes = [...dron.querySelectorAll<HTMLElement>('.dron__nube')].map((n) => ({ n, z: parseFloat(n.style.getPropertyValue('--nz')) || 0 }));
+  const cl = (v: number) => Math.min(1, Math.max(0, v));
+  const suave = (t: number) => t * t * (3 - 2 * t);
+  const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const LEJOS = 2600;
+  let visible = false, raf = 0;
+  const pinta = () => {
+    raf = 0;
+    const r = dron.getBoundingClientRect();
+    const H = innerHeight, W = innerWidth, movil = W < 900;
+    const p = cl(-r.top / Math.max(1, r.height - H));
+    const e = inOut(cl(p / 0.72));
+    const fin = suave(cl((p - 0.5) / 0.3));
+    const lejos = 1 - e;
+    const z = -(movil ? 1500 : LEJOS) * lejos;
+    const balanceo = Math.sin(p * 18) * 5 * lejos;
+    const tx = movil ? 0 : W * 0.22 * fin - W * 0.07 * lejos;
+    const ty = (movil ? -H * 0.2 * fin : 0) - H * (movil ? 0.3 : 0.34) * lejos + balanceo; // desde lejos, el mosaico centrado
+    cam.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${(60 * lejos).toFixed(2)}deg) rotateZ(${(-16 * lejos).toFixed(2)}deg)`;
+    plano.style.opacity = (1 - suave(cl((p - 0.42) / 0.3))).toFixed(3);
+    for (const { n, z: nz } of nubes) {
+      const ef = z + nz; // distancia de la nube a la cámara (1000 = la cámara)
+      n.style.opacity = (0.95 * cl((750 - ef) / 450)).toFixed(3);
+    }
+    const k = suave(cl((p - 0.66) / 0.2));
+    texto.style.opacity = k.toFixed(3);
+    texto.style.transform = `translate3d(0, ${((1 - k) * 34).toFixed(1)}px, 0)`;
+  };
+  const pedir = () => { if (!raf) raf = requestAnimationFrame(pinta); };
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) pedir(); }, { rootMargin: '200px' }).observe(dron);
+  addEventListener('scroll', () => { if (visible) pedir(); }, { passive: true });
+  addEventListener('resize', pedir, { passive: true });
+  pinta();
+}
+
+/* Reseñas de Google: «Leer más» en las largas y «Ver más reseñas» */
+const resenas = document.querySelector<HTMLElement>('[data-resenas]');
+if (resenas) {
+  const marcarLargas = () => resenas.querySelectorAll<HTMLElement>('.resena').forEach((r) => {
+    const t = r.querySelector<HTMLElement>('.resena__texto');
+    const b = r.querySelector<HTMLButtonElement>('.resena__mas');
+    if (!t || !b || r.classList.contains('abierta')) return;
+    b.hidden = t.scrollHeight <= t.clientHeight + 2;
+  });
+  resenas.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('.resena__mas');
+    if (b) {
+      const r = b.closest('.resena')!;
+      const abierta = r.classList.toggle('abierta');
+      b.setAttribute('aria-expanded', String(abierta));
+      b.textContent = abierta ? 'Leer menos' : 'Leer más';
+      return;
+    }
+    const ver = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-resenas-ver]');
+    if (ver) {
+      resenas.classList.add('todas');
+      ver.closest('.resenas__pie')?.remove();
+      requestAnimationFrame(marcarLargas);
+    }
+  });
+  marcarLargas();
+  window.addEventListener('resize', marcarLargas, { passive: true });
+  document.fonts?.ready.then(marcarLargas);
+}
+
+/* Pausar el muro de marcas cuando no se ve */
+document.querySelectorAll<HTMLElement>('.marcas').forEach((el) => io.observe(el));
 export {};
