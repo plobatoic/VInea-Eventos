@@ -153,7 +153,14 @@ $resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galer√
 <section class="ese" data-ese aria-labelledby="esencia-titulo">
 	<figure class="ese__foto">
 		<div class="ese__telon">
-			<img src="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-820.webp' ); ?> 820w, <?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?> 1400w" sizes="(max-width: 900px) 100vw, 62vw" width="1400" height="1867" alt="Lara y Mirian, fundadoras de Vinea Eventos" loading="lazy" decoding="async">
+			<img class="ese__a" src="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-820.webp' ); ?> 820w, <?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?> 1400w" sizes="(max-width: 900px) 100vw, 62vw" width="1400" height="1867" alt="Lara y Mirian, fundadoras de Vinea Eventos" loading="lazy" decoding="async">
+			<!-- La gota cae, hace ondas y abre una ventana con la otra foto; luego se cierra y vuelve a subir -->
+			<div class="ese__ventana" aria-hidden="true">
+				<img src="<?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'premios-ondas-1000.webp' ); ?> 1000w, <?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?> 1600w" sizes="(max-width: 900px) 100vw, 62vw" width="1600" height="1066" alt="" loading="lazy" decoding="async">
+			</div>
+			<span class="ese__onda" aria-hidden="true"></span>
+			<span class="ese__onda ese__onda--2" aria-hidden="true"></span>
+			<span class="ese__cae" aria-hidden="true"></span>
 		</div>
 	</figure>
 	<div class="contenedor ese__capa">

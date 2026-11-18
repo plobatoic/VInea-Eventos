@@ -35,9 +35,10 @@ if (hero && movimiento) {
 const ese = document.querySelector<HTMLElement>('[data-ese]');
 if (ese) {
   const io2 = new IntersectionObserver(([en]) => {
-    if (en.isIntersecting) { ese.classList.add('visible'); io2.disconnect(); }
+    if (en.isIntersecting) { ese.classList.add('visible'); io2.disconnect(); setTimeout(() => ese.classList.add('ciclo'), 1800); }
   }, { threshold: 0.25 });
   io2.observe(ese);
+  io.observe(ese); // pausa la transición cuando no se ve
 }
 
 /* Reseñas de Google: «Leer más» en las largas y «Ver más reseñas» */
