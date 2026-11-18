@@ -45,24 +45,39 @@ $servicios = (array) $v( 'servicios', array() );
 $opiniones = (array) $v( 'opiniones', array() );
 $abanico   = array_values( array_filter( array_merge( array( $v( 'conciencia_imagen' ) ), array_slice( $momentos, 0, 3 ) ) ) );
 $anillo    = $galeria['anillo'];
-$resto     = array_values( array_diff( array_keys( $por_nom ), $anillo ) );
+$cara      = array_values( array_filter( array_merge( array_map( $url_de, (array) $v( 'montaje', array() ) ), $momentos ) ) );
+$resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galería
 ?>
 
-<!-- ============ 1. ENTRADA: anillo 3D de fotos ============ -->
-<section class="h3d" data-h3d aria-labelledby="hero-titulo">
-	<div class="h3d__escena" aria-hidden="true">
-		<div class="h3d__anillo" style="--n:<?php echo count( $anillo ); ?>">
-			<?php foreach ( $anillo as $i => $nombre ) : ?>
-				<figure class="h3d__foto" style="--i:<?php echo (int) $i; ?>"><?php echo $foto_gal( $nombre, $i < 6 ? 'eager' : 'lazy' ); // phpcs:ignore ?></figure>
-			<?php endforeach; ?>
+<!-- ============ 1. ENTRADA: la gota de Vinea en 3D ============ -->
+<section class="p3d" data-h3d aria-labelledby="hero-titulo">
+	<div class="p3d__fondo" aria-hidden="true"></div>
+	<div class="contenedor p3d__grid">
+		<div class="p3d__texto">
+			<h1 id="hero-titulo" class="p3d__h1"><?php echo esc_html( $v( 'h1', 'Agencia de eventos en Barcelona para empresas e instituciones' ) ); ?></h1>
+			<p class="p3d__claim"><?php echo $claim; // phpcs:ignore -- escapado arriba. ?></p>
+			<a class="boton boton--naranja p3d__boton" href="<?php echo esc_url( $v( 'boton_url', '/contacto/' ) ); ?>"><?php echo esc_html( $v( 'boton_texto', 'cuéntanos tu idea' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
+		</div>
+		<div class="p3d__escena" aria-hidden="true">
+			<div class="p3d__sombra"></div>
+			<div class="p3d__giro"><div class="p3d__entra"><div class="p3d__mundo">
+				<span class="p3d__aro p3d__aro--a"></span>
+				<span class="p3d__aro p3d__aro--b"></span>
+				<div class="p3d__gota">
+					<?php for ( $k = 0; $k < 14; $k++ ) : ?><span class="p3d__capa" style="--k:<?php echo (int) $k; ?>"></span><?php endfor; ?>
+					<div class="p3d__cara">
+						<?php foreach ( array_slice( $cara, 0, 4 ) as $i => $foto ) : ?>
+							<div class="p3d__foto" style="--i:<?php echo (int) $i; ?>"><?php $img( $foto, 'large', array( 'sizes' => '(max-width: 900px) 60vw, 460px', 'alt' => '', 'prioridad' => 0 === $i ) ); ?></div>
+						<?php endforeach; ?>
+						<span class="p3d__brillo"></span>
+					</div>
+				</div>
+				<?php foreach ( array( 'a', 'b', 'c' ) as $m ) : ?>
+					<div class="p3d__mini p3d__mini--<?php echo esc_attr( $m ); ?>"><div class="p3d__mini-in"><?php for ( $k = 0; $k < 4; $k++ ) : ?><span style="--k:<?php echo (int) $k; ?>"></span><?php endfor; ?></div></div>
+				<?php endforeach; ?>
+			</div></div></div>
 		</div>
 	</div>
-	<div class="h3d__texto contenedor">
-		<h1 id="hero-titulo" class="h3d__h1"><?php echo esc_html( $v( 'h1', 'Agencia de eventos en Barcelona para empresas e instituciones' ) ); ?></h1>
-		<p class="h3d__claim"><?php echo $claim; // phpcs:ignore -- escapado arriba. ?></p>
-		<a class="boton boton--naranja h3d__boton" href="<?php echo esc_url( $v( 'boton_url', '/contacto/' ) ); ?>"><?php echo esc_html( $v( 'boton_texto', 'cuéntanos tu idea' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
-	</div>
-	<div class="h3d__bajar" aria-hidden="true"><span></span></div>
 </section>
 
 <!-- ============ 2. LEMA ============ -->
