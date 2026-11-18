@@ -1,0 +1,173 @@
+/* ==========================================================================
+   TEMA 2 — Vinea en 3D. Cálido (crema + vino) con el naranja de la marca.
+   Solo se animan transform y opacity: lo mueve la tarjeta gráfica, sin tirones.
+   ========================================================================== */
+:root {
+  --hueso: #f5efe6;
+  --papel: #fffaf3;
+  --arena: #ece2d1;
+  --tinta: #1f1513;
+  --tinta-2: #4a3c36;
+  --noche: #2a1311;
+  --noche-2: #3a1b18;
+  --vino: #5b1f1b;
+  --gota-radio: 9% 50% 50% 50%; /* la gota del logo como border-radius (sin máscaras) */
+}
+body { background: var(--hueso); }
+.seccion--oscura, .pie { background: var(--noche); }
+.pie { background: radial-gradient(80% 60% at 80% 0%, #4a1c18 0%, var(--noche) 60%); }
+
+/* ---------- ENTRADA CON EL LOGO ---------- */
+.intro { display: none; }
+.con-intro .intro {
+  display: grid; place-items: center; position: fixed; inset: 0; z-index: 10000; background: var(--hueso); cursor: pointer;
+  animation: intro-fuera 0.5s ease 2.2s forwards;
+}
+.con-intro.intro-fin .intro { animation: intro-fuera 0.35s ease forwards; }
+.intro__logo { position: relative; width: min(74vw, 760px); aspect-ratio: 1353 / 435; }
+.intro__logo .logo { width: 100%; height: 100%; color: var(--tinta); overflow: visible; }
+.intro__logo .logo__gota { opacity: 0; }
+.intro__logo .logo__letra { transform-box: fill-box; transform-origin: 50% 100%; animation: intro-letra 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.55s + var(--k) * 0.07s) both, intro-letra-fuera 0.3s ease 1.65s forwards; }
+.intro__gota {
+  position: absolute; left: 0.81%; top: 2.3%; width: 30.45%; aspect-ratio: 1; border-radius: var(--gota-radio);
+  background: linear-gradient(225deg, #ff5611 0%, #ff6a33 45%, #ff8a66 100%); will-change: transform;
+  transform-origin: 50% 50%; animation: intro-gota 2.3s linear both;
+}
+.intro__saltar { position: absolute; bottom: 28px; left: 50%; translate: -50% 0; font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gris); }
+@keyframes intro-gota {
+  0% { transform: translateY(-110vh) scale(0.8, 1.25); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  22% { transform: translateY(0) scale(1.18, 0.82); animation-timing-function: ease-out; }
+  29% { transform: translateY(-9%) scale(0.95, 1.06); animation-timing-function: ease-in; }
+  36% { transform: translateY(0) scale(1.03, 0.98); animation-timing-function: ease-out; }
+  42% { transform: none; }
+  70% { transform: rotate(0deg) scale(1); animation-timing-function: cubic-bezier(0.7, 0, 0.9, 0.4); }
+  100% { transform: rotate(-25deg) scale(46); }
+}
+@keyframes intro-letra-fuera { to { opacity: 0; transform: translateY(-20%); } }
+@keyframes intro-letra { from { opacity: 0; transform: translateY(70%) rotate(6deg); } }
+@keyframes intro-fuera { to { opacity: 0; visibility: hidden; } }
+/* El contenido entra justo cuando se abre la gota */
+.con-intro .h3d__texto > *, .con-intro .h3d__foto img { animation-delay: 2.25s !important; }
+
+/* ---------- 1. ANILLO 3D DE FOTOS ---------- */
+.h3d { --mx: 0; --my: 0; --sc: 0; position: relative; height: max(640px, min(100svh, 980px)); overflow: hidden; perspective: 2200px; perspective-origin: 50% 20%;
+  background: radial-gradient(70% 60% at 50% 45%, #fffaf3 0%, var(--hueso) 55%, #efe4d3 100%); }
+.h3d::after { content: ''; position: absolute; inset: auto 0 0 0; height: 12%; background: linear-gradient(transparent, var(--hueso)); pointer-events: none; z-index: 1; }
+.h3d__escena { position: absolute; inset: 44% 0 0 0; display: grid; place-items: center; transform-style: preserve-3d;
+  transform: translateY(calc(var(--sc) * -8%)) rotateX(calc(9deg + var(--my) * 6deg + var(--sc) * 14deg)) rotateY(calc(var(--mx) * 14deg)) scale(calc(1 - var(--sc) * 0.12)); }
+.h3d__anillo { --w: clamp(100px, 10.5vw, 175px); --r: calc(var(--w) * 2.9); position: relative; width: var(--w); aspect-ratio: 3 / 4; transform-style: preserve-3d; animation: anillo 70s linear infinite; }
+.h3d__foto { position: absolute; inset: 0; margin: 0; border-radius: 18px; overflow: hidden; background: var(--arena);
+  transform: rotateY(calc(var(--i) * 360deg / var(--n))) translateZ(var(--r)); }
+.h3d__foto img { width: 100%; height: 100%; object-fit: cover; }
+@keyframes anillo { to { transform: rotateY(-360deg); } }
+.h3d.en-pausa .h3d__anillo { animation-play-state: paused; }
+.h3d__texto { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; padding-top: clamp(118px, 15vh, 150px); pointer-events: none; }
+.h3d__texto::before { content: ''; position: absolute; left: 50%; top: 27%; width: min(1000px, 100vw); height: 40%; translate: -50% -50%; z-index: -1;
+  background: radial-gradient(closest-side, rgba(245, 239, 230, 0.94), rgba(245, 239, 230, 0.75) 55%, transparent); }
+.h3d__h1 { font-family: var(--ff-texto); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--naranja-texto); margin: 0 0 18px; }
+.h3d__claim { font-family: var(--ff-display); font-size: clamp(2.4rem, 5.2vw, 5rem); line-height: 1; letter-spacing: -0.035em; margin: 0; max-width: 17ch; color: var(--tinta); }
+.h3d__claim em { font-style: italic; color: var(--naranja-texto); }
+.h3d__boton { margin-top: clamp(24px, 4vh, 38px); pointer-events: auto; }
+.h3d__bajar { display: none; position: absolute; bottom: 22px; left: 50%; translate: -50% 0; z-index: 2; width: 26px; height: 42px; border-radius: 20px; box-shadow: inset 0 0 0 2px var(--tinta); }
+.h3d__bajar span { position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: var(--naranja); }
+.movimiento .h3d__bajar span { animation: rueda 1.8s ease-in-out infinite; }
+@keyframes rueda { 50% { transform: translateY(12px); opacity: 0.3; } }
+.movimiento .h3d__texto > * { animation: sube 0.9s var(--ease-out) both; }
+.movimiento .h3d__claim { animation-delay: 0.08s; }
+.movimiento .h3d__boton { animation-delay: 0.16s; }
+.movimiento .h3d__foto img { animation: escena-entra 1.4s var(--ease-out) both; } /* en la foto, no en la escena: una opacidad en la escena aplana el 3D */
+@keyframes escena-entra { from { opacity: 0; } }
+@keyframes sube { from { opacity: 0; transform: translateY(18px); } }
+@media (max-width: 700px) {
+  .h3d { height: max(600px, 92svh); }
+  .h3d__escena { inset: 46% 0 0 0; }
+  .h3d__anillo { --w: 92px; }
+  .h3d__claim { font-size: clamp(2.2rem, 10vw, 3rem); }
+}
+
+/* ---------- 3. SERVICIOS: tarjetas con profundidad ---------- */
+.vineta--3d { --rx: 0deg; --ry: 0deg; position: relative; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform 0.5s var(--ease-out), box-shadow 0.4s; background: transparent; }
+.vineta--3d:hover { transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-6px); background: transparent; box-shadow: none; }
+.vineta__fondo { position: absolute; inset: 0; border-radius: 30px; background: var(--papel); box-shadow: 0 30px 60px -36px rgba(60, 25, 10, 0.5); opacity: 0; transform: translateZ(-30px); transition: opacity 0.4s; }
+.vineta--3d:hover .vineta__fondo { opacity: 1; }
+.vineta--3d .vineta__foto { -webkit-mask: none; mask: none; border-radius: var(--gota-radio); transform: translateZ(40px); box-shadow: 16px 18px 0 -6px var(--naranja); }
+.vineta--3d .vineta__num, .vineta--3d .vineta__titulo { transform: translateZ(30px); }
+.vineta--3d .vineta__texto, .vineta--3d .vineta__mas { transform: translateZ(18px); }
+
+/* ---------- MURO 3D DE FOTOS ---------- */
+.muro { position: relative; height: clamp(520px, 75vw, 980px); overflow: hidden; perspective: 1600px; background: var(--noche); contain: paint; }
+.muro::before, .muro::after { content: ''; position: absolute; left: 0; right: 0; height: 16%; z-index: 1; pointer-events: none; }
+.muro::before { top: 0; background: linear-gradient(var(--hueso), rgba(245, 239, 230, 0)); }
+.muro::after { bottom: 0; background: linear-gradient(rgba(245, 239, 230, 0), var(--hueso)); }
+.muro__plano { position: absolute; inset: -22% -12%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; transform: rotateX(32deg) rotateZ(-12deg); transform-style: preserve-3d; }
+.muro__col { display: flex; flex-direction: column; gap: 16px; will-change: transform; animation: muro var(--v) linear infinite var(--sentido); }
+.muro__col img { width: 100%; height: auto; border-radius: 14px; background: var(--noche-2); }
+@keyframes muro { to { transform: translateY(-50%); } }
+.muro.en-pausa .muro__col { animation-play-state: paused; }
+@media (max-width: 760px) { .muro__plano { grid-template-columns: repeat(3, 1fr); inset: -20% -30%; } .muro__col:nth-child(n + 4) { display: none; } }
+
+/* ---------- 4. CONCIENCIA: abanico de fotos ---------- */
+.inicio-conciencia { padding: clamp(80px, 10vw, 140px) var(--gutter) 0; }
+.abanico { margin: 0; }
+.abanico__cartas { position: relative; height: clamp(320px, 34vw, 460px); perspective: 1200px; }
+.abanico__carta { position: absolute; left: 50%; top: 50%; width: 56%; aspect-ratio: 4 / 3; margin: -21% 0 0 -28%; border-radius: 20px; overflow: hidden; border: 6px solid var(--papel); box-shadow: 0 30px 60px -30px rgba(40, 10, 0, 0.55);
+  transform: rotate(0deg); transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1); transition-delay: calc(var(--k) * 70ms); }
+.abanico__carta img { width: 100%; height: 100%; object-fit: cover; }
+.abanico.visible .abanico__carta:nth-child(1) { transform: translate(-34%, -14%) rotate(-11deg); }
+.abanico.visible .abanico__carta:nth-child(2) { transform: translate(30%, -22%) rotate(7deg); }
+.abanico.visible .abanico__carta:nth-child(3) { transform: translate(-22%, 30%) rotate(5deg); }
+.abanico.visible .abanico__carta:nth-child(4) { transform: translate(34%, 22%) rotate(-6deg); }
+.abanico__carta:hover { z-index: 5; }
+.abanico.visible .abanico__carta:hover { transform: translate(var(--hx, 0), var(--hy, 0)) scale(1.06) rotate(0deg) !important; }
+.sin-movimiento .abanico .abanico__carta:nth-child(1) { transform: translate(-34%, -14%) rotate(-11deg); }
+.sin-movimiento .abanico .abanico__carta:nth-child(2) { transform: translate(30%, -22%) rotate(7deg); }
+.sin-movimiento .abanico .abanico__carta:nth-child(3) { transform: translate(-22%, 30%) rotate(5deg); }
+.sin-movimiento .abanico .abanico__carta:nth-child(4) { transform: translate(34%, 22%) rotate(-6deg); }
+.inicio-conciencia__pie { text-align: center; margin-top: 28px; }
+
+/* ---------- 5. ESENCIA con profundidad ---------- */
+.esencia3d { --rx: 0deg; --ry: 0deg; position: relative; transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform 0.6s var(--ease-out); }
+.esencia3d .inicio-esencia__foto { -webkit-mask: none; mask: none; border-radius: var(--gota-radio); transform: translateZ(40px); box-shadow: 0 40px 80px -40px rgba(60, 25, 10, 0.6); }
+.esencia3d__gota { position: absolute; width: 38%; aspect-ratio: 1; right: -6%; bottom: -6%; border-radius: var(--gota-radio); background: linear-gradient(225deg, #ff5611, #ff8a66); transform: translateZ(80px); }
+.movimiento .esencia3d__gota { animation: flota 6s ease-in-out infinite alternate; }
+
+/* ---------- 6. OPINIONES con profundidad ---------- */
+.tarjeta-opinion figure { --rx: 0deg; --ry: 0deg; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform 0.5s var(--ease-out), box-shadow 0.4s; }
+.tarjeta-opinion figure:hover { box-shadow: 0 30px 60px -34px rgba(60, 25, 10, 0.45); }
+
+/* ---------- 7. CIERRE con gotas flotando ---------- */
+.inicio-cierre { position: relative; overflow: hidden; }
+.inicio-cierre__gota { position: absolute; border-radius: var(--gota-radio); background: linear-gradient(225deg, #ff5611, #ff8a66); opacity: 0.9; }
+.inicio-cierre__gota--a { width: clamp(60px, 8vw, 120px); aspect-ratio: 1; left: 6%; top: 18%; }
+.inicio-cierre__gota--b { width: clamp(36px, 4vw, 64px); aspect-ratio: 1; right: 9%; bottom: 16%; transform: rotate(90deg); }
+.movimiento .inicio-cierre__gota--a { animation: flota 7s ease-in-out infinite alternate; }
+.movimiento .inicio-cierre__gota--b { animation: flota 5s ease-in-out -2s infinite alternate-reverse; }
+@keyframes flota { from { transform: translateY(-10px) rotate(-4deg); } to { transform: translateY(12px) rotate(4deg); } }
+
+/* ---------- PÁGINAS INTERIORES: foto de cabecera en 3D ---------- */
+.cab__foto { -webkit-mask: none !important; mask: none !important; border-radius: var(--gota-radio); overflow: hidden;
+  transform: perspective(1100px) rotateY(-10deg) rotateX(3deg); box-shadow: 22px 24px 0 -6px var(--naranja), 0 50px 90px -50px rgba(60, 25, 10, 0.6); transition: transform 0.8s var(--ease-out); }
+.cab__foto:hover { transform: perspective(1100px) rotateY(-3deg) rotateX(1deg); }
+.movimiento .cab__foto { animation: cab-entra 1.1s var(--ease-out) both; }
+@keyframes cab-entra { from { opacity: 0; transform: perspective(1100px) rotateY(-32deg) rotateX(8deg) translateX(40px); } }
+.contenido figure { transition: transform 0.6s var(--ease-out), box-shadow 0.5s; }
+.contenido figure:hover { transform: perspective(900px) rotateY(-4deg) translateY(-4px); box-shadow: 0 30px 60px -36px rgba(60, 25, 10, 0.5); }
+.tarjeta-p__foto { border-radius: 22px; }
+.banda { background: linear-gradient(120deg, #ff5611, #ff7a45); }
+
+@media (max-width: 760px) {
+  .esencia3d__gota { right: 0; bottom: -4%; width: 30%; }
+  .abanico__cartas { height: 330px; }
+  .abanico__carta { width: 62%; margin: -23% 0 0 -31%; }
+  .abanico.visible .abanico__carta:nth-child(1), .sin-movimiento .abanico .abanico__carta:nth-child(1) { transform: translate(-22%, -26%) rotate(-9deg); }
+  .abanico.visible .abanico__carta:nth-child(2), .sin-movimiento .abanico .abanico__carta:nth-child(2) { transform: translate(22%, -12%) rotate(6deg); }
+  .abanico.visible .abanico__carta:nth-child(3), .sin-movimiento .abanico .abanico__carta:nth-child(3) { transform: translate(-16%, 22%) rotate(4deg); }
+  .abanico.visible .abanico__carta:nth-child(4), .sin-movimiento .abanico .abanico__carta:nth-child(4) { transform: translate(20%, 32%) rotate(-5deg); }
+  .inicio-cierre__gota--a { width: 40px; left: 5%; top: 5%; }
+  .inicio-cierre__gota--b { width: 28px; right: 5%; bottom: 4%; }
+}
+.inicio-cierre .contenedor--estrecho { position: relative; z-index: 1; }
+/* Mientras se ve la entrada del logo, el anillo no se pinta (ahorra trabajo al móvil) */
+.con-intro .h3d__escena { animation: aparece 0s linear 2.1s both; }
+.con-intro.intro-fin .h3d__escena { animation: none; }
+@keyframes aparece { from { visibility: hidden; } }

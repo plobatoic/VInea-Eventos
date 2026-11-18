@@ -17,6 +17,16 @@ $tema = get_template_directory_uri();
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
+<?php if ( is_front_page() ) : ?>
+<script>(function(){var d=document.documentElement;try{if(sessionStorage.getItem('vinea-intro')||d.classList.contains('sin-movimiento')){d.classList.add('sin-intro')}else{sessionStorage.setItem('vinea-intro','1');d.classList.add('con-intro')}}catch(e){d.classList.add('sin-intro')}})();</script>
+<div class="intro" aria-hidden="true" onclick="document.documentElement.classList.add('intro-fin')">
+	<div class="intro__logo">
+		<?php echo file_get_contents( get_template_directory() . '/partes/logo-animado.svg' ); // phpcs:ignore -- SVG propio del tema. ?>
+		<span class="intro__gota"></span>
+	</div>
+	<span class="intro__saltar">Saltar</span>
+</div>
+<?php endif; ?>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
 <div class="progreso" aria-hidden="true"></div>
 

@@ -29,8 +29,8 @@ function vinea_encolar(): void {
 		)
 	);
 
-	// La portada ya no necesita JavaScript propio (todo es CSS): no se carga inicio.js.
-	if ( false && is_front_page() ) {
+	// Portada: script mínimo (inclinación 3D con el ratón y pausa fuera de pantalla).
+	if ( is_front_page() ) {
 		$inicio = VINEA_DIR . '/assets/js/inicio.js';
 		wp_enqueue_script(
 			'vinea-inicio',

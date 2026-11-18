@@ -77,7 +77,7 @@ css += bloque('src/components/TarjetaServicio.astro');
 css += bloque('src/components/TarjetaProyecto.astro');
 css += bloque('src/components/Cabecera.astro');
 css += bloque('src/components/Pie.astro');
-css += bloque('src/pages/index.astro', '.pg-inicio');
+// (estilos de la portada antigua ya no se incluyen)
 css += bloque('src/pages/servicios/index.astro', '.pg-pagina');
 css += bloque('src/pages/servicios/[slug].astro', '.pg-servicio');
 css += bloque('src/pages/proyectos/index.astro', '.pg-proyectos');
@@ -85,6 +85,7 @@ css += bloque('src/pages/proyectos/[slug].astro', '.pg-proyecto');
 css += bloque('src/pages/contacto.astro', '.pg-contacto');
 css += bloque('src/pages/404.astro', '.pg-404');
 css += fs.readFileSync(path.join(WP, 'estilos/wp.css'), 'utf8');
+css += fs.readFileSync(path.join(WP, 'estilos/tema2.css'), 'utf8');
 // Dentro de un ámbito, los selectores que empiezan por .movimiento/.portal-animado/html deben ir delante del ámbito
 css = css.replace(/(\.pg-[a-z0-9-]+) \{\n([\s\S]*?)\n\}\n/g, (todo, ambito, cuerpo) =>
   `${ambito} {\n${cuerpo.replace(/(^|\n|,)\s*(\.movimiento|\.sin-movimiento|\.portal-animado|\.gota-3d|\.pista-horizontal|\.menu-abierto|html(?:[:.\[][^\s,{]*)?)\s+/g, (m, sep, raiz) => `${sep} ${raiz} & `)}\n}\n`);
@@ -100,7 +101,7 @@ await esbuild.build({
 
 // --- JavaScript
 await esbuild.build({
-  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), inicio: path.join(WP, 'fuentes/inicio-wp.ts') },
+  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), inicio: path.join(WP, 'fuentes/portada3d.ts') },
   outdir: path.join(TEMA, 'assets/js'),
   bundle: true, minify: true, format: 'iife', nodePaths: [path.join(WEB, 'node_modules')], target: ['es2020'], logLevel: 'warning',
 });
