@@ -274,64 +274,60 @@ body { background: var(--hueso); }
   .resenas:not(.todas) .resena:nth-child(n + 4) { display: none; }
 }
 
-/* ---------- 5. LA ESENCIA: paseo por una galería en 3D ----------
-   Pasillo (paredes, suelo, techo y fondo) en CSS 3D. Las paredes son planos de color pintados a 1/4 de
-   tamaño y ampliados (pesan muy poco); los cuadros son elementos aparte, nítidos. La cámara avanza con
-   el scroll (solo transform). Paleta de galería: beige cálido y carbón, con el naranja de Vinea. */
-.sala { --W: max(1500px, 118vw); --H: 1050px; --D: 4400px; position: relative; height: 420svh; background: #e9dfd1; }
-.sala__fijo { position: sticky; top: 0; height: 100svh; overflow: hidden; background: #e9dfd1; }
-.sala__escena { position: absolute; inset: 0; perspective: 620px; perspective-origin: 50% 46%; }
+/* ---------- 5. LA ESENCIA: plano de dron hasta Mirian y Lara ----------
+   Mundo en px: suelo en y=0 (y hacia abajo), ellas en z=0, pared del fondo en z=-600.
+   La sala mide 2400 × 1000 × 2200. Las superficies lisas se pintan pequeñas y se amplían (pesan poco). */
+.sala { position: relative; height: 440svh; background: #0f0c0a; color: #f4efe8; }
+.sala__fijo { position: sticky; top: 0; height: 100svh; overflow: hidden; background: radial-gradient(80% 60% at 50% 30%, #2a1d16, #0f0c0a 70%); }
+.sala__escena { position: absolute; inset: 0; perspective: 800px; perspective-origin: 50% 50%; }
 .sala__mundo { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
-.sala__mundo > * { position: absolute; left: 0; top: 0; }
-.sala__muro, .sala__suelo, .sala__techo, .sala__fondo { will-change: transform; }
-.sala__muro { width: calc(var(--D) / 4); height: calc(var(--H) / 4); margin-top: calc(var(--H) / -8); transform-origin: 0 50%;
-  background: linear-gradient(180deg, #efe7dc 0%, #e8ddcf 70%, #d9ccba 100%),
-    repeating-linear-gradient(90deg, rgba(43, 37, 34, 0.05) 0 1px, transparent 1px 110px); background-blend-mode: multiply; }
-.sala__muro--izq { transform: translateX(calc(var(--W) / -2)) rotateY(90deg) scale(4); }
-.sala__muro--der { transform: translateX(calc(var(--W) / 2)) rotateY(90deg) scale(4); background-color: #e3d7c7; }
-.sala__suelo, .sala__techo { width: calc(var(--W) / 4); height: calc(var(--D) / 4); margin-left: calc(var(--W) / -8); transform-origin: 50% 0; }
-.sala__suelo { transform: translateY(calc(var(--H) / 2)) rotateX(-90deg) scale(4);
-  background: linear-gradient(180deg, rgba(43, 37, 34, 0.0), rgba(43, 37, 34, 0.18)), repeating-linear-gradient(90deg, #cdb79a 0 22px, #c6af90 22px 23px, #d2bea3 23px 45px, #c6af90 45px 46px); }
-.sala__techo { transform: translateY(calc(var(--H) / -2)) rotateX(-90deg) scale(4);
-  background: repeating-linear-gradient(180deg, #f4eee6 0 60px, #fffaf2 60px 66px, #f4eee6 66px 120px); }
-.sala__fondo { width: calc(var(--W) / 4); height: calc(var(--H) / 4); margin: calc(var(--H) / -8) 0 0 calc(var(--W) / -8);
-  transform: translateZ(calc(var(--D) * -1)) scale(4); background: radial-gradient(60% 70% at 50% 45%, #fff6ea, #eadfce 70%); }
-.sala__cuadro { margin: 0; width: 330px; aspect-ratio: 4 / 5; margin: -230px 0 0 -165px; padding: 14px; background: #fffdf9; box-shadow: 0 0 0 5px #2b2522, 0 30px 50px -20px rgba(43, 37, 34, 0.55); }
-.sala__cuadro img { width: 100%; height: 100%; object-fit: cover; }
-.sala__cuadro::before { content: ''; position: absolute; left: -45%; right: -45%; top: -55%; height: 120%; z-index: -1; pointer-events: none;
-  background: radial-gradient(50% 50% at 50% 30%, rgba(255, 236, 205, 0.9), transparent 70%); }
-.sala__cuadro--izq { transform: translate3d(calc(var(--W) / -2 + 3px), 0, calc(var(--z) * -1)) rotateY(90deg); }
-.sala__cuadro--der { transform: translate3d(calc(var(--W) / 2 - 3px), 0, calc(var(--z) * -1)) rotateY(-90deg); }
-.sala__cuadro--final { width: 560px; margin: -360px 0 0 -280px; padding: 0; overflow: hidden; border-radius: 6% 50% 50% 50% / 5% 40% 40% 40%;
-  box-shadow: 26px 30px 0 -4px var(--naranja), 0 40px 80px -30px rgba(43, 37, 34, 0.6); transform: translate3d(14%, 0, calc(var(--D) * -1 + 4px)); }
-.sala__cuadro--final::before { display: none; }
-
-/* Plano de la galería que se dibuja al avanzar */
-.sala__plano { position: absolute; right: clamp(16px, 3vw, 40px); bottom: clamp(16px, 4vh, 40px); width: 74px; height: auto; overflow: visible; fill: none; stroke: #2b2522; stroke-width: 2.4; stroke-linecap: round; }
-.sala__plano-muro { stroke-dasharray: 1; stroke-dashoffset: var(--dib, 1); }
-.sala__plano-paso { stroke: var(--naranja); stroke-dasharray: 0.02 0.03; opacity: 0.8; }
-.sala__plano-yo { fill: var(--naranja); stroke: #fffdf9; stroke-width: 2; }
-
-/* Título al entrar y texto al llegar al fondo */
-.sala__entrada { position: absolute; inset: 0; margin: 0; display: grid; place-items: center; pointer-events: none; }
-.sala__entrada span { font-family: var(--ff-display); font-size: clamp(2.6rem, 7vw, 6.4rem); letter-spacing: -0.03em; color: #2b2522; text-shadow: 0 2px 30px rgba(255, 250, 242, 0.9); }
+.sala__mundo > * { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+/* Exterior: suelo oscuro con retícula y puntos dorados (vista de dron) */
+.sala__exterior { width: 1000px; height: 900px; transform: translate3d(-4000px, 2px, -3000px) rotateX(90deg) scale(8);
+  background: radial-gradient(30% 26% at 50% 36%, rgba(255, 140, 70, 0.16), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(212, 166, 90, 0.10) 0 1px, transparent 1px 50px),
+    repeating-linear-gradient(0deg, rgba(212, 166, 90, 0.10) 0 1px, transparent 1px 50px), #0d0a08; }
+/* Sala */
+.sala__suelo { width: 1200px; height: 1100px; transform: translate3d(-1200px, 0, -600px) rotateX(90deg) scale(2);
+  background: radial-gradient(28% 26% at 50% 28%, rgba(255, 200, 140, 0.20), transparent 70%), linear-gradient(180deg, #1d1713, #120e0b 60%, #0e0b09); }
+.sala__luz { width: 1400px; height: 900px; transform: translate3d(-700px, -1px, -450px) rotateX(90deg);
+  background: radial-gradient(closest-side, rgba(255, 170, 100, 0.22), transparent); }
+.sala__muro { width: 1100px; height: 500px; background: linear-gradient(180deg, #221a15, #17120f 80%), repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 90px);
+  background-blend-mode: screen; border-top: 2px solid #d4a65a; box-shadow: inset 0 -2px 0 #b8893f; }
+.sala__muro--izq { transform: translate3d(-1200px, -1000px, -600px) rotateY(-90deg) scale(2); }
+.sala__muro--der { transform: translate3d(1200px, -1000px, -600px) rotateY(-90deg) scale(2); }
+.sala__fondo { width: 2400px; height: 1000px; transform: translate3d(-1200px, -1000px, -600px); border-top: 4px solid #d4a65a;
+  background: radial-gradient(45% 55% at 30% 45%, #2c2119, transparent 70%), linear-gradient(180deg, #221a15, #16110e); }
+.sala__arte { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: #d9a752; stroke-width: 3; stroke-linecap: round; }
+.sala__trazo path, .sala__trazo circle { stroke-dasharray: 1; stroke-dashoffset: var(--dib, 1); }
+.sala__trazo circle { stroke-width: 1.5; opacity: 0.6; }
+.sala__estrellas path { fill: #d9a752; stroke: none; opacity: 0.85; }
+.movimiento .sala__estrellas path { animation: brilla 3s ease-in-out infinite alternate; }
+.movimiento .sala__estrellas path:nth-child(2) { animation-delay: -1s; }
+.movimiento .sala__estrellas path:nth-child(3) { animation-delay: -2s; }
+@keyframes brilla { from { opacity: 0.35; } to { opacity: 1; } }
+/* Mirian y Lara: de la cabeza (y=-580) a medio muslo (y=-200); el humo de escenario tapa el resto */
+.sala__jefas { width: 298px; max-width: none; height: 380px; transform: translate3d(-149px, -580px, 0); }
+/* Humo de escenario delante de sus piernas (tapa el corte de la foto) */
+.sala__humo { width: 1000px; height: 440px; transform: translate3d(-500px, -440px, 2px);
+  background: radial-gradient(70% 100% at 50% 100%, rgb(22, 17, 14) 55%, rgba(22, 17, 14, 0.85) 66%, rgba(22, 17, 14, 0) 88%); }
+/* Texto final */
 .sala__capa { position: relative; height: 100%; display: grid; grid-template-columns: 1fr 1fr; align-items: center; pointer-events: none; }
-.sala__texto { pointer-events: auto; max-width: 480px; background: rgba(255, 252, 247, 0.9); border-radius: 26px; padding: clamp(24px, 3vw, 40px); box-shadow: 0 30px 60px -36px rgba(43, 37, 34, 0.5); }
-.sala__texto .inicio-seccion__titulo { margin-bottom: 18px; }
-.sala__texto .inicio-esencia__texto { margin-bottom: 24px; }
+.sala__texto { pointer-events: auto; max-width: 470px; background: rgba(20, 15, 12, 0.78); border: 1px solid rgba(212, 166, 90, 0.35); border-radius: 26px; padding: clamp(24px, 3vw, 40px);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.sala__texto .inicio-seccion__titulo { color: #f4efe8; margin-bottom: 18px; }
+.sala__texto .inicio-esencia__texto { color: #d8cfc4; margin-bottom: 24px; }
 .movimiento .sala__texto { opacity: 0; }
 @media (max-width: 900px) {
-  .sala { --W: 1000px; --H: 1250px; --D: 3800px; height: 380svh; }
-  .sala__escena { perspective: 520px; }
-  .sala__cuadro { width: 300px; margin: -210px 0 0 -150px; }
-  .sala__cuadro--final { width: 520px; margin: -330px 0 0 -260px; transform: translate3d(0, -14%, calc(var(--D) * -1 + 4px)); }
+  .sala { height: 400svh; }
+  .sala__escena { perspective: 700px; }
   .sala__capa { grid-template-columns: 1fr; align-items: end; padding-bottom: clamp(20px, 5vh, 50px); }
-  .sala__texto { padding: 22px 20px; }
+  .sala__texto { padding: 22px 20px; backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(20, 15, 12, 0.88); }
   .sala__texto .inicio-esencia__texto { font-size: 1.02rem; margin-bottom: 18px; }
-  .sala__plano { width: 52px; bottom: auto; top: 90px; }
 }
-/* Sin movimiento: se ve la pared del fondo con Mirian y Lara y el texto */
+/* Sin movimiento: ellas delante y el texto, sin recorrido */
 .sin-movimiento .sala { height: auto; }
 .sin-movimiento .sala__fijo { position: relative; height: max(680px, 100svh); }
-.sin-movimiento .sala__mundo { transform: translateZ(calc(var(--D) - 560px)); }
-.sin-movimiento .sala__entrada, .sin-movimiento .sala__plano { display: none; }
+.sin-movimiento .sala__mundo { transform: translate3d(180px, 390px, 380px); }
+.sin-movimiento .sala__trazo path, .sin-movimiento .sala__trazo circle { stroke-dashoffset: 0; }
+@media (max-width: 900px) { .sin-movimiento .sala__mundo { transform: translate3d(0, 300px, 360px); } }

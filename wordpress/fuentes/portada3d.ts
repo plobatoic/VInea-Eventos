@@ -31,45 +31,50 @@ if (hero && movimiento) {
   }, { passive: true });
 }
 
-/* La esencia: paseo por la galería 3D guiado por el scroll */
+/* La esencia: plano de dron guiado por el scroll (de lejos y desde arriba hasta Mirian y Lara) */
 const sala = document.querySelector<HTMLElement>('[data-sala]');
 if (sala && movimiento) {
   const mundo = sala.querySelector<HTMLElement>('[data-sala-mundo]')!;
   const texto = sala.querySelector<HTMLElement>('[data-sala-texto]')!;
-  const entrada = sala.querySelector<HTMLElement>('[data-sala-entrada]')!;
-  const plano = sala.querySelector<SVGElement>('.sala__plano')!;
-  const yo = sala.querySelector<SVGCircleElement>('[data-sala-yo]')!;
+  const arte = sala.querySelector<SVGElement>('[data-sala-arte]')!;
   const cl = (v: number) => Math.min(1, Math.max(0, v));
   const suave = (t: number) => t * t * (3 - 2 * t);
-  const inOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const sale = (t: number) => 1 - Math.pow(1 - t, 3);
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
   const fino = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  let visible = false, raf = 0, mx = 0, my = 0, tmx = 0, tmy = 0, D = 4400;
-  const medir = () => { D = parseFloat(getComputedStyle(sala).getPropertyValue('--D')) || 4400; };
-  medir();
+  let visible = false, raf = 0, mx = 0, my = 0, tmx = 0, tmy = 0;
+  const ALTO = 380, CENTRO = -390; // ellas: alto visible y centro (px del mundo)
   const pinta = () => {
     raf = 0;
+    const W = innerWidth, H = innerHeight, movil = W < 900;
+    const P = movil ? 700 : 800;
     const r = sala.getBoundingClientRect();
-    const p = cl(-r.top / Math.max(1, r.height - innerHeight));
-    const andar = inOut(cl(p / 0.86));
-    const z = andar * (D - 560);
-    const paso = Math.sin(andar * 26) * 3 * (1 - andar);           // el balanceo al caminar
-    const giro = Math.sin(andar * Math.PI * 2) * 4;                  // mira a un lado y a otro
+    const p = cl(-r.top / Math.max(1, r.height - H));
+    const e = cl(p / 0.82);
+    // Encuadre final: ellas ocupan ~80% del alto (a la derecha en ordenador, arriba en móvil)
+    const s = (movil ? 0.74 : 0.9) * H / ALTO;
+    const zf = -(P - P / s);
+    const xf = movil ? 0 : -(0.16 * W) / s;
+    const yf = CENTRO + (movil ? (0.1 * H) / s : (-0.07 * H) / s);
+    const cz = lerp(5600, zf, sale(e));
+    const cy = lerp(-3400, yf, inOut(e));
+    const cx = lerp(movil ? 0 : 900, xf, inOut(e));
+    const pitch = lerp(52, 0, inOut(cl(e * 1.05)));
+    const yaw = lerp(movil ? -10 : -24, 0, inOut(e));
+    const bal = Math.sin(e * 9) * 6 * (1 - e); // vaivén del dron
     mx += (tmx - mx) * 0.1; my += (tmy - my) * 0.1;
-    mundo.style.transform = `rotateY(${(giro + mx * 10).toFixed(2)}deg) rotateX(${(my * -5).toFixed(2)}deg) translate3d(0, ${paso.toFixed(1)}px, ${z.toFixed(1)}px)`;
-    const e = suave(cl((p - 0.03) / 0.14));
-    entrada.style.opacity = (1 - e).toFixed(3);
-    entrada.style.transform = `translate3d(0, ${(-e * 40).toFixed(1)}px, 0) scale(${(1 + e * 0.15).toFixed(3)})`;
+    mundo.style.transform = `rotateX(${(-pitch + my * -3).toFixed(2)}deg) rotateY(${(yaw + mx * 6).toFixed(2)}deg) translate3d(${(-cx).toFixed(1)}px, ${(-cy + bal).toFixed(1)}px, ${(-cz).toFixed(1)}px)`;
+    arte.style.setProperty('--dib', (1 - suave(cl((p - 0.15) / 0.55))).toFixed(3));
     const k = suave(cl((p - 0.8) / 0.14));
     texto.style.opacity = k.toFixed(3);
     texto.style.transform = `translate3d(0, ${((1 - k) * 30).toFixed(1)}px, 0)`;
-    plano.style.setProperty('--dib', (1 - suave(cl(p / 0.5))).toFixed(3));
-    yo.setAttribute('cy', (212 - andar * 172).toFixed(1));
     if (Math.abs(tmx - mx) + Math.abs(tmy - my) > 0.002) pedir();
   };
   const pedir = () => { if (!raf && visible) raf = requestAnimationFrame(pinta); };
   new IntersectionObserver(([en]) => { visible = en.isIntersecting; pedir(); }, { rootMargin: '200px' }).observe(sala);
   addEventListener('scroll', pedir, { passive: true });
-  addEventListener('resize', () => { medir(); pedir(); }, { passive: true });
+  addEventListener('resize', pedir, { passive: true });
   if (fino) addEventListener('pointermove', (ev) => { tmx = ev.clientX / innerWidth - 0.5; tmy = ev.clientY / innerHeight - 0.5; pedir(); }, { passive: true });
   visible = true; pinta(); visible = false;
 }

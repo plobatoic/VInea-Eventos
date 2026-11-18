@@ -145,40 +145,49 @@ $resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galer�
 	</div>
 </section>
 
-<!-- ============ 5. LA ESENCIA DE VINEA: paseo por una galería en 3D ============
-     Al bajar, la cámara camina por un pasillo de galería con fotos de eventos de Vinea colgadas
-     y llega a la pared del fondo, donde están Mirian y Lara. Todo con CSS 3D (sin WebGL). -->
+<!-- ============ 5. LA ESENCIA DE VINEA: plano de dron hasta Mirian y Lara ============
+     Una sala oscura con dibujos de línea dorada (como la de su foto en los Premios Ondas), hecha con
+     CSS 3D y SVG. Mirian y Lara (recortadas de su foto) están dentro. Al bajar, la cámara se acerca
+     como un dron desde lejos y desde arriba, entra en la sala y acaba con ellas delante. -->
+<?php $jefas = get_template_directory_uri() . '/assets/esencia/mirian-y-lara.webp'; ?>
 <section class="sala" data-sala aria-labelledby="esencia-titulo">
 	<div class="sala__fijo">
 		<div class="sala__escena" aria-hidden="true">
 			<div class="sala__mundo" data-sala-mundo>
+				<span class="sala__exterior"></span>
+				<span class="sala__suelo"></span>
+				<span class="sala__luz"></span>
 				<span class="sala__muro sala__muro--izq"></span>
 				<span class="sala__muro sala__muro--der"></span>
-				<span class="sala__suelo"></span>
-				<span class="sala__techo"></span>
-				<span class="sala__fondo"></span>
-				<?php
-				$cuadros = array_slice( array_keys( $por_nom ), 60, 8 );
-				foreach ( $cuadros as $i => $nombre ) :
-					$lado = 0 === $i % 2 ? 'izq' : 'der';
-					$z    = 700 + (int) floor( $i / 2 ) * 900 + ( 'der' === $lado ? 420 : 0 );
-					?>
-					<figure class="sala__cuadro sala__cuadro--<?php echo esc_attr( $lado ); ?>" style="--z:<?php echo (int) $z; ?>px"><?php echo $foto_gal( $nombre ); // phpcs:ignore ?></figure>
-				<?php endforeach; ?>
-				<figure class="sala__cuadro sala__cuadro--final"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 70vw, 560px', 'alt' => '' ) ); ?></figure>
+				<div class="sala__fondo">
+					<svg class="sala__arte" viewBox="0 0 1200 500" data-sala-arte>
+						<g class="sala__trazo">
+							<path pathLength="1" d="M300 70 H372 A170 170 0 1 1 202 240 V168 Q202 70 300 70 Z" />
+							<path pathLength="1" d="M300 110 H368 A130 130 0 1 1 238 240 V178 Q238 110 300 110 Z" />
+							<path pathLength="1" d="M372 30 A210 210 0 0 1 582 240" />
+							<path pathLength="1" d="M160 300 A230 230 0 0 0 372 470" />
+							<path pathLength="1" d="M120 180 A260 260 0 0 1 300 15" />
+							<path pathLength="1" d="M520 330 A200 200 0 0 1 410 455" />
+							<circle pathLength="1" cx="372" cy="240" r="250" />
+							<path pathLength="1" d="M60 460 H1140" />
+						</g>
+						<g class="sala__estrellas">
+							<path d="M930 120 l6 22 22 6 -22 6 -6 22 -6 -22 -22 -6 22 -6z" />
+							<path d="M1010 260 l4 15 15 4 -15 4 -4 15 -4 -15 -15 -4 15 -4z" />
+							<path d="M860 330 l3 11 11 3 -11 3 -3 11 -3 -11 -11 -3 11 -3z" />
+							<path d="M1090 90 l3 10 10 3 -10 3 -3 10 -3 -10 -10 -3 10 -3z" />
+						</g>
+					</svg>
+				</div>
+				<img class="sala__jefas" src="<?php echo esc_url( $jefas ); ?>" width="784" height="1000" alt="Mirian y Lara, fundadoras de Vinea Eventos" loading="eager" fetchpriority="low" decoding="async">
+				<span class="sala__humo"></span>
 			</div>
 		</div>
-		<svg class="sala__plano" viewBox="0 0 120 220" aria-hidden="true">
-			<path class="sala__plano-muro" pathLength="1" d="M20 210 V20 H100 V210" />
-			<path class="sala__plano-paso" pathLength="1" d="M60 212 V40" />
-			<circle class="sala__plano-yo" data-sala-yo cx="60" cy="212" r="5" />
-		</svg>
-		<p class="sala__entrada" data-sala-entrada><span><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></span></p>
 		<div class="contenedor sala__capa">
 			<div class="sala__texto" data-sala-texto>
 				<h2 id="esencia-titulo" class="inicio-seccion__titulo"><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
 				<p class="inicio-esencia__texto"><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
-				<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>"><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
+				<a class="boton boton--naranja" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>"><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
 			</div>
 		</div>
 	</div>
