@@ -15,7 +15,11 @@ if (conMovimiento()) {
 
 /* ---------- Contenido de WordPress: se le añaden las animaciones automáticamente ---------- */
 document.querySelectorAll<HTMLElement>('.contenido').forEach((c) => {
-  c.querySelectorAll<HTMLElement>('h2').forEach((h) => h.setAttribute('data-split', ''));
+  c.querySelectorAll<HTMLElement>('h2:not(.h-largo)').forEach((h) => h.setAttribute('data-split', ''));
+  // Trazo 2D que se dibuja entre bloques (con una gota al final)
+  c.querySelectorAll<HTMLElement>('.bloque + .bloque').forEach((b, i) => {
+    b.insertAdjacentHTML('afterbegin', `<svg class="trazo${i % 2 ? ' trazo--b' : ''}" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true" data-reveal><path pathLength="1" d="M0 34 C 160 6, 300 58, 470 30 S 760 4, 930 30 S 1110 52, 1180 30"/><circle cx="1186" cy="30" r="7"/></svg>`);
+  });
   c.querySelectorAll<HTMLElement>('.bloque > :not(h2):not(figure):not(.galeria-contenido)').forEach((el, i) => {
     el.setAttribute('data-reveal', ''); el.style.setProperty('--d', String((i % 3) * 80));
   });
