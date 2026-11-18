@@ -3,16 +3,14 @@
  * desplazamiento suave, apariciones al hacer scroll, cabecera, menú móvil,
  * contadores, inclinación 3D de tarjetas y el interruptor "Reducir animaciones".
  */
-import Lenis from 'lenis';
 
 const html = document.documentElement;
 const conMovimiento = () => html.classList.contains('movimiento');
 
 /* ---------- Desplazamiento suave ---------- */
-let lenis: Lenis | null = null;
+let lenis: any = null; // sin desplazamiento suavizado: scroll nativo
 if (conMovimiento()) {
-  lenis = new Lenis({ autoRaf: true, lerp: 0.11, anchors: { offset: -90 } });
-  (window as any).__lenis = lenis;
+  // Scroll nativo del navegador: más inmediato y sin tirones.
 }
 
 /* ---------- Contenido de WordPress: se le añaden las animaciones automáticamente ---------- */
@@ -77,7 +75,7 @@ const observador = new IntersectionObserver(
       }
     });
   },
-  { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+  { rootMargin: '0px 0px -2% 0px', threshold: 0.01 },
 );
 document.querySelectorAll('[data-reveal], [data-split]').forEach((el) => {
   if (el.closest('[data-reveal-manual]')) return;
@@ -202,36 +200,8 @@ if (interruptor) {
   });
 }
 
-/* ---------- Cursor propio y botones magnéticos (solo con ratón) ---------- */
+/* ---------- Botones magnéticos (solo con ratón) ---------- */
 if (conMovimiento() && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-  const cursor = document.createElement('div');
-  cursor.className = 'cursor';
-  cursor.setAttribute('aria-hidden', 'true');
-  cursor.innerHTML = '<span class="cursor__texto"></span>';
-  document.body.append(cursor);
-  const texto = cursor.firstElementChild as HTMLElement;
-  let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, moviendo = false;
-  const mover = () => {
-    cx += (x - cx) * 0.2;
-    cy += (y - cy) * 0.2;
-    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    if (Math.abs(x - cx) > 0.1 || Math.abs(y - cy) > 0.1) requestAnimationFrame(mover);
-    else moviendo = false;
-  };
-  window.addEventListener('pointermove', (e) => {
-    x = e.clientX; y = e.clientY;
-    cursor.classList.add('activo');
-    if (!moviendo) { moviendo = true; requestAnimationFrame(mover); }
-    const t = e.target as Element | null;
-    const conTexto = t?.closest<HTMLElement>('[data-cursor]');
-    const enlace = t?.closest('a, button, summary, label, input, textarea, select');
-    cursor.classList.toggle('con-texto', !!conTexto);
-    cursor.classList.toggle('sobre-enlace', !conTexto && !!enlace);
-    cursor.classList.toggle('oculto', !!t?.closest('input, textarea, select'));
-    if (conTexto) texto.textContent = conTexto.dataset.cursor ?? '';
-  }, { passive: true });
-  document.documentElement.addEventListener('pointerleave', () => cursor.classList.remove('activo'));
-
   document.querySelectorAll<HTMLElement>('.boton').forEach((b) => {
     b.addEventListener('pointermove', (e) => {
       const r = b.getBoundingClientRect();

@@ -29,7 +29,8 @@ function vinea_encolar(): void {
 		)
 	);
 
-	if ( is_front_page() ) {
+	// La portada ya no necesita JavaScript propio (todo es CSS): no se carga inicio.js.
+	if ( false && is_front_page() ) {
 		$inicio = VINEA_DIR . '/assets/js/inicio.js';
 		wp_enqueue_script(
 			'vinea-inicio',

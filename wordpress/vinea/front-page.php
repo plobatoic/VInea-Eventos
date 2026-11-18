@@ -1,8 +1,7 @@
 <?php
 /**
- * Portada de Vinea. Todos los textos salen de la Home original (campos de la
- * página de portada, editables en el escritorio de WordPress). El diseño y las
- * animaciones los pone el tema.
+ * Portada de Vinea: textos de la Home original, en su mismo orden, editables en
+ * Páginas → Home. Diseño claro y acogedor; animaciones solo con CSS (ligeras).
  */
 get_header();
 
@@ -18,95 +17,66 @@ $img = function ( $url, $tam = 'large', $attrs = array() ) {
 	if ( ! $url ) {
 		return;
 	}
-	if ( function_exists( 'vinea_img' ) ) {
-		echo vinea_img( $url, $tam, $attrs ); // phpcs:ignore -- HTML de imagen ya escapado.
-	} else {
-		printf( '<img src="%s" alt="%s" loading="lazy">', esc_url( $url ), esc_attr( $attrs['alt'] ?? '' ) );
-	}
+	echo function_exists( 'vinea_img' ) ? vinea_img( $url, $tam, $attrs ) : sprintf( '<img src="%s" alt="" loading="lazy">', esc_url( $url ) ); // phpcs:ignore
 };
 $url_de = function ( $item ) {
 	return is_array( $item ) ? ( $item['url'] ?? '' ) : $item;
 };
 
-// "Creamos experiencias emocionales…": la palabra «emocionales» en cursiva.
-$claim = esc_html( $v( 'claim', 'Creamos experiencias emocionales para que sean recordadas' ) );
-$claim = preg_replace( '/(emocionales)/iu', '<em>$1</em>', $claim );
-
-$servicios_hijos = array();
-$pag_servicios   = get_page_by_path( 'servicios' );
-if ( $pag_servicios ) {
-	$servicios_hijos = get_pages( array( 'child_of' => $pag_servicios->ID, 'parent' => $pag_servicios->ID, 'sort_column' => 'menu_order' ) );
-}
-$montaje   = (array) $v( 'montaje', array() );
-$momentos  = (array) $v( 'momentos', array() );
+$claim     = preg_replace( '/(emocionales)/iu', '<em>$1</em>', esc_html( $v( 'claim', 'Creamos experiencias emocionales para que sean recordadas' ) ) );
+$montaje   = array_values( array_filter( array_map( $url_de, (array) $v( 'montaje', array() ) ) ) );
+$momentos  = array_values( array_filter( array_map( $url_de, (array) $v( 'momentos', array() ) ) ) );
 $servicios = (array) $v( 'servicios', array() );
 $opiniones = (array) $v( 'opiniones', array() );
-$tema      = get_template_directory_uri();
+$carrusel  = array_values( array_filter( array_merge( array( $v( 'conciencia_imagen' ) ), array_slice( $momentos, 0, 3 ) ) ) );
 ?>
 
-<!-- ============ ENTRADA ============ -->
-<section class="hero" data-hero aria-labelledby="hero-titulo">
-	<div class="hero__aura" aria-hidden="true" data-aura></div>
-	<canvas class="hero__particulas" aria-hidden="true" data-particulas></canvas>
-	<canvas class="hero__gota" aria-hidden="true" data-gota></canvas>
-	<div class="hero__gota-plana" aria-hidden="true" data-gota-plana></div>
-
-	<div class="hero__escena" data-hero-centro>
-		<div class="hero__logo" data-hero-logo>
-			<?php echo file_get_contents( get_template_directory() . '/partes/logo-animado.svg' ); // phpcs:ignore -- SVG propio del tema. ?>
-		</div>
-	</div>
-
-	<div class="hero__pie contenedor">
-		<div class="hero__textos" data-hero-fade>
-			<h1 id="hero-titulo" class="hero__h1"><?php echo esc_html( $v( 'h1', 'Agencia de eventos en Barcelona para empresas e instituciones' ) ); ?></h1>
-			<p class="hero__claim"><?php echo $claim; // phpcs:ignore -- escapado arriba. ?></p>
-		</div>
-		<div class="hero__acciones" data-hero-fade>
-			<a class="boton boton--naranja" href="<?php echo esc_url( $v( 'boton_url', '/contacto/' ) ); ?>"><?php echo esc_html( $v( 'boton_texto', 'cuéntanos tu idea' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
-		</div>
-	</div>
-
-	<div class="hero__bajar" aria-hidden="true" data-hero-bajar><span></span></div>
-
-	<div class="hero__portal" data-portal>
-		<?php foreach ( $montaje as $i => $foto ) : ?>
-			<div class="hero__portal-foto" data-portal-foto style="z-index:<?php echo (int) $i; ?>">
-				<?php $img( $url_de( $foto ), 'full', array( 'sizes' => '100vw', 'alt' => '' ) ); ?>
+<!-- ============ 1. ENTRADA ============ -->
+<section class="inicio-hero" aria-labelledby="hero-titulo">
+	<div class="contenedor inicio-hero__grid">
+		<div class="inicio-hero__texto">
+			<h1 id="hero-titulo" class="inicio-hero__h1"><?php echo esc_html( $v( 'h1', 'Agencia de eventos en Barcelona para empresas e instituciones' ) ); ?></h1>
+			<p class="inicio-hero__claim"><?php echo $claim; // phpcs:ignore -- escapado arriba. ?></p>
+			<div class="inicio-hero__acciones">
+				<a class="boton boton--naranja" href="<?php echo esc_url( $v( 'boton_url', '/contacto/' ) ); ?>"><?php echo esc_html( $v( 'boton_texto', 'cuéntanos tu idea' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
 			</div>
-		<?php endforeach; ?>
-		<div class="hero__portal-texto contenedor sobre-oscuro" data-portal-texto>
-			<p class="titulo-1" data-palabras><?php echo esc_html( $v( 'lema' ) ); ?></p>
+		</div>
+
+		<div class="inicio-hero__visual" aria-hidden="true">
+			<div class="inicio-hero__gota">
+				<?php foreach ( array_slice( $montaje, 0, 3 ) as $i => $foto ) : ?>
+					<div class="inicio-hero__foto" style="--n:<?php echo (int) $i; ?>"><?php $img( $foto, 'large', array( 'sizes' => '(max-width: 900px) 90vw, 46vw', 'alt' => '', 'prioridad' => 0 === $i ) ); ?></div>
+				<?php endforeach; ?>
+			</div>
+			<?php if ( isset( $momentos[3] ) ) : ?><div class="inicio-hero__mini inicio-hero__mini--a"><?php $img( $momentos[3], 'medium', array( 'sizes' => '180px', 'alt' => '' ) ); ?></div><?php endif; ?>
+			<?php if ( isset( $momentos[4] ) ) : ?><div class="inicio-hero__mini inicio-hero__mini--b"><?php $img( $momentos[4], 'medium', array( 'sizes' => '150px', 'alt' => '' ) ); ?></div><?php endif; ?>
+			<span class="inicio-hero__punto"></span>
+			<svg class="inicio-hero__sello" viewBox="0 0 200 200"><defs><path id="sello-circulo" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0"/></defs><text><textPath href="#sello-circulo">Vinea Eventos y Turismo · Vinea Eventos y Turismo ·</textPath></text></svg>
 		</div>
 	</div>
 </section>
 
-<!-- ============ FRANJA: nombres de los servicios ============ -->
-<?php if ( $servicios_hijos ) : ?>
-<section class="franja" aria-hidden="true" data-skew>
-	<p class="franja__fila" data-franja="-1">
-		<?php for ( $r = 0; $r < 2; $r++ ) : foreach ( $servicios_hijos as $s ) : ?><span><?php echo esc_html( get_the_title( $s ) ); ?><i class="franja__gota" aria-hidden="true"></i></span><?php endforeach; endfor; ?>
-	</p>
-</section>
-<?php endif; ?>
-
-<!-- ============ SERVICIOS ============ -->
-<section class="servicios seccion--papel" id="servicios" data-servicios aria-labelledby="servicios-titulo">
-	<div class="servicios__cabeza contenedor">
-		<h2 id="servicios-titulo" class="titulo-2 relleno" data-relleno><?php echo esc_html( $v( 'intro' ) ); ?></h2>
+<!-- ============ 2. LEMA ============ -->
+<section class="inicio-lema" aria-label="Vinea">
+	<div class="contenedor--estrecho">
+		<p class="inicio-lema__texto" data-relleno><?php echo esc_html( $v( 'lema' ) ); ?></p>
 	</div>
-	<div class="servicios__ventana">
-		<ul class="servicios__pista" data-pista>
+</section>
+
+<!-- ============ 3. SERVICIOS ============ -->
+<section class="inicio-servicios" id="servicios" aria-labelledby="servicios-titulo">
+	<div class="contenedor">
+		<h2 id="servicios-titulo" class="inicio-servicios__titulo" data-split><?php echo esc_html( $v( 'intro' ) ); ?></h2>
+		<ul class="inicio-servicios__lista">
 			<?php foreach ( $servicios as $i => $s ) : ?>
-				<li class="servicios__item" data-servicio>
-					<a class="tarjeta-s" href="<?php echo esc_url( $s['url'] ?? '#' ); ?>" data-tilt data-cursor="Ver" <?php echo str_starts_with( (string) ( $s['url'] ?? '' ), 'http' ) ? 'target="_blank" rel="noopener"' : ''; ?>>
-						<div class="tarjeta-s__foto"><?php $img( $s['imagen'] ?? '', 'medium_large', array( 'sizes' => '(max-width: 900px) 80vw, 400px', 'alt' => '' ) ); ?></div>
-						<div class="tarjeta-s__texto">
-							<p class="tarjeta-s__meta"><span><?php echo esc_html( str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span></p>
-							<h3 class="tarjeta-s__titulo"><?php echo esc_html( $s['titulo'] ?? '' ); ?></h3>
-							<p class="tarjeta-s__resumen"><?php echo esc_html( $s['texto'] ?? '' ); ?></p>
-							<span class="tarjeta-s__vermas">ver más <span aria-hidden="true">→</span></span>
-						</div>
+				<?php $externo = str_starts_with( (string) ( $s['url'] ?? '' ), 'http' ); ?>
+				<li data-reveal style="--d:<?php echo (int) ( $i * 90 ); ?>">
+					<a class="vineta" href="<?php echo esc_url( $s['url'] ?? '#' ); ?>"<?php echo $externo ? ' target="_blank" rel="noopener"' : ''; ?>>
+						<div class="vineta__foto"><?php $img( $s['imagen'] ?? '', 'medium_large', array( 'sizes' => '(max-width: 600px) 80vw, (max-width: 1100px) 40vw, 300px', 'alt' => '' ) ); ?></div>
+						<span class="vineta__num"><?php echo esc_html( str_pad( (string) ( $i + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+						<h3 class="vineta__titulo"><?php echo esc_html( $s['titulo'] ?? '' ); ?></h3>
+						<p class="vineta__texto"><?php echo esc_html( $s['texto'] ?? '' ); ?></p>
+						<span class="vineta__mas">ver más <span aria-hidden="true">→</span><?php echo $externo ? '<span class="sr-only"> (se abre en otra pestaña)</span>' : ''; ?></span>
 					</a>
 				</li>
 			<?php endforeach; ?>
@@ -114,57 +84,49 @@ $tema      = get_template_directory_uri();
 	</div>
 </section>
 
-<!-- ============ CONCIENCIA SOCIAL Y MEDIOAMBIENTAL (con las 4 fotos del carrusel original) ============ -->
-<?php $carrusel = array_merge( array( $v( 'conciencia_imagen' ) ), array_map( $url_de, array_slice( $momentos, 0, 3 ) ) ); ?>
-<section class="accesible" aria-labelledby="conciencia-titulo">
-	<div class="contenedor accesible__cabeza">
-		<h2 id="conciencia-titulo" class="titulo-1" data-split><?php echo esc_html( $v( 'conciencia_titulo' ) ); ?></h2>
-		<p class="accesible__p" data-reveal><?php echo esc_html( $v( 'conciencia_texto' ) ); ?></p>
-	</div>
-	<figure class="carrusel-proyecto">
-		<div class="momentos__collage">
-			<?php foreach ( array_filter( $carrusel ) as $i => $foto ) : ?>
-				<div class="momento momento--<?php echo (int) $i; ?>" data-parallax="<?php echo esc_attr( array( 0.12, -0.18, 0.24, -0.1 )[ $i ] ?? 0 ); ?>">
-					<?php $img( $foto, 'medium_large', array( 'sizes' => '(max-width: 900px) 70vw, 34vw', 'alt' => '' ) ); ?>
-				</div>
-			<?php endforeach; ?>
+<!-- ============ 4. CONCIENCIA SOCIAL Y MEDIOAMBIENTAL ============ -->
+<section class="inicio-conciencia" aria-labelledby="conciencia-titulo">
+	<div class="contenedor inicio-conciencia__grid">
+		<div class="inicio-conciencia__texto">
+			<h2 id="conciencia-titulo" class="inicio-conciencia__titulo" data-split><?php echo esc_html( $v( 'conciencia_titulo' ) ); ?></h2>
+			<p class="inicio-conciencia__p" data-reveal><?php echo esc_html( $v( 'conciencia_texto' ) ); ?></p>
 		</div>
-		<figcaption class="accesible__pie contenedor"><?php echo esc_html( $v( 'conciencia_proyecto' ) ); ?></figcaption>
-	</figure>
+		<figure class="inicio-conciencia__fotos">
+			<div class="mosaico">
+				<?php foreach ( array_slice( $carrusel, 0, 4 ) as $i => $foto ) : ?>
+					<div class="mosaico__foto mosaico__foto--<?php echo (int) $i; ?>" data-reveal="foto" style="--d:<?php echo (int) ( $i * 80 ); ?>"><?php $img( $foto, 'medium_large', array( 'sizes' => '(max-width: 900px) 45vw, 25vw', 'alt' => '' ) ); ?></div>
+				<?php endforeach; ?>
+			</div>
+			<figcaption class="inicio-conciencia__pie"><?php echo esc_html( $v( 'conciencia_proyecto' ) ); ?></figcaption>
+		</figure>
+	</div>
 </section>
 
-<!-- ============ LA ESENCIA DE VINEA ============ -->
-<section class="seccion esencia-portada" aria-labelledby="esencia-titulo">
-	<div class="contenedor esencia-portada__grid">
-		<div class="esencia-portada__foto con-gota" data-reveal="foto"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 80vw, 40vw', 'alt' => '' ) ); ?></div>
+<!-- ============ 5. LA ESENCIA DE VINEA ============ -->
+<section class="inicio-esencia" aria-labelledby="esencia-titulo">
+	<div class="contenedor inicio-esencia__grid">
+		<div class="inicio-esencia__foto" data-reveal="foto"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 80vw, 40vw', 'alt' => '' ) ); ?></div>
 		<div>
-			<h2 id="esencia-titulo" class="titulo-1" data-split><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
-			<p class="entradilla" data-reveal><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
+			<h2 id="esencia-titulo" class="inicio-seccion__titulo" data-split><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
+			<p class="inicio-esencia__texto" data-reveal><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
 			<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>" data-reveal><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
 		</div>
 	</div>
 </section>
 
-<!-- ============ EMPRESAS QUE CONFÍAN EN VINEA ============ -->
+<!-- ============ 6. EMPRESAS QUE CONFÍAN EN VINEA ============ -->
 <?php if ( $opiniones ) : ?>
-<section class="seccion seccion--arena confianza" aria-labelledby="opiniones-titulo">
-	<div class="contenedor opiniones" data-reveal>
-		<div class="opiniones__cabeza">
-			<h2 id="opiniones-titulo" class="titulo-2" data-split><?php echo esc_html( $v( 'opiniones_titulo', 'Empresas que confían en Vinea' ) ); ?></h2>
-			<div class="opiniones__flechas">
-				<button type="button" class="opiniones__flecha" data-op="-1" aria-controls="lista-opiniones"><span aria-hidden="true">←</span><span class="sr-only">Opinión anterior</span></button>
-				<button type="button" class="opiniones__flecha" data-op="1" aria-controls="lista-opiniones"><span aria-hidden="true">→</span><span class="sr-only">Opinión siguiente</span></button>
-			</div>
-		</div>
-		<ul class="opiniones__lista" id="lista-opiniones" tabindex="0" aria-label="<?php echo esc_attr( $v( 'opiniones_titulo', 'Empresas que confían en Vinea' ) ); ?>" data-opiniones>
-			<?php foreach ( $opiniones as $o ) : ?>
-				<li class="opinion">
+<section class="inicio-opiniones" aria-labelledby="opiniones-titulo">
+	<div class="contenedor">
+		<h2 id="opiniones-titulo" class="inicio-seccion__titulo inicio-opiniones__titulo" data-split><?php echo esc_html( $v( 'opiniones_titulo', 'Empresas que confían en Vinea' ) ); ?></h2>
+		<ul class="inicio-opiniones__lista">
+			<?php foreach ( $opiniones as $i => $o ) : ?>
+				<li class="tarjeta-opinion" data-reveal style="--d:<?php echo (int) ( ( $i % 3 ) * 80 ); ?>">
 					<figure>
-						<span class="opinion__comillas" aria-hidden="true">“</span>
 						<blockquote><p><?php echo nl2br( esc_html( str_replace( '\n', "\n", $o['texto'] ?? '' ) ) ); ?></p></blockquote>
 						<figcaption>
-							<span class="opinion__inicial" aria-hidden="true"><?php echo esc_html( mb_substr( $o['autor'] ?? '', 0, 1 ) ); ?></span>
-							<span><?php echo esc_html( $o['autor'] ?? '' ); ?><?php if ( ! empty( $o['fecha'] ) ) : ?><time class="opinion__fecha" datetime="<?php echo esc_attr( $o['fecha'] ); ?>"><?php echo esc_html( date_i18n( 'j M Y', strtotime( $o['fecha'] ) ) ); ?></time><?php endif; ?></span>
+							<span class="tarjeta-opinion__inicial" aria-hidden="true"><?php echo esc_html( mb_substr( $o['autor'] ?? '', 0, 1 ) ); ?></span>
+							<span><strong><?php echo esc_html( $o['autor'] ?? '' ); ?></strong><?php if ( ! empty( $o['fecha'] ) ) : ?><time datetime="<?php echo esc_attr( $o['fecha'] ); ?>"><?php echo esc_html( date_i18n( 'j M Y', strtotime( $o['fecha'] ) ) ); ?></time><?php endif; ?></span>
 						</figcaption>
 					</figure>
 				</li>
@@ -174,10 +136,10 @@ $tema      = get_template_directory_uri();
 </section>
 <?php endif; ?>
 
-<!-- ============ CIERRE (último texto de la Home original) ============ -->
-<section class="seccion cierre" aria-label="Nuestra forma de trabajar">
+<!-- ============ 7. CIERRE ============ -->
+<section class="inicio-cierre" aria-label="Nuestra forma de trabajar">
 	<div class="contenedor--estrecho">
-		<h2 class="cierre__texto relleno" data-relleno><?php echo esc_html( $v( 'cierre' ) ); ?></h2>
+		<h2 class="inicio-cierre__texto" data-relleno><?php echo esc_html( $v( 'cierre' ) ); ?></h2>
 	</div>
 </section>
 
