@@ -31,52 +31,36 @@ if (hero && movimiento) {
   }, { passive: true });
 }
 
-/* La esencia: plano de dron guiado por el scroll (de lejos y desde arriba hasta Mirian y Lara) */
+/* La esencia: el dron vuela solo al llegar a la sección (animación CSS) */
 const sala = document.querySelector<HTMLElement>('[data-sala]');
-if (sala && movimiento) {
-  const mundo = sala.querySelector<HTMLElement>('[data-sala-mundo]')!;
-  const texto = sala.querySelector<HTMLElement>('[data-sala-texto]')!;
-  const arte = sala.querySelector<SVGElement>('[data-sala-arte]')!;
-  const cl = (v: number) => Math.min(1, Math.max(0, v));
-  const suave = (t: number) => t * t * (3 - 2 * t);
-  const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  const sale = (t: number) => 1 - Math.pow(1 - t, 3);
-  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-  const fino = matchMedia('(hover: hover) and (pointer: fine)').matches;
-  let visible = false, raf = 0, mx = 0, my = 0, tmx = 0, tmy = 0;
-  const ALTO = 380, CENTRO = -390; // ellas: alto visible y centro (px del mundo)
-  const pinta = () => {
-    raf = 0;
-    const W = innerWidth, H = innerHeight, movil = W < 900;
-    const P = movil ? 700 : 800;
-    const r = sala.getBoundingClientRect();
-    const p = cl(-r.top / Math.max(1, r.height - H));
-    const e = cl(p / 0.82);
-    // Encuadre final: ellas ocupan ~80% del alto (a la derecha en ordenador, arriba en móvil)
-    const s = (movil ? 0.74 : 0.9) * H / ALTO;
-    const zf = -(P - P / s);
-    const xf = movil ? 0 : -(0.16 * W) / s;
-    const yf = CENTRO + (movil ? (0.1 * H) / s : (-0.07 * H) / s);
-    const cz = lerp(5600, zf, sale(e));
-    const cy = lerp(-3400, yf, inOut(e));
-    const cx = lerp(movil ? 0 : 900, xf, inOut(e));
-    const pitch = lerp(52, 0, inOut(cl(e * 1.05)));
-    const yaw = lerp(movil ? -10 : -24, 0, inOut(e));
-    const bal = Math.sin(e * 9) * 6 * (1 - e); // vaivén del dron
-    mx += (tmx - mx) * 0.1; my += (tmy - my) * 0.1;
-    mundo.style.transform = `rotateX(${(-pitch + my * -3).toFixed(2)}deg) rotateY(${(yaw + mx * 6).toFixed(2)}deg) translate3d(${(-cx).toFixed(1)}px, ${(-cy + bal).toFixed(1)}px, ${(-cz).toFixed(1)}px)`;
-    arte.style.setProperty('--dib', (1 - suave(cl((p - 0.15) / 0.55))).toFixed(3));
-    const k = suave(cl((p - 0.8) / 0.14));
-    texto.style.opacity = k.toFixed(3);
-    texto.style.transform = `translate3d(0, ${((1 - k) * 30).toFixed(1)}px, 0)`;
-    if (Math.abs(tmx - mx) + Math.abs(tmy - my) > 0.002) pedir();
+if (sala) {
+  const ajuste = sala.querySelector<HTMLElement>('[data-sala-ajuste]')!;
+  // Encaje: en ordenador la foto cubre la pantalla con ellas a la derecha; en móvil, ellas centradas arriba
+  const encajar = () => {
+    const W = sala.clientWidth, H = sala.clientHeight;
+    if (W < 900) {
+      const k = Math.min((W * 1.15) / 784, (H * 0.8) / 1066);
+      ajuste.style.setProperty('--k', k.toFixed(4));
+      ajuste.style.setProperty('--ax', `${(-190 * k).toFixed(1)}px`);
+      ajuste.style.setProperty('--ay', `${(-H * 0.12).toFixed(1)}px`);
+    } else {
+      const k = Math.max(W / 1600, H / 1066) * 1.02;
+      ajuste.style.setProperty('--k', k.toFixed(4));
+      ajuste.style.setProperty('--ax', `${Math.min(0, (W * 0.5 - (800 + 190) * k + 1600 * k * 0.5) * 0)}px`);
+      ajuste.style.setProperty('--ay', '0px');
+    }
   };
-  const pedir = () => { if (!raf && visible) raf = requestAnimationFrame(pinta); };
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; pedir(); }, { rootMargin: '200px' }).observe(sala);
-  addEventListener('scroll', pedir, { passive: true });
-  addEventListener('resize', pedir, { passive: true });
-  if (fino) addEventListener('pointermove', (ev) => { tmx = ev.clientX / innerWidth - 0.5; tmy = ev.clientY / innerHeight - 0.5; pedir(); }, { passive: true });
-  visible = true; pinta(); visible = false;
+  encajar();
+  addEventListener('resize', encajar, { passive: true });
+  if (movimiento) {
+    const cam = sala.querySelector<HTMLElement>('.sala__camara')!;
+    cam.addEventListener('animationend', () => sala.classList.add('llego'));
+    const io2 = new IntersectionObserver(([en]) => {
+      if (en.isIntersecting) { sala.classList.add('vuela'); io2.disconnect(); }
+    }, { threshold: 0.45 });
+    io2.observe(sala);
+    io.observe(sala);
+  }
 }
 
 /* Reseñas de Google: «Leer más» en las largas y «Ver más reseñas» */
