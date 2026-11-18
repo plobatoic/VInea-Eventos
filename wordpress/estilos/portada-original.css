@@ -336,3 +336,44 @@
 
 /* ---- Carrusel horizontal de servicios: fotos cuadradas ---- */
 .pg-inicio .servicios .tarjeta-s__foto { -webkit-mask: none !important; mask: none !important; border-radius: 16px; }
+
+/* ---- Servicios a medida (carrusel fijado): todo cabe en la pantalla, sin cortes ---- */
+.pista-horizontal .pg-inicio .servicios, .pg-inicio.pista-horizontal .servicios { padding-top: 92px !important; }
+.pista-horizontal .servicios .servicios__cabeza { margin-bottom: clamp(16px, 3vh, 40px) !important; }
+.pista-horizontal .servicios .servicios__cabeza .titulo-2 { font-size: clamp(2rem, min(4.2vw, 7.2vh), 4.4rem); }
+.pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 30vh) !important; }
+.pista-horizontal .servicios .tarjeta-s { gap: 16px; }
+.pista-horizontal .servicios .tarjeta-s__titulo { font-size: clamp(1.25rem, min(1.8vw, 3.2vh), 1.8rem); }
+.pista-horizontal .servicios .tarjeta-s__resumen { font-size: 0.93rem; line-height: 1.5; }
+.servicios .tarjeta-s__meta { line-height: 1.3; align-items: flex-start; padding-right: 6px; }
+.servicios .tarjeta-s__texto { padding-right: 50px; }
+@media (max-height: 760px) { .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 26vh) !important; } .pista-horizontal .servicios .servicios__cabeza .entradilla { font-size: 0.95rem; } }
+
+/* ---- Portada: ritmo vertical más compacto (sin huecos grandes entre secciones) ---- */
+.pg-inicio { --seccion: clamp(64px, 8vw, 120px); }
+.og-lema, .og-cierre { padding-block: clamp(64px, 8vw, 120px); }
+.og-serv, .og-conc, .inicio-opiniones { padding-block: clamp(56px, 7vw, 110px); }
+.ese { padding-block: clamp(48px, 6vw, 90px); }
+.pg-inicio .seccion.intro { padding-top: clamp(40px, 5vw, 80px); }
+.pg-inicio .pilares { margin-top: clamp(40px, 6vw, 80px); }
+.pg-inicio .seccion.momentos { padding-bottom: clamp(40px, 5vw, 80px); }
+.pg-inicio .momentos__collage { margin-top: clamp(24px, 3vw, 48px); }
+.pg-inicio .testimonio { margin-top: clamp(40px, 6vw, 80px); }
+.pg-inicio .cifras__lista { margin-top: clamp(36px, 5vw, 70px); }
+@media (min-width: 761px) { .pg-inicio .momentos__collage { height: clamp(500px, 70vw, 980px) !important; } }
+.pg-inicio .confianza { padding-top: clamp(48px, 6vw, 90px); }
+@media (max-height: 800px) {
+  .pista-horizontal .pg-inicio .servicios, .pg-inicio.pista-horizontal .servicios { padding-top: 80px !important; }
+  .pista-horizontal .servicios .servicios__cabeza .titulo-2 { font-size: clamp(1.9rem, 6vh, 3.2rem); }
+  .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 24vh) !important; }
+  .pista-horizontal .servicios .tarjeta-s__resumen { font-size: 0.88rem; line-height: 1.45; }
+}
+@media (max-height: 740px) {
+  .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 22vh) !important; }
+  .pista-horizontal .servicios .tarjeta-s { gap: 12px; }
+}
+/* Cierre: gotas decorativas fuera del texto */
+.og-cierre .mini--a { left: 3%; top: 50%; }
+.og-cierre .mini--b { right: 4%; bottom: 14%; }
+.og-cierre .mini--c { right: 3%; top: 12%; }
+@media (max-width: 760px) { .og-cierre .mini { display: none; } }

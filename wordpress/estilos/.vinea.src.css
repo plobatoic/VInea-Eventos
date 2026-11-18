@@ -1194,7 +1194,7 @@ body { background: var(--hueso); }
 /* ---------- Cabecera: obra 2D alrededor de la foto ---------- */
 .cab__obra { position: relative; justify-self: end; width: 100%; max-width: 560px; }
 .cab--sin-foto .cab__grid { grid-template-columns: 1.4fr 1fr; }
-.cab--sin-foto .cab__obra { max-width: 340px; aspect-ratio: 1; }
+.cab--sin-foto .cab__obra { max-width: 240px; aspect-ratio: 1; }
 .cab__gotaxl { position: absolute; inset: 14%; border-radius: 6% 50% 50% 50%; background: var(--degradado, linear-gradient(225deg, #ff5611, #ff8a66)); }
 .sello { position: absolute; z-index: 3; width: clamp(96px, 9vw, 140px); left: -6%; top: -4%; fill: var(--tinta); overflow: visible; }
 .sello text { font-family: var(--ff-texto); font-size: 13.4px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
@@ -1305,6 +1305,22 @@ a:hover .ilus__gota { transform: rotate(calc(var(--g) + 25deg)) scale(1.06); }
 @media (max-width: 900px) { .ev__grid { grid-template-columns: 1fr; } .ev__cartel { position: relative; top: auto; max-width: 520px; } }
 /* Texto solo para lectores de pantalla en la paginación */
 .navigation .screen-reader-text, .pagination .screen-reader-text { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Espaciado: sin huecos grandes al final del contenido ---------- */
+.contenido.seccion { padding-bottom: clamp(48px, 6vw, 90px); }
+.contenido .bloque:last-child { padding-bottom: 0; }
+.contenido .bloque:first-child { border-top: 0; }
+.seccion.mas { padding-block: clamp(56px, 7vw, 110px); }
+.contenido .ev__texto .bloque { padding-bottom: 0; }
+.ev__grid { padding-bottom: clamp(40px, 5vw, 80px); }
+.cab { padding-bottom: clamp(40px, 6vw, 90px); }
+
+/* ---------- Pie: el «vinea» de fondo se ve entero y sin hueco grande ---------- */
+.pie { padding-bottom: 28px !important; }
+.pie__marca { margin: clamp(28px, 4vw, 56px) auto 0 !important; opacity: 0.08; }
+@supports (animation-timeline: view()) {
+  .movimiento .pie__marca { animation-range: entry 0% entry 100% !important; }
+}
 /* ==== PORTADA: bloques con los textos de la Home original, en el diseño de la portada ==== */
 /* ---------- 6. EMPRESAS QUE CONFÍAN: muro de marcas en 3D + reseñas de Google ---------- */
 .inicio-opiniones__titulo { text-align: center; margin-inline: auto; }
@@ -1643,3 +1659,44 @@ a:hover .ilus__gota { transform: rotate(calc(var(--g) + 25deg)) scale(1.06); }
 
 /* ---- Carrusel horizontal de servicios: fotos cuadradas ---- */
 .pg-inicio .servicios .tarjeta-s__foto { -webkit-mask: none !important; mask: none !important; border-radius: 16px; }
+
+/* ---- Servicios a medida (carrusel fijado): todo cabe en la pantalla, sin cortes ---- */
+.pista-horizontal .pg-inicio .servicios, .pg-inicio.pista-horizontal .servicios { padding-top: 92px !important; }
+.pista-horizontal .servicios .servicios__cabeza { margin-bottom: clamp(16px, 3vh, 40px) !important; }
+.pista-horizontal .servicios .servicios__cabeza .titulo-2 { font-size: clamp(2rem, min(4.2vw, 7.2vh), 4.4rem); }
+.pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 30vh) !important; }
+.pista-horizontal .servicios .tarjeta-s { gap: 16px; }
+.pista-horizontal .servicios .tarjeta-s__titulo { font-size: clamp(1.25rem, min(1.8vw, 3.2vh), 1.8rem); }
+.pista-horizontal .servicios .tarjeta-s__resumen { font-size: 0.93rem; line-height: 1.5; }
+.servicios .tarjeta-s__meta { line-height: 1.3; align-items: flex-start; padding-right: 6px; }
+.servicios .tarjeta-s__texto { padding-right: 50px; }
+@media (max-height: 760px) { .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 26vh) !important; } .pista-horizontal .servicios .servicios__cabeza .entradilla { font-size: 0.95rem; } }
+
+/* ---- Portada: ritmo vertical más compacto (sin huecos grandes entre secciones) ---- */
+.pg-inicio { --seccion: clamp(64px, 8vw, 120px); }
+.og-lema, .og-cierre { padding-block: clamp(64px, 8vw, 120px); }
+.og-serv, .og-conc, .inicio-opiniones { padding-block: clamp(56px, 7vw, 110px); }
+.ese { padding-block: clamp(48px, 6vw, 90px); }
+.pg-inicio .seccion.intro { padding-top: clamp(40px, 5vw, 80px); }
+.pg-inicio .pilares { margin-top: clamp(40px, 6vw, 80px); }
+.pg-inicio .seccion.momentos { padding-bottom: clamp(40px, 5vw, 80px); }
+.pg-inicio .momentos__collage { margin-top: clamp(24px, 3vw, 48px); }
+.pg-inicio .testimonio { margin-top: clamp(40px, 6vw, 80px); }
+.pg-inicio .cifras__lista { margin-top: clamp(36px, 5vw, 70px); }
+@media (min-width: 761px) { .pg-inicio .momentos__collage { height: clamp(500px, 70vw, 980px) !important; } }
+.pg-inicio .confianza { padding-top: clamp(48px, 6vw, 90px); }
+@media (max-height: 800px) {
+  .pista-horizontal .pg-inicio .servicios, .pg-inicio.pista-horizontal .servicios { padding-top: 80px !important; }
+  .pista-horizontal .servicios .servicios__cabeza .titulo-2 { font-size: clamp(1.9rem, 6vh, 3.2rem); }
+  .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 24vh) !important; }
+  .pista-horizontal .servicios .tarjeta-s__resumen { font-size: 0.88rem; line-height: 1.45; }
+}
+@media (max-height: 740px) {
+  .pista-horizontal .servicios .servicios__item .tarjeta-s__foto { width: min(100%, 22vh) !important; }
+  .pista-horizontal .servicios .tarjeta-s { gap: 12px; }
+}
+/* Cierre: gotas decorativas fuera del texto */
+.og-cierre .mini--a { left: 3%; top: 50%; }
+.og-cierre .mini--b { right: 4%; bottom: 14%; }
+.og-cierre .mini--c { right: 3%; top: 12%; }
+@media (max-width: 760px) { .og-cierre .mini { display: none; } }
