@@ -13,7 +13,7 @@ body { background: var(--hueso); }
 .con-intro .ilogo { display: grid; place-items: center; position: fixed; inset: 0; z-index: 10000; cursor: pointer; animation: ilogo-fuera 0.5s ease 6s forwards; }
 .ilogo__fondo { position: absolute; inset: 0; background: #f7f3ec; transition: opacity 0.75s ease 0.1s; }
 .ilogo__logo { position: relative; width: min(74vw, 760px); aspect-ratio: 1353 / 435; }
-.ilogo__logo .logo { width: 100%; height: 100%; color: #141210; overflow: visible; }
+.ilogo__logo .logo { position: relative; z-index: 1; width: 100%; height: 100%; color: #141210; overflow: visible; }
 .ilogo__logo .logo__gota { opacity: 0; }
 .ilogo__logo .logo__letra { transform-box: fill-box; transform-origin: 50% 100%; transition: transform 0.6s cubic-bezier(0.6, 0, 0.3, 1), opacity 0.45s ease;
   transition-delay: calc(var(--k) * 0.04s); animation: ilogo-letra 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.55s + var(--k) * 0.07s) both; }
@@ -23,10 +23,10 @@ body { background: var(--hueso); }
 /* Vuelo final */
 .ilogo--vuela { animation: none; pointer-events: none; }
 .ilogo--vuela .ilogo__fondo, .ilogo--vuela .ilogo__saltar { opacity: 0; }
-.ilogo--vuela .logo__letra { opacity: 0; transform: translateY(-35%) rotate(-4deg); animation: none; }
+.ilogo--vuela .logo__letra { animation: none; }
 /* Mientras vuela, la gota de la portada espera escondida y aparece al aterrizar */
-.con-intro:not(.ilogo-llega) [data-gota-css], .con-intro:not(.ilogo-llega) [data-gota] { opacity: 0 !important; }
-.ilogo-llega [data-gota-css], .ilogo-llega [data-gota] { transition: none !important; }
+.con-intro:not(.ilogo-llega) [data-gota-css], .con-intro:not(.ilogo-llega) [data-gota], .con-intro:not(.ilogo-llega) [data-hero-nombre] { opacity: 0 !important; }
+.ilogo-llega [data-gota-css], .ilogo-llega [data-gota], .ilogo-llega [data-hero-nombre] { transition: none !important; }
 @keyframes ilogo-cae {
   0% { transform: translateY(-110vh) scale(0.8, 1.25); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
   40% { transform: translateY(0) scale(1.18, 0.82); animation-timing-function: ease-out; }

@@ -137,38 +137,75 @@
   100.00% { transform: scale(0.3600); }
 }
 @keyframes ese-ventana-foto {
-  0.00% { transform: translate(-50%, -50%) scale(2.7778); }
-  33.50% { transform: translate(-50%, -50%) scale(2.7778); }
-  34.18% { transform: translate(-50%, -50%) scale(2.6223); }
-  34.86% { transform: translate(-50%, -50%) scale(1.8842); }
-  35.54% { transform: translate(-50%, -50%) scale(1.0681); }
-  36.21% { transform: translate(-50%, -50%) scale(0.5794); }
-  36.89% { transform: translate(-50%, -50%) scale(0.3303); }
-  37.57% { transform: translate(-50%, -50%) scale(0.2012); }
-  38.25% { transform: translate(-50%, -50%) scale(0.1302); }
-  38.93% { transform: translate(-50%, -50%) scale(0.0962); }
-  39.61% { transform: translate(-50%, -50%) scale(0.0811); }
-  40.29% { transform: translate(-50%, -50%) scale(0.0733); }
-  40.96% { transform: translate(-50%, -50%) scale(0.0693); }
-  41.64% { transform: translate(-50%, -50%) scale(0.0674); }
-  42.32% { transform: translate(-50%, -50%) scale(0.0668); }
-  43.00% { transform: translate(-50%, -50%) scale(0.0667); }
+  0.00% { transform: translate(-50%, -50%) scale(3.2778); }
+  33.50% { transform: translate(-50%, -50%) scale(3.2778); }
+  34.18% { transform: translate(-50%, -50%) scale(3.0940); }
+  34.86% { transform: translate(-50%, -50%) scale(2.2214); }
+  35.54% { transform: translate(-50%, -50%) scale(1.2566); }
+  36.21% { transform: translate(-50%, -50%) scale(0.6789); }
+  36.89% { transform: translate(-50%, -50%) scale(0.3844); }
+  37.57% { transform: translate(-50%, -50%) scale(0.2318); }
+  38.25% { transform: translate(-50%, -50%) scale(0.1478); }
+  38.93% { transform: translate(-50%, -50%) scale(0.1072); }
+  39.61% { transform: translate(-50%, -50%) scale(0.0880); }
+  40.29% { transform: translate(-50%, -50%) scale(0.0777); }
+  40.96% { transform: translate(-50%, -50%) scale(0.0720); }
+  41.64% { transform: translate(-50%, -50%) scale(0.0690); }
+  42.32% { transform: translate(-50%, -50%) scale(0.0677); }
+  43.00% { transform: translate(-50%, -50%) scale(0.0671); }
+  55.00% { transform: translate(-50%, -50%) scale(0.0667); }
   75.00% { transform: translate(-50%, -50%) scale(0.0667); }
-  75.57% { transform: translate(-50%, -50%) scale(0.0668); }
-  76.14% { transform: translate(-50%, -50%) scale(0.0674); }
-  76.71% { transform: translate(-50%, -50%) scale(0.0693); }
-  77.29% { transform: translate(-50%, -50%) scale(0.0733); }
-  77.86% { transform: translate(-50%, -50%) scale(0.0811); }
-  78.43% { transform: translate(-50%, -50%) scale(0.0962); }
-  79.00% { transform: translate(-50%, -50%) scale(0.1302); }
-  79.57% { transform: translate(-50%, -50%) scale(0.2012); }
-  80.14% { transform: translate(-50%, -50%) scale(0.3303); }
-  80.71% { transform: translate(-50%, -50%) scale(0.5794); }
-  81.29% { transform: translate(-50%, -50%) scale(1.0681); }
-  81.86% { transform: translate(-50%, -50%) scale(1.8842); }
-  82.43% { transform: translate(-50%, -50%) scale(2.6223); }
-  83.00% { transform: translate(-50%, -50%) scale(2.7778); }
-  100.00% { transform: translate(-50%, -50%) scale(2.7778); }
+  75.57% { transform: translate(-50%, -50%) scale(0.0671); }
+  76.14% { transform: translate(-50%, -50%) scale(0.0682); }
+  76.71% { transform: translate(-50%, -50%) scale(0.0705); }
+  77.29% { transform: translate(-50%, -50%) scale(0.0750); }
+  77.86% { transform: translate(-50%, -50%) scale(0.0834); }
+  78.43% { transform: translate(-50%, -50%) scale(0.0995); }
+  79.00% { transform: translate(-50%, -50%) scale(0.1354); }
+  79.57% { transform: translate(-50%, -50%) scale(0.2104); }
+  80.14% { transform: translate(-50%, -50%) scale(0.3473); }
+  80.71% { transform: translate(-50%, -50%) scale(0.6125); }
+  81.29% { transform: translate(-50%, -50%) scale(1.1353); }
+  81.86% { transform: translate(-50%, -50%) scale(2.0134); }
+  82.43% { transform: translate(-50%, -50%) scale(2.8171); }
+  83.00% { transform: translate(-50%, -50%) scale(3.0000); }
+  100.00% { transform: translate(-50%, -50%) scale(3.2778); }
+}
+@keyframes ese-borde {
+  0.00% { transform: scale(0.3643); opacity: 0.00; }
+  33.50% { transform: scale(0.3643); opacity: 1.00; }
+  34.18% { transform: scale(0.3859); opacity: 1.00; }
+  34.86% { transform: scale(0.5371); opacity: 1.00; }
+  35.54% { transform: scale(0.9474); opacity: 1.00; }
+  36.21% { transform: scale(1.7465); opacity: 1.00; }
+  36.89% { transform: scale(3.0640); opacity: 1.00; }
+  37.57% { transform: scale(5.0293); opacity: 1.00; }
+  38.25% { transform: scale(7.7722); opacity: 1.00; }
+  38.93% { transform: scale(10.5150); opacity: 1.00; }
+  39.61% { transform: scale(12.4803); opacity: 0.85; }
+  40.29% { transform: scale(13.7978); opacity: 0.68; }
+  40.96% { transform: scale(14.5969); opacity: 0.51; }
+  41.64% { transform: scale(15.0072); opacity: 0.34; }
+  42.32% { transform: scale(15.1584); opacity: 0.17; }
+  43.00% { transform: scale(15.1800); opacity: 0.00; }
+  60% { transform: scale(15); opacity: 0; }
+  75.00% { transform: scale(15.1800); opacity: 0.00; }
+  75.57% { transform: scale(15.1584); opacity: 0.00; }
+  76.14% { transform: scale(15.0072); opacity: 0.00; }
+  76.71% { transform: scale(14.5969); opacity: 0.00; }
+  77.29% { transform: scale(13.7978); opacity: 0.00; }
+  77.86% { transform: scale(12.4803); opacity: 0.17; }
+  78.43% { transform: scale(10.5150); opacity: 0.39; }
+  79.00% { transform: scale(7.7722); opacity: 0.60; }
+  79.57% { transform: scale(5.0293); opacity: 0.81; }
+  80.14% { transform: scale(3.0640); opacity: 1.00; }
+  80.71% { transform: scale(1.7465); opacity: 1.00; }
+  81.29% { transform: scale(0.9474); opacity: 1.00; }
+  81.86% { transform: scale(0.5371); opacity: 1.00; }
+  82.43% { transform: scale(0.3859); opacity: 1.00; }
+  83.00% { transform: scale(0.3643); opacity: 1.00; }
+  84.5% { transform: scale(0.36); opacity: 0; }
+  100% { transform: scale(0.36); opacity: 0; }
 }
 
 /* Entrada al aparecer (una vez): la foto se descubre como un telón y se acerca despacio */
@@ -254,3 +291,48 @@
 .og-cierre .mini--c { right: 18%; top: 14%; bottom: auto; }
 .og-conc, .og-serv, .og-lema, .og-cierre { overflow-x: clip; }
 @media (max-width: 900px) { .og-conc__hoja { right: 0; } }
+
+/* ---- Nombre «vinea» junto a la gota de la portada ---- */
+.hero__nombre { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.4s; will-change: transform; }
+.hero__nombre.listo { opacity: 1; }
+.hero__nombre svg { display: block; width: 100%; height: auto; overflow: visible; color: #141210; }
+.hero__nombre .logo__letra { transform-box: fill-box; transform-origin: 50% 100%; }
+.movimiento .hero__nombre .logo__letra { animation: nombre-sube 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards; animation-delay: calc(0.35s + var(--k) * 0.07s); }
+@keyframes nombre-sube { from { opacity: 0; transform: translateY(60%) rotate(6deg); } }
+
+/* ---- Esencia: transición más rica ----
+   Antes de caer, una sombra crece en el punto de impacto; al tocar salpica (6 gotitas), la foto de
+   abajo da un pequeño rebote, la ventana se abre con un borde de luz y la foto de dentro se asienta
+   con un leve acercamiento. Todo transform/opacity. */
+.ese__telon img.ese__a { object-position: 58% 40%; }
+.ese__ventana img { object-position: 50% 26%; }
+.ese__borde { position: absolute; left: 50%; top: 46%; width: 100px; height: 100px; margin: -50px 0 0 -50px; border-radius: 9% 50% 50% 50%; box-shadow: 0 0 0 3px rgba(255, 250, 242, 0.95), 0 0 34px 6px rgba(255, 200, 150, 0.55); opacity: 0; transform: scale(0.36); pointer-events: none; }
+.ese__sombra-imp { position: absolute; left: 50%; top: 46%; width: 90px; height: 30px; margin: 4px 0 0 -45px; border-radius: 50%; background: radial-gradient(closest-side, rgba(30, 12, 4, 0.45), transparent); opacity: 0; transform: scale(0.2); pointer-events: none; }
+.ese__gotita { position: absolute; left: 50%; top: 46%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 9% 50% 50% 50%; background: #ff6a33; opacity: 0; pointer-events: none; }
+.movimiento .ese.ciclo .ese__borde { animation: ese-borde 16s linear infinite; }
+.movimiento .ese.ciclo .ese__sombra-imp { animation: ese-sombra 16s linear infinite; }
+.movimiento .ese.ciclo .ese__gotita { animation: ese-gotita 16s linear infinite; }
+.movimiento .ese.ciclo .ese__a { animation: ese-rebote 16s linear infinite; }
+.ese.en-pausa .ese__borde, .ese.en-pausa .ese__sombra-imp, .ese.en-pausa .ese__gotita, .ese.en-pausa .ese__a { animation-play-state: paused; }
+@keyframes ese-sombra {
+  0%, 27% { opacity: 0; transform: scale(0.2); }
+  32.8% { opacity: 1; transform: scale(1); }
+  34.5% { opacity: 0; transform: scale(1.6); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes ese-gotita {
+  0%, 33% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(0.6); }
+  33.3% { opacity: 1; transform: rotate(var(--a)) translateY(-8px) scale(1); animation-timing-function: cubic-bezier(0.1, 0.7, 0.3, 1); }
+  38% { opacity: 0; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(0.4); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(-1 * var(--d))) scale(0.4); }
+}
+@keyframes ese-rebote {
+  0%, 32.9% { transform: none; }
+  34% { transform: scale(0.975); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.2); }
+  38% { transform: scale(1.03); }
+  48%, 100% { transform: none; }
+}
+.ese:not(.ciclo) .ese__borde, .ese:not(.ciclo) .ese__gotita, .ese:not(.ciclo) .ese__sombra-imp { display: none; }
+
+/* ---- Carrusel horizontal de servicios: fotos cuadradas ---- */
+.pg-inicio .servicios .tarjeta-s__foto { -webkit-mask: none !important; mask: none !important; border-radius: 16px; }

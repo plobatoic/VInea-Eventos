@@ -12,7 +12,7 @@ document.querySelectorAll<HTMLElement>('.og-lema').forEach((el) => una.observe(e
 const ese = document.querySelector<HTMLElement>('[data-ese]');
 if (ese) {
   const o = new IntersectionObserver(([en]) => {
-    if (en.isIntersecting) { ese.classList.add('visible'); o.disconnect(); if (movimiento) setTimeout(() => ese.classList.add('ciclo'), 1800); }
+    if (en.isIntersecting) { ese.classList.add('visible'); o.disconnect(); if (movimiento) setTimeout(() => ese.classList.add('ciclo'), 3200); }
   }, { threshold: 0.25 });
   o.observe(ese);
 }

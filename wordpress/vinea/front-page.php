@@ -89,11 +89,14 @@ ob_start(); ?>
 <section class="ese" data-ese aria-labelledby="esencia-titulo">
 	<figure class="ese__foto">
 		<div class="ese__telon">
-			<img class="ese__a" src="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-820.webp' ); ?> 820w, <?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?> 1400w" sizes="(max-width: 900px) 100vw, 62vw" width="1400" height="1867" alt="Lara y Mirian, fundadoras de Vinea Eventos" loading="lazy" decoding="async">
-			<!-- La gota cae, hace ondas y abre una ventana con la otra foto; luego se cierra y vuelve a subir -->
+			<img class="ese__a" src="<?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'premios-ondas-1000.webp' ); ?> 1000w, <?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?> 1600w" sizes="(max-width: 900px) 100vw, 62vw" width="1600" height="1066" alt="Lara y Mirian en los Premios Ondas 2024" loading="lazy" decoding="async">
+			<!-- Una gota cae, salpica y abre una ventana con la otra foto; luego se cierra y vuelve a subir -->
+			<span class="ese__sombra-imp" aria-hidden="true"></span>
 			<div class="ese__ventana" aria-hidden="true">
-				<img src="<?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'premios-ondas-1000.webp' ); ?> 1000w, <?php echo esc_url( $esencia_dir . 'premios-ondas-1600.webp' ); ?> 1600w" sizes="(max-width: 900px) 100vw, 62vw" width="1600" height="1066" alt="" loading="lazy" decoding="async">
+				<img src="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-820.webp' ); ?> 820w, <?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?> 1400w" sizes="(max-width: 900px) 100vw, 62vw" width="1400" height="1867" alt="" loading="lazy" decoding="async">
 			</div>
+			<span class="ese__borde" aria-hidden="true"></span>
+			<?php foreach ( array( array( -70, 70 ), array( -25, 95 ), array( 20, 85 ), array( 65, 75 ), array( 110, 60 ), array( -115, 55 ) ) as $g ) : ?><span class="ese__gotita" style="--a:<?php echo (int) $g[0]; ?>deg;--d:<?php echo (int) $g[1]; ?>px" aria-hidden="true"></span><?php endforeach; ?>
 			<span class="ese__onda" aria-hidden="true"></span>
 			<span class="ese__onda ese__onda--2" aria-hidden="true"></span>
 			<span class="ese__cae" aria-hidden="true"></span>

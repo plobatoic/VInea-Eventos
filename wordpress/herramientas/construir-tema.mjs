@@ -103,7 +103,7 @@ await esbuild.build({
 
 // --- JavaScript
 await esbuild.build({
-  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), entrada: path.join(WP, 'fuentes/entrada.ts'), original: path.join(WP, 'fuentes/portada-original.ts') },
+  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), entrada: path.join(WP, 'fuentes/entrada.ts'), original: path.join(WP, 'fuentes/portada-original.ts'), portada: path.join(WP, 'fuentes/portada/inicio.ts') },
   outdir: path.join(TEMA, 'assets/js'),
   bundle: true, minify: true, format: 'iife', nodePaths: [path.join(WEB, 'node_modules')], target: ['es2020'], logLevel: 'warning',
 });

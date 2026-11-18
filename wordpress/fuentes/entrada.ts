@@ -36,6 +36,27 @@ if (capa && html.classList.contains('con-intro')) {
       { duration: 1150, easing: 'cubic-bezier(0.6, 0, 0.25, 1)', fill: 'forwards' },
     );
     setTimeout(() => html.classList.add('ilogo-llega'), 1150 * 0.8);
+    // Las letras de «vinea» viajan con la gota hasta el nombre de la portada
+    const svg = capa.querySelector<SVGSVGElement>('.ilogo__logo svg');
+    const tinta = svg?.querySelector<SVGGElement>('.logo__tinta');
+    const destinoTinta = document.querySelector<SVGGElement>('[data-hero-nombre] .logo__tinta');
+    if (svg && tinta && destinoTinta) {
+      const ra = tinta.getBoundingClientRect(), rb = destinoTinta.getBoundingClientRect(), rs = svg.getBoundingClientRect();
+      if (ra.width && rb.width) {
+        const k = rb.width / ra.width;
+        const tx = rb.left - ra.left, ty = rb.top - ra.top;
+        svg.style.transformOrigin = `${ra.left - rs.left}px ${ra.top - rs.top}px`;
+        svg.animate(
+          [
+            { transform: 'none', opacity: 1 },
+            { transform: `translate(${tx * 0.5}px, ${ty * 0.5 - 30}px) scale(${(1 + k) / 2})`, opacity: 1, offset: 0.55 },
+            { transform: `translate(${tx}px, ${ty}px) scale(${k})`, opacity: 1, offset: 0.85 },
+            { transform: `translate(${tx}px, ${ty}px) scale(${k})`, opacity: 0 },
+          ],
+          { duration: 1150, easing: 'cubic-bezier(0.6, 0, 0.25, 1)', fill: 'forwards' },
+        );
+      }
+    }
     vuelo.finished.then(fin, fin);
   };
   // El vuelo empieza cuando termina de subir la última letra (así no depende de lo que tarde en cargar)
