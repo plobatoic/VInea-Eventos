@@ -18,14 +18,24 @@ while ( have_posts() ) :
 		<p class="etiqueta" data-reveal><?php echo esc_html( trim( $lugar . ( '' !== $lugar && '' !== $fecha ? ' · ' : '' ) . $fecha ) ); ?></p>
 		<h1 class="titulo-1 cab-proy__titulo" data-split><?php echo esc_html( get_the_title() ); ?></h1>
 	</header>
-	<div class="contenedor ev__grid">
-		<?php if ( $img ) : ?>
-			<figure class="ev__cartel" data-reveal="foto"><?php echo vinea_img( $img, 'large', array( 'prioridad' => true, 'sizes' => '(min-width: 900px) 44vw, 92vw', 'data-ampliar' => '' ) ); // phpcs:ignore ?></figure>
-		<?php endif; ?>
-		<div class="contenido ev__texto">
-			<section class="bloque bloque--intro"><?php the_content(); ?></section>
-			<p class="ev__accion"><a class="boton boton--naranja" href="<?php echo esc_url( home_url( '/contacto/' ) ); ?>">Attend <span class="flecha" aria-hidden="true">→</span></a></p>
+	<div class="contenedor ev__grid<?php echo function_exists( 'vinea_tienda_evento' ) && vinea_tienda_evento( $post ) ? ' ev__grid--tienda' : ''; ?>">
+		<div class="ev__principal">
+			<?php if ( $img ) : ?>
+				<figure class="ev__cartel" data-reveal="foto"><?php echo vinea_img( $img, 'large', array( 'prioridad' => true, 'sizes' => '(min-width: 1100px) 640px, 92vw', 'data-ampliar' => '' ) ); // phpcs:ignore ?></figure>
+			<?php endif; ?>
+			<div class="contenido ev__texto">
+				<section class="bloque bloque--intro"><?php the_content(); ?></section>
+			</div>
 		</div>
+		<?php
+		if ( function_exists( 'vinea_tienda_evento' ) && vinea_tienda_evento( $post ) ) {
+			vinea_caja_tickets( $post );
+		} else {
+			?>
+			<p class="ev__accion"><a class="boton boton--naranja" href="<?php echo esc_url( home_url( '/contacto/' ) ); ?>">Attend <span class="flecha" aria-hidden="true">→</span></a></p>
+			<?php
+		}
+		?>
 	</div>
 </article>
 	<?php
@@ -42,6 +52,11 @@ while ( have_posts() ) :
 					<div class="evento__texto">
 						<h3 class="evento__titulo"><a href="<?php echo esc_url( get_permalink( $o ) ); ?>"><?php echo esc_html( get_the_title( $o ) ); ?></a></h3>
 						<p class="evento__resumen"><?php echo esc_html( $o->post_excerpt ); ?></p>
+						<?php $desde = function_exists( 'vinea_precio_desde' ) ? vinea_precio_desde( $o ) : null; ?>
+						<p class="evento__pie">
+							<?php if ( null !== $desde ) : ?><span class="evento__precio"><small>Desde</small> <?php echo esc_html( vinea_precio( $desde ) ); ?></span><?php endif; ?>
+							<a class="boton boton--naranja evento__boton" href="<?php echo esc_url( get_permalink( $o ) ); ?>">Attend <span class="flecha" aria-hidden="true">→</span></a>
+						</p>
 					</div>
 				</li>
 			<?php endforeach; ?>

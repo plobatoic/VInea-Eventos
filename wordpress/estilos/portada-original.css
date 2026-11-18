@@ -377,3 +377,12 @@
 .og-cierre .mini--b { right: 4%; bottom: 14%; }
 .og-cierre .mini--c { right: 3%; top: 12%; }
 @media (max-width: 760px) { .og-cierre .mini { display: none; } }
+
+/* ---- Textos originales en la portada del vídeo ---- */
+.pg-inicio .pilares--4 { grid-template-columns: repeat(4, 1fr) !important; }
+@media (max-width: 1000px) { .pg-inicio .pilares--4 { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 560px) { .pg-inicio .pilares--4 { grid-template-columns: 1fr !important; } }
+.pg-inicio .momentos__frase { max-width: 22ch; margin-inline: auto; font-size: clamp(1.9rem, 4.2vw, 3.8rem); line-height: 1.08; }
+.pg-inicio .cifras .cifras__lista { margin-top: 0 !important; }
+.pg-inicio .hero__portal-texto .titulo-1 { max-width: 18ch; }
+.pg-inicio .servicios .servicios__cabeza .titulo-2, .pg-inicio .servicios .servicios__cabeza .titulo-1 { max-width: 13ch; }

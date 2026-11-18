@@ -23,6 +23,7 @@ foreach ( array(
 	'redirecciones',
 	'afinado',
 	'eventos',
+	'tienda',
 	'pulido',
 	'admin',
 	'importador',

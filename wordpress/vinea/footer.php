@@ -49,6 +49,22 @@ $tel   = function ( $t ) { return 'tel:' . preg_replace( '/[^0-9+]/', '', $t ); 
 			</nav>
 		</div>
 
+		<?php
+		// «Somos partners de:» (como en el pie de la web original)
+		$partners_json = get_template_directory() . '/assets/partners/partners.json';
+		$partners      = file_exists( $partners_json ) ? json_decode( (string) file_get_contents( $partners_json ), true ) : array(); // phpcs:ignore
+		if ( $partners ) :
+			?>
+		<div class="pie__partners">
+			<p class="pie__partners-titulo">Somos partners de:</p>
+			<ul class="pie__partners-lista">
+				<?php foreach ( $partners as $pt ) : ?>
+					<li><img src="<?php echo esc_url( $tema . '/assets/partners/' . $pt['f'] ); ?>" width="<?php echo (int) $pt['w']; ?>" height="<?php echo (int) $pt['h']; ?>" alt="<?php echo esc_attr( $pt['nombre'] ); ?>" loading="lazy" decoding="async"></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php endif; ?>
+
 		<div class="pie__base">
 			<p>© <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?></p>
 			<ul class="pie__redes">

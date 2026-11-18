@@ -430,30 +430,52 @@ function vinea_listado_proyectos(): void {
 	$id_blog = (int) get_option( 'page_for_posts' );
 	$titulo  = $id_blog ? get_the_title( $id_blog ) : 'Proyectos';
 
-	vinea_parte_cabecera(
-		array(
-			'titulo'   => $titulo,
-			'etiqueta' => 'Proyectos',
-		)
-	);
-
 	$defecto = (int) get_option( 'default_category' );
 	$cats    = array_filter(
 		get_categories( array( 'hide_empty' => true ) ),
 		static fn( $c ) => (int) $c->term_id !== $defecto && 'uncategorized' !== $c->slug
 	);
 	$actual  = is_category() ? get_queried_object_id() : 0;
+	$total   = (int) wp_count_posts( 'post' )->publish;
+
+	// Fotos de los últimos proyectos para la cabecera (en abanico)
+	$fotos = array();
+	foreach ( get_posts( array( 'numberposts' => 12, 'post_status' => 'publish' ) ) as $pp ) {
+		$im = vinea_imagen_post( $pp );
+		if ( $im ) {
+			$fotos[] = vinea_img( $im, 'medium_large', array( 'sizes' => '(min-width: 900px) 22vw, 40vw', 'alt' => '', 'prioridad' => 0 === count( $fotos ) ) );
+		}
+		if ( count( $fotos ) >= 3 ) {
+			break;
+		}
+	}
 	?>
+<section class="cab-blog">
+	<div class="contenedor cab-blog__grid">
+		<div class="cab-blog__texto">
+			<nav class="migas" aria-label="Ruta de navegación"><ol><li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Inicio</a></li><li><span aria-current="page"><?php echo esc_html( $titulo ); ?></span></li></ol></nav>
+			<p class="etiqueta" data-reveal>Proyectos</p>
+			<h1 class="cab-blog__titulo" data-split><?php echo esc_html( $titulo ); ?></h1>
+			<p class="cab-blog__cuenta" data-reveal><strong><?php echo (int) $total; ?></strong> proyectos</p>
+			<?php if ( $cats ) : ?>
+				<nav class="filtros" aria-label="Categorías" data-reveal>
+					<a href="<?php echo esc_url( vinea_url_blog() ); ?>"<?php echo $actual ? '' : ' aria-current="page"'; ?>>Todos</a>
+					<?php foreach ( $cats as $c ) : ?>
+						<a href="<?php echo esc_url( get_category_link( $c ) ); ?>"<?php echo (int) $c->term_id === $actual ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $c->name ); ?></a>
+					<?php endforeach; ?>
+				</nav>
+			<?php endif; ?>
+		</div>
+		<?php if ( $fotos ) : ?>
+			<div class="cab-blog__abanico" aria-hidden="true">
+				<?php foreach ( $fotos as $k => $f ) : ?><div class="cab-blog__carta" style="--k:<?php echo (int) $k; ?>"><?php echo $f; // phpcs:ignore ?></div><?php endforeach; ?>
+				<span class="cab-blog__gota"></span>
+			</div>
+		<?php endif; ?>
+	</div>
+</section>
 <div class="seccion proyectos">
 	<div class="contenedor">
-		<?php if ( $cats ) : ?>
-			<nav class="filtros" aria-label="Categorías">
-				<a href="<?php echo esc_url( vinea_url_blog() ); ?>"<?php echo $actual ? '' : ' aria-current="page"'; ?>>Todos</a>
-				<?php foreach ( $cats as $c ) : ?>
-					<a href="<?php echo esc_url( get_category_link( $c ) ); ?>"<?php echo (int) $c->term_id === $actual ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $c->name ); ?></a>
-				<?php endforeach; ?>
-			</nav>
-		<?php endif; ?>
 
 		<?php if ( have_posts() ) : ?>
 			<ul class="rejilla">

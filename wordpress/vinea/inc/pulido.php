@@ -81,6 +81,31 @@ function vinea_pulir_esencia( string $html ): string {
 		return $o;
 	};
 
+	// 0) En la web original cada foto va ANTES del nombre de la persona (Lara Roca, Mirian Hevia).
+	//    Al importar, la foto quedó al final del bloque anterior: se devuelve a su sitio.
+	$secciones = $hijos( $raiz );
+	for ( $i = 0; $i < count( $secciones ) - 1; $i++ ) {
+		$els = $hijos( $secciones[ $i ] );
+		$sig = $hijos( $secciones[ $i + 1 ] );
+		$ult = end( $els );
+		if ( $ult && 'figure' === $ult->nodeName && $sig && 'h2' === $sig[0]->nodeName && false === strpos( $secciones[ $i ]->textContent, 'El equipo Vinea' ) ) {
+			$secciones[ $i + 1 ]->insertBefore( $ult, $sig[0] );
+		}
+	}
+	// 0b) Departamento de Laia Ginés (en la web original: «Departamento de producción y comercialización»).
+	foreach ( $raiz->getElementsByTagName( 'p' ) as $pp ) {
+		if ( 'Laia Ginés' === trim( $pp->textContent ) ) {
+			$n = $pp->nextSibling;
+			while ( $n && XML_ELEMENT_NODE !== $n->nodeType ) {
+				$n = $n->nextSibling;
+			}
+			if ( ! $n || 0 !== strpos( trim( $n->textContent ), 'Departamento' ) ) {
+				$pp->parentNode->insertBefore( $doc->createElement( 'p', 'Departamento de producción y comercialización' ), $n );
+			}
+			break;
+		}
+	}
+
 	foreach ( $hijos( $raiz ) as $seccion ) {
 		$els = $hijos( $seccion );
 		// 1) Valores: figure, h3, p repetidos.
@@ -137,12 +162,9 @@ function vinea_pulir_esencia( string $html ): string {
 				} elseif ( 'p' === $r->nodeName ) {
 					$txt = trim( $r->textContent );
 					if ( 0 === strpos( $txt, 'Departamento' ) ) {
-						foreach ( $nombres as &$n ) {
-							if ( ! $n['dep'] ) {
-								$n['dep'] = $r;
-							}
+						if ( $nombres && ! $nombres[ count( $nombres ) - 1 ]['dep'] ) {
+							$nombres[ count( $nombres ) - 1 ]['dep'] = $r; // cada departamento va con el nombre que lo precede
 						}
-						unset( $n );
 						$r->parentNode->removeChild( $r );
 					} else {
 						$nombres[] = array( 'nombre' => $r, 'dep' => null );
@@ -170,6 +192,19 @@ function vinea_pulir_esencia( string $html ): string {
 				}
 				$lista->appendChild( $li );
 			}
+			// El equipo pasa a su propio bloque, detrás del de Mirian
+			$nuevo = $doc->createElement( 'section' );
+			$nuevo->setAttribute( 'class', 'bloque bloque--equipo' );
+			$intro = $el->nextSibling;
+			while ( $intro && XML_ELEMENT_NODE !== $intro->nodeType ) {
+				$intro = $intro->nextSibling;
+			}
+			$nuevo->appendChild( $el );
+			if ( $intro && 'p' === $intro->nodeName ) {
+				$nuevo->appendChild( $intro );
+			}
+			$nuevo->appendChild( $lista );
+			$seccion->parentNode->insertBefore( $nuevo, $seccion->nextSibling );
 			break;
 		}
 	}

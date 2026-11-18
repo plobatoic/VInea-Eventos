@@ -116,6 +116,8 @@ function vinea_tarjetas_eventos(): string {
 				<p class="evento__resumen"><?php echo esc_html( $p->post_excerpt ); ?></p>
 				<p class="evento__pie">
 					<?php if ( '' !== $fecha ) : ?><span class="evento__fecha"><?php echo esc_html( $fecha ); ?></span><?php endif; ?>
+					<?php $desde = function_exists( 'vinea_precio_desde' ) ? vinea_precio_desde( $p ) : null; ?>
+					<?php if ( null !== $desde ) : ?><span class="evento__precio"><small>Desde</small> <?php echo esc_html( vinea_precio( $desde ) ); ?></span><?php endif; ?>
 					<a class="boton boton--naranja evento__boton" href="<?php echo esc_url( $url ); ?>">Attend <span class="flecha" aria-hidden="true">→</span></a>
 				</p>
 			</div>

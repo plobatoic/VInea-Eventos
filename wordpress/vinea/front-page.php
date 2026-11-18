@@ -188,6 +188,27 @@ ob_start(); ?>
 // Diseño de la portada (vídeo) + bloques originales en su orden
 $portada = get_template_directory() . '/partes/portada-video.html';
 $html    = file_exists( $portada ) ? (string) file_get_contents( $portada ) : ''; // phpcs:ignore
+// Entradas (eventos reales, los mismos que en la página «Entradas»)
+$cid     = ' data-astro-cid-j7pv25f6';
+$meses   = array( 'enero' => 'ene', 'febrero' => 'feb', 'marzo' => 'mar', 'abril' => 'abr', 'mayo' => 'may', 'junio' => 'jun', 'julio' => 'jul', 'agosto' => 'ago', 'septiembre' => 'sep', 'octubre' => 'oct', 'noviembre' => 'nov', 'diciembre' => 'dic' );
+$eventos = get_posts( array( 'post_type' => 'etn', 'posts_per_page' => 3, 'meta_key' => 'vinea_en_listado', 'meta_value' => '1', 'orderby' => 'menu_order', 'order' => 'ASC' ) ); // phpcs:ignore
+$lista   = '';
+foreach ( $eventos as $ev ) {
+	$f     = (string) get_post_meta( $ev->ID, 'vinea_fecha_txt', true );
+	$lugar = (string) get_post_meta( $ev->ID, 'vinea_lugar', true );
+	$dia   = '';
+	$mes   = '';
+	if ( preg_match( '/^(\p{L}+)\s+(\d{1,2}),\s*(\d{4})$/u', trim( $f ), $mm ) ) {
+		$dia = $mm[2];
+		$mes = $meses[ mb_strtolower( $mm[1] ) ] ?? mb_substr( $mm[1], 0, 3 );
+	}
+	$lista .= '<li class="proximo" data-reveal' . $cid . '><a href="' . esc_url( get_permalink( $ev ) ) . '"' . $cid . '>'
+		. '<span class="proximo__fecha"' . $cid . '><strong' . $cid . '>' . esc_html( $dia ) . '</strong><span' . $cid . '>' . esc_html( $mes ) . '</span></span>'
+		. '<span class="proximo__info"' . $cid . '><span class="titulo-3"' . $cid . '>' . esc_html( get_the_title( $ev ) ) . '</span>'
+		. ( '' !== $lugar ? '<span class="proximo__lugar"' . $cid . '>' . esc_html( $lugar ) . '</span>' : '' ) . '</span>'
+		. '<span class="proximo__estado"' . $cid . '>Attend <span aria-hidden="true">→</span></span></a></li>';
+}
+$html = str_replace( '{{EVENTOS}}', $lista, $html );
 $html    = str_replace( array( '{{T}}', '{{H}}' ), array( esc_url( get_template_directory_uri() ), untrailingslashit( esc_url( home_url() ) ) ), $html );
 $poner   = static function ( string $html, string $antes_de, string $bloque ): string {
 	$p = strpos( $html, $antes_de );

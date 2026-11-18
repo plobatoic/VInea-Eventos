@@ -54,6 +54,8 @@ $tema = get_template_directory_uri();
 			</p>
 		</nav>
 
+		<?php if ( function_exists( 'vinea_boton_carrito' ) ) { vinea_boton_carrito(); } ?>
+
 		<a class="boton boton--naranja cabecera__cta" href="<?php echo esc_url( home_url( '/contacto/' ) ); ?>">cuéntanos tu idea <span class="flecha" aria-hidden="true">→</span></a>
 
 		<button class="cabecera__boton" type="button" aria-expanded="false" aria-controls="menu-principal" data-menu-boton>

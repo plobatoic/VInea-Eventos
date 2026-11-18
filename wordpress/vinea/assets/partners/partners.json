@@ -1,0 +1,26 @@
+[
+ {
+  "f": "geoparc.webp",
+  "nombre": "GeoParc Catalunya Central",
+  "w": 360,
+  "h": 83
+ },
+ {
+  "f": "ccb.webp",
+  "nombre": "Catalunya Convention Bureau",
+  "w": 187,
+  "h": 140
+ },
+ {
+  "f": "oller-del-mas.webp",
+  "nombre": "Heretat Oller del Mas",
+  "w": 140,
+  "h": 140
+ },
+ {
+  "f": "casmacs.webp",
+  "nombre": "CASMACS",
+  "w": 140,
+  "h": 140
+ }
+]
