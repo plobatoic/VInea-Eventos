@@ -1,0 +1,125 @@
+{
+ "claim": "Creamos experiencias emocionales para que sean recordadas",
+ "h1": "Agencia de eventos en Barcelona para empresas e instituciones",
+ "boton_texto": "cuéntanos tu idea",
+ "boton_url": "/contacto/",
+ "lema": "Al igual que los frutos de la vida, nuestros productos o servicios generan notoriedad y añaden valor tangible a la marca",
+ "intro": "En Vinea diseñamos y organizamos eventos en Barcelona con una mirada creativa, cercana y estratégica.",
+ "servicios": [
+  {
+   "titulo": "Organización de eventos en Barcelona",
+   "texto": "Si buscas eventos auténticos que se queden grabados en la memoria de los asistentes, esto es para ti. En Vinea Eventos, somos una agencia de eventos en Barcelona especializada en crear experiencias únicas, accesibles y pensadas para conectar con las personas.",
+   "url": "/servicios/",
+   "imagen": "https://vineaeventos.com/wp-content/uploads/2024/10/Premis-Ondas-2023-Fotografia-juliatermes-121-1-scaled.jpg"
+  },
+  {
+   "titulo": "Formaciones y consultorías para turismo y eventos",
+   "texto": "Si necesitas una hoja de ruta clara o una consultoría de eventos adaptada a tu negocio, esto te interesa. En Vinea ofrecemos formaciones y consultorías para proyectos de turismo y eventos que buscan mejorar su propuesta, su enfoque y la experiencia que ofrecen.",
+   "url": "/servicios/formaciones-consultorias/",
+   "imagen": "https://vineaeventos.com/wp-content/uploads/2024/05/eentos-conferncias-charlas-vinea-scaled-e1720971743669.jpg"
+  },
+  {
+   "titulo": "Espacios para eventos en Barcelona",
+   "texto": "Seleccionamos espacios para eventos en Barcelona que encajan con la esencia de cada proyecto, buscando localizaciones con carácter, personalidad y potencial para crear experiencias memorables.",
+   "url": "/servicios/espacios/",
+   "imagen": "https://vineaeventos.com/wp-content/uploads/2025/02/DJI_0063-2-scaled.jpg"
+  },
+  {
+   "titulo": "Personal y proveedores para eventos",
+   "texto": "Contamos con una red de profesionales y colaboradores para dar respuesta a las necesidades de cada evento, aportando apoyo especializado según el formato, el objetivo y la experiencia que se quiere construir.",
+   "url": "https://freelanceforevents.com",
+   "imagen": "https://vineaeventos.com/wp-content/uploads/2025/02/WhatsApp-Image-2025-02-05-at-14.35.45-scaled.jpeg"
+  }
+ ],
+ "conciencia_titulo": "Agencia de eventos en Barcelona con conciencia social y medioambiental",
+ "conciencia_texto": "Diseñamos experiencias auténticas que sean accesibles y sostenibles.",
+ "conciencia_proyecto": "Consultoría Oller del Mas – Proyecto enoturístico 2024",
+ "conciencia_imagen": "https://vineaeventos.com/wp-content/uploads/2024/08/ODM_cbanas23-scaled-e1737542307851-1024x680.jpg",
+ "esencia_titulo": "La esencia de Vinea",
+ "esencia_texto": "Somos Mirian y Lara, amantes de los eventos y el turismo, unidas con una alianza firme y en compromiso con la sociedad.",
+ "esencia_boton_texto": "nuestra esencia",
+ "esencia_boton_url": "/descubre-esencia-vinea-eventos/",
+ "opiniones_titulo": "Empresas que confían en Vinea",
+ "opiniones": [
+  {
+   "autor": "JOJUFA",
+   "fecha": "2025-06-19",
+   "texto": "La formació va ser un èxit. El clima que va aconseguir el formador va ser meravellós i tothom es va implicar molt en l’aprenentatge. Sincerament, l’experiència va superar -per molt- les nostres expectatives, i estem molt contents d’haver-la fer.\nEl nostre equip és ara més capaç d’atendre a persones que puguin tenir una dificultat en l’oïda. I alhora és més conscient de la importància de fer un esforç envers aquest col·lectiu."
+  },
+  {
+   "autor": "Pau Fresquet Delgado",
+   "fecha": "2025-05-12",
+   "texto": "Excelentes profesionales.\nColaboraron con mi evento, y se implicaron al 100% con nuestro proyecto pese a ser un ámbito nuevo para ellas. Recomiendo!"
+  },
+  {
+   "autor": "Marta G",
+   "fecha": "2025-05-09",
+   "texto": "Lara y su equipo hacen que no sufras por nada! Siempre encuentran la solución a todo lo que te venga en mente 🙌🏼"
+  },
+  {
+   "autor": "Premis Notworking",
+   "fecha": "2025-05-09",
+   "texto": "L'organització dels Premis Notworking no hagués estat possible sense la ment i l'experiència de Lara Roca, sòcia de Vinea. Estem molt orgullosos de poder comptar amb Vinea Eventos per futures edicions dels premis. L'organització dels Premis gràcies al seu suport va ser una meravella."
+  },
+  {
+   "autor": "Alba - Agencia Walaweb",
+   "fecha": "2025-05-09",
+   "texto": "Lara y Mirian son un equipo de profesionales muy top. Han acompañado a Walaweb desde sus inicios y no podría estar más orgullosa de todo el valor que han aportado. Desde Workshop, reuniones informales, team buildings, siempre desde un lado humano muy cercano y un perfeccionismo impecable."
+  },
+  {
+   "autor": "Franki Pereira",
+   "fecha": "2024-11-15",
+   "texto": "L’organitazió per part seva de tot el que envolta els Premis Ondas de Ràdio Barcelona va ser SENSACIONAL.\nCom a guanyadors d’un dels premis, van acompanyar-nos des del primer dia en tot el que ens va fer falta, ens van ajudar en tot moment i ens ho van posar tot molt fàcil.\nSens dubte, 100% recomanable contractar-les perquè organitzin els teus esdeveniments.\nPD: de nou, gràcies Lara per tot!"
+  },
+  {
+   "autor": "Concepcion Merina",
+   "fecha": "2024-11-15",
+   "texto": "Muy recomendable! Un equipo muy profesional y ágiles en las gestiones, mi experiencia totalmente positiva ."
+  },
+  {
+   "autor": "Jonathan Fernández",
+   "fecha": "2024-11-15",
+   "texto": "Muy recomendable trabajar con Vinea, he coincidido a nivel profesional con ellas en un gran evento y tanto Miriam, como Lara son muy profesionales, cuidan hasta el último detalle y se desviven porque todo salga perfecto."
+  },
+  {
+   "autor": "Cristina Rebollo",
+   "fecha": "2024-06-03",
+   "texto": "Superaron mis expectativas 100%! Saben escuchar y comprender exactamente lo que estás buscando, siempre dándote su consejo como profesionales que son pero intentándo ceñirse al máximo con la idea que tienes! Lara y Mirian son unas cracks y apasionadas de su trabajo, da gusto trabajar con gente así! Las recomiendo 100%"
+  },
+  {
+   "autor": "Pedro Miguel Salich",
+   "fecha": "2024-05-17",
+   "texto": "Actualmente estoy en contacto con Lara y Miriam para organizar mi próximo evento en Mallorca. Somos un despacho técnico de arquitectura e ingeniería y además tenemos una pequeña constructora por lo que tenemos clientes diversos y queremos hacer un evento muy enfocado a algunos seleccionados para fidelizarlos. En este caso me están demostrando mucha profesionalidad ya que me están asesorando de una manera muy dinámica y enfocada a lo que quiero hacer dándome muchas ideas innovadoras. El trato esta siendo inmejorable tanto desde el punto de vista profesional como de la cercanía."
+  }
+ ],
+ "cierre": "En Vinea Eventos apostamos por una forma de trabajar basada en la cercanía, la planificación y el respeto por cada proyecto. Nos implicamos en cada evento desde el inicio, cuidando los procesos, los equipos y los detalles para ofrecer experiencias coherentes, bien organizadas y alineadas con los objetivos de cada cliente.",
+ "montaje": [
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2025/02/DJI_0063-2-scaled.jpg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2025/02/Port-Barcelona-Musica-scaled.jpg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2025/02/Gran-Teatre-Liceu-Premios-Ondas-2024.jpg"
+  }
+ ],
+ "momentos": [
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2024/08/Festival-de-Paisatges-1024x683.jpeg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2024/08/fira-del-vi-de-falset-e1737541138219-1024x683.jpg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2024/08/Mos-entre-vinas-1024x684.jpg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2026/08/Ruta-en-bici-fira-Pals-Vineaeventos-scaled.jpg"
+  },
+  {
+   "url": "https://vineaeventos.com/wp-content/uploads/2024/08/30-aniversario-Montana-Colors-scaled.jpg"
+  }
+ ],
+ "esencia_imagen": "https://vineaeventos.com/wp-content/uploads/2026/04/Premios-Ondas-Vinea-2024.jpg"
+}
