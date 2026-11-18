@@ -31,45 +31,47 @@ if (hero && movimiento) {
   }, { passive: true });
 }
 
-/* La esencia: plano de dron guiado por el scroll */
-const dron = document.querySelector<HTMLElement>('[data-dron]');
-if (dron && movimiento) {
-  const cam = dron.querySelector<HTMLElement>('[data-dron-camara]')!;
-  const plano = dron.querySelector<HTMLElement>('[data-dron-plano]')!;
-  const texto = dron.querySelector<HTMLElement>('[data-dron-texto]')!;
-  const nubes = [...dron.querySelectorAll<HTMLElement>('.dron__nube')].map((n) => ({ n, z: parseFloat(n.style.getPropertyValue('--nz')) || 0 }));
+/* La esencia: paseo por la galería 3D guiado por el scroll */
+const sala = document.querySelector<HTMLElement>('[data-sala]');
+if (sala && movimiento) {
+  const mundo = sala.querySelector<HTMLElement>('[data-sala-mundo]')!;
+  const texto = sala.querySelector<HTMLElement>('[data-sala-texto]')!;
+  const entrada = sala.querySelector<HTMLElement>('[data-sala-entrada]')!;
+  const plano = sala.querySelector<SVGElement>('.sala__plano')!;
+  const yo = sala.querySelector<SVGCircleElement>('[data-sala-yo]')!;
   const cl = (v: number) => Math.min(1, Math.max(0, v));
   const suave = (t: number) => t * t * (3 - 2 * t);
-  const inOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  const LEJOS = 2600;
-  let visible = false, raf = 0;
+  const inOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+  const fino = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let visible = false, raf = 0, mx = 0, my = 0, tmx = 0, tmy = 0, D = 4400;
+  const medir = () => { D = parseFloat(getComputedStyle(sala).getPropertyValue('--D')) || 4400; };
+  medir();
   const pinta = () => {
     raf = 0;
-    const r = dron.getBoundingClientRect();
-    const H = innerHeight, W = innerWidth, movil = W < 900;
-    const p = cl(-r.top / Math.max(1, r.height - H));
-    const e = inOut(cl(p / 0.72));
-    const fin = suave(cl((p - 0.5) / 0.3));
-    const lejos = 1 - e;
-    const z = -(movil ? 1500 : LEJOS) * lejos;
-    const balanceo = Math.sin(p * 18) * 5 * lejos;
-    const tx = movil ? 0 : W * 0.22 * fin - W * 0.07 * lejos;
-    const ty = (movil ? -H * 0.2 * fin : 0) - H * (movil ? 0.3 : 0.34) * lejos + balanceo; // desde lejos, el mosaico centrado
-    cam.style.transform = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${(60 * lejos).toFixed(2)}deg) rotateZ(${(-16 * lejos).toFixed(2)}deg)`;
-    plano.style.opacity = (1 - suave(cl((p - 0.42) / 0.3))).toFixed(3);
-    for (const { n, z: nz } of nubes) {
-      const ef = z + nz; // distancia de la nube a la cámara (1000 = la cámara)
-      n.style.opacity = (0.95 * cl((750 - ef) / 450)).toFixed(3);
-    }
-    const k = suave(cl((p - 0.66) / 0.2));
+    const r = sala.getBoundingClientRect();
+    const p = cl(-r.top / Math.max(1, r.height - innerHeight));
+    const andar = inOut(cl(p / 0.86));
+    const z = andar * (D - 560);
+    const paso = Math.sin(andar * 26) * 3 * (1 - andar);           // el balanceo al caminar
+    const giro = Math.sin(andar * Math.PI * 2) * 4;                  // mira a un lado y a otro
+    mx += (tmx - mx) * 0.1; my += (tmy - my) * 0.1;
+    mundo.style.transform = `rotateY(${(giro + mx * 10).toFixed(2)}deg) rotateX(${(my * -5).toFixed(2)}deg) translate3d(0, ${paso.toFixed(1)}px, ${z.toFixed(1)}px)`;
+    const e = suave(cl((p - 0.03) / 0.14));
+    entrada.style.opacity = (1 - e).toFixed(3);
+    entrada.style.transform = `translate3d(0, ${(-e * 40).toFixed(1)}px, 0) scale(${(1 + e * 0.15).toFixed(3)})`;
+    const k = suave(cl((p - 0.8) / 0.14));
     texto.style.opacity = k.toFixed(3);
-    texto.style.transform = `translate3d(0, ${((1 - k) * 34).toFixed(1)}px, 0)`;
+    texto.style.transform = `translate3d(0, ${((1 - k) * 30).toFixed(1)}px, 0)`;
+    plano.style.setProperty('--dib', (1 - suave(cl(p / 0.5))).toFixed(3));
+    yo.setAttribute('cy', (212 - andar * 172).toFixed(1));
+    if (Math.abs(tmx - mx) + Math.abs(tmy - my) > 0.002) pedir();
   };
-  const pedir = () => { if (!raf) raf = requestAnimationFrame(pinta); };
-  new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) pedir(); }, { rootMargin: '200px' }).observe(dron);
-  addEventListener('scroll', () => { if (visible) pedir(); }, { passive: true });
-  addEventListener('resize', pedir, { passive: true });
-  pinta();
+  const pedir = () => { if (!raf && visible) raf = requestAnimationFrame(pinta); };
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; pedir(); }, { rootMargin: '200px' }).observe(sala);
+  addEventListener('scroll', pedir, { passive: true });
+  addEventListener('resize', () => { medir(); pedir(); }, { passive: true });
+  if (fino) addEventListener('pointermove', (ev) => { tmx = ev.clientX / innerWidth - 0.5; tmy = ev.clientY / innerHeight - 0.5; pedir(); }, { passive: true });
+  visible = true; pinta(); visible = false;
 }
 
 /* Reseñas de Google: «Leer más» en las largas y «Ver más reseñas» */

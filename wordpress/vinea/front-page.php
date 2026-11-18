@@ -145,34 +145,37 @@ $resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galer�
 	</div>
 </section>
 
-<!-- ============ 5. LA ESENCIA DE VINEA: plano de dron que baja hasta Mirian y Lara ============ -->
-<section class="dron" data-dron aria-labelledby="esencia-titulo">
-	<div class="dron__fijo">
-		<div class="dron__escena">
-			<div class="dron__camara" data-dron-camara>
-				<div class="dron__plano" data-dron-plano aria-hidden="true">
-					<?php
-					$fotos_dron = array_slice( array_keys( $por_nom ), 40, 34 );
-					$k          = 0;
-					for ( $fila = -2; $fila <= 2; $fila++ ) :
-						for ( $col = -3; $col <= 3; $col++ ) :
-							if ( 0 === $fila && 0 === $col ) {
-								continue;
-							}
-							$nombre = $fotos_dron[ $k++ % max( 1, count( $fotos_dron ) ) ] ?? '';
-							?>
-							<div class="dron__tesela" style="--x:<?php echo (int) $col; ?>;--y:<?php echo (int) $fila; ?>"><?php echo $nombre ? $foto_gal( $nombre ) : ''; // phpcs:ignore ?></div>
-						<?php endfor; ?>
-					<?php endfor; ?>
-				</div>
-				<span class="dron__gota" aria-hidden="true"></span>
-				<div class="dron__foto"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 64vw, 520px' ) ); ?></div>
-				<span class="dron__nube" style="--nx:-28%;--ny:-12%;--nz:700px" aria-hidden="true"></span>
-				<span class="dron__nube" style="--nx:30%;--ny:10%;--nz:1300px" aria-hidden="true"></span>
+<!-- ============ 5. LA ESENCIA DE VINEA: paseo por una galería en 3D ============
+     Al bajar, la cámara camina por un pasillo de galería con fotos de eventos de Vinea colgadas
+     y llega a la pared del fondo, donde están Mirian y Lara. Todo con CSS 3D (sin WebGL). -->
+<section class="sala" data-sala aria-labelledby="esencia-titulo">
+	<div class="sala__fijo">
+		<div class="sala__escena" aria-hidden="true">
+			<div class="sala__mundo" data-sala-mundo>
+				<span class="sala__muro sala__muro--izq"></span>
+				<span class="sala__muro sala__muro--der"></span>
+				<span class="sala__suelo"></span>
+				<span class="sala__techo"></span>
+				<span class="sala__fondo"></span>
+				<?php
+				$cuadros = array_slice( array_keys( $por_nom ), 60, 8 );
+				foreach ( $cuadros as $i => $nombre ) :
+					$lado = 0 === $i % 2 ? 'izq' : 'der';
+					$z    = 700 + (int) floor( $i / 2 ) * 900 + ( 'der' === $lado ? 420 : 0 );
+					?>
+					<figure class="sala__cuadro sala__cuadro--<?php echo esc_attr( $lado ); ?>" style="--z:<?php echo (int) $z; ?>px"><?php echo $foto_gal( $nombre ); // phpcs:ignore ?></figure>
+				<?php endforeach; ?>
+				<figure class="sala__cuadro sala__cuadro--final"><?php $img( $v( 'esencia_imagen' ), 'large', array( 'sizes' => '(max-width: 900px) 70vw, 560px', 'alt' => '' ) ); ?></figure>
 			</div>
 		</div>
-		<div class="contenedor dron__capa">
-			<div class="dron__texto" data-dron-texto>
+		<svg class="sala__plano" viewBox="0 0 120 220" aria-hidden="true">
+			<path class="sala__plano-muro" pathLength="1" d="M20 210 V20 H100 V210" />
+			<path class="sala__plano-paso" pathLength="1" d="M60 212 V40" />
+			<circle class="sala__plano-yo" data-sala-yo cx="60" cy="212" r="5" />
+		</svg>
+		<p class="sala__entrada" data-sala-entrada><span><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></span></p>
+		<div class="contenedor sala__capa">
+			<div class="sala__texto" data-sala-texto>
 				<h2 id="esencia-titulo" class="inicio-seccion__titulo"><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
 				<p class="inicio-esencia__texto"><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
 				<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>"><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
