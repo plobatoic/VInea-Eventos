@@ -245,10 +245,9 @@ if (conMovimiento() && window.matchMedia('(hover: hover) and (pointer: fine)').m
 /* ---------- Texto que se ilumina con el scroll (palabra a palabra) ---------- */
 const rellenos = [...document.querySelectorAll<HTMLElement>('[data-relleno]')].map((el) => {
   const ps = (el.textContent ?? '').trim().split(/\s+/);
-  el.setAttribute('aria-label', el.textContent?.trim() ?? '');
   el.textContent = '';
   const spans = ps.map((p, i) => {
-    const s = document.createElement('span'); s.className = 'rl'; s.setAttribute('aria-hidden', 'true'); s.textContent = p;
+    const s = document.createElement('span'); s.className = 'rl'; s.textContent = p;
     el.append(s); if (i < ps.length - 1) el.append(' ');
     return s;
   });

@@ -78,6 +78,8 @@ while ( have_posts() ) :
 				'sort_order'  => 'ASC',
 			)
 		);
+		// "Ferias y congresos" duplica a "Congresos" y no estaba en el menú original: no se repite en la rejilla.
+		$hijas = array_values( array_filter( $hijas, function ( $h ) { return 'ferias-y-congresos' !== $h->post_name; } ) );
 		if ( $hijas ) :
 			?>
 <ul class="contenedor lista__grid">

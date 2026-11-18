@@ -13,7 +13,7 @@ function vinea_portada_claves_texto(): array {
 	return array(
 		'claim', 'h1', 'boton_texto', 'boton_url', 'lema', 'intro',
 		'conciencia_titulo', 'conciencia_texto', 'conciencia_proyecto', 'conciencia_imagen',
-		'esencia_titulo', 'esencia_texto', 'esencia_boton_texto', 'esencia_boton_url',
+		'esencia_titulo', 'esencia_texto', 'esencia_imagen', 'esencia_boton_texto', 'esencia_boton_url',
 		'opiniones_titulo', 'cierre',
 	);
 }
@@ -175,6 +175,7 @@ function vinea_portada_campos(): array {
 		'conciencia_imagen'   => array( 'Conciencia: imagen (URL)', 'input', 1, 'Dirección completa de la imagen; puedes copiarla desde la Biblioteca de medios.' ),
 		'esencia_titulo'      => array( 'Esencia: título', 'input', 1, '' ),
 		'esencia_texto'       => array( 'Esencia: texto', 'textarea', 4, '' ),
+		'esencia_imagen'      => array( 'Esencia: imagen (URL)', 'input', 1, 'Dirección completa de la imagen; puedes copiarla desde la Biblioteca de medios.' ),
 		'esencia_boton_texto' => array( 'Esencia: texto del botón', 'input', 1, '' ),
 		'esencia_boton_url'   => array( 'Esencia: enlace del botón', 'input', 1, '' ),
 		'opiniones_titulo'    => array( 'Opiniones: título', 'input', 1, '' ),

@@ -60,13 +60,11 @@ if (aura && movimiento && window.matchMedia('(hover: hover)').matches) {
 /* ---------- Lema palabra a palabra ---------- */
 const palabras: HTMLElement[] = [];
 portalTexto?.querySelectorAll<HTMLElement>('[data-palabras]').forEach((el) => {
-  el.setAttribute('aria-label', el.textContent?.trim() ?? '');
   const ps = (el.textContent ?? '').trim().split(/\s+/);
   el.textContent = '';
   ps.forEach((p, i) => {
     const s = document.createElement('span');
     s.className = 'palabra';
-    s.setAttribute('aria-hidden', 'true');
     s.textContent = p;
     el.append(s);
     if (i < ps.length - 1) el.append(' ');
@@ -100,9 +98,12 @@ const iniciarGota = () => {
   if (!canvas || !m0) return;
   const g = crearGota(canvas, estado);
   if (!g) return;
-  gota3d = true;
-  html.classList.add('gota-3d');
-  if (plana) plana.style.display = 'none';
+  // Se cambia de la gota plana a la 3D cuando la 3D ya ha pintado (sin parpadeo)
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    gota3d = true;
+    html.classList.add('gota-3d');
+    if (plana) plana.style.display = 'none';
+  }));
   const url = fotoCristal?.currentSrc || fotoCristal?.src;
   if (url) g.cargarFoto(url);
   if (movimiento) g.arrancar(); else g.fotograma();

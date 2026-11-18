@@ -15,7 +15,7 @@ while ( have_posts() ) :
 	<header class="cab-proy contenedor">
 		<nav class="migas" aria-label="Ruta de navegación"><ol><li><a href="<?php echo esc_url( home_url( '/' ) ); ?>">Inicio</a></li><li><a href="<?php echo esc_url( vinea_url_blog() ); ?>">Proyectos</a></li><li><span aria-current="page"><?php echo esc_html( get_the_title() ); ?></span></li></ol></nav>
 		<p class="etiqueta" data-reveal><?php echo '' !== $cat ? esc_html( $cat ) . ' · ' : ''; ?><time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( vinea_mes_anio( $post ) ); ?></time></p>
-		<h1 class="titulo-1 cab-proy__titulo" data-split><?php echo esc_html( get_the_title() ); ?></h1>
+		<h1 class="titulo-1 cab-proy__titulo" data-split><?php echo ! empty( $cab['titulo'] ) ? wp_kses( $cab['titulo'], array( 'strong' => array(), 'em' => array(), 'br' => array(), 'a' => array( 'href' => array() ) ) ) : esc_html( get_the_title() ); ?></h1>
 	</header>
 
 	<?php if ( '' !== $imagen ) : ?>
