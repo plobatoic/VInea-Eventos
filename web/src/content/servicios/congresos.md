@@ -3,7 +3,7 @@ titulo: "Congresos"
 tipo: servicio
 orden: 3
 etiqueta: "Congresos y exposición"
-titular: "Congresos bien organizados, de la inscripción al informe final"
+titular: "Congresos *bien organizados*, de la inscripción al informe final"
 resumen: "Organizamos congresos y proyectos expositivos: inscripciones, ponentes, programa, patrocinios y zona de exposición. Un ejemplo: EnerHub Reus 2025."
 imagen: "Vinea-eventos-congresos-jose-elias-scaled.jpg"
 imagenAlt: "Escenario del congreso EnerHub Reus con una ponencia proyectada en pantalla"

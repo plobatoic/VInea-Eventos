@@ -3,7 +3,7 @@ titulo: "Conferencias y convenciones"
 tipo: servicio
 orden: 2
 etiqueta: "Empresas e instituciones"
-titular: "Encuentros que comunican y alinean a tu equipo"
+titular: "Encuentros que *comunican* y alinean a tu equipo"
 resumen: "Conferencias, jornadas y convenciones para empresas e instituciones. Nos encargamos de la planificación, la producción y la coordinación para una ejecución fluida."
 imagen: "0_JT_00010-1-scaled.jpg"
 imagenAlt: "Una ponente con micrófono habla ante el público en una sala de conferencias"

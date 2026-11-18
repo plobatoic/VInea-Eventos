@@ -5,6 +5,9 @@ import Pie from '../components/Pie.astro';
 import { sitio } from '../data/sitio';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import fuenteTitular from '@fontsource/gelasio/files/gelasio-latin-400-normal.woff2?url';
+import fuenteTexto from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
+import fuenteCursiva from '@fontsource/gelasio/files/gelasio-latin-400-italic.woff2?url';
 
 interface Props {
   titulo: string;
@@ -48,6 +51,9 @@ const organizacion = {
     <title>{tituloCompleto}</title>
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonica} />
+    <link rel="preload" href={fuenteTitular} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteCursiva} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#f7f3ec" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -76,6 +82,7 @@ const organizacion = {
   </head>
   <body>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <div class="progreso" aria-hidden="true"></div>
     <Cabecera />
     <main id="contenido" tabindex="-1">
       <slot />

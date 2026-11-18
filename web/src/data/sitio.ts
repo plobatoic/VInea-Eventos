@@ -17,10 +17,10 @@ export const sitio = {
 };
 
 export const menu = [
-  { texto: 'Servicios', href: '/servicios/' },
-  { texto: 'Proyectos', href: '/proyectos/' },
-  { texto: 'Eventos', href: '/eventos/' },
   { texto: 'Nuestra esencia', href: '/nuestra-esencia/' },
+  { texto: 'Servicios', href: '/servicios/', submenu: true },
+  { texto: 'Proyectos', href: '/proyectos/' },
+  { texto: 'Entradas', href: '/eventos/' },
   { texto: 'Accesibilidad', href: '/accesibilidad-e-inclusion/' },
 ];
 

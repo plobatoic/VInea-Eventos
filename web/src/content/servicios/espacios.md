@@ -3,7 +3,7 @@ titulo: "Espacios únicos"
 tipo: servicio
 orden: 7
 etiqueta: "Espacios"
-titular: "Encontramos el lugar que encaja con tu evento"
+titular: "Encontramos el lugar que *encaja* con tu evento"
 resumen: "Seleccionamos espacios con carácter y personalidad, para que la experiencia sea coherente y memorable. Naturaleza, mar, deporte y lugares con alma."
 imagen: "DJI_0063-2-scaled.jpg"
 imagenAlt: "Vista aérea de una masía entre viñedos con Montserrat al fondo"

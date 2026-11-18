@@ -14,7 +14,7 @@ interface Props {
 const { slug, titulo, resumen, imagen, imagenAlt, etiqueta, numero, tipo, class: clase } = Astro.props;
 ---
 
-<a class:list={['tarjeta-s', clase]} href={`/servicios/${slug}/`} data-tilt>
+<a class:list={['tarjeta-s', clase]} href={`/servicios/${slug}/`} data-tilt data-cursor="Ver">
   <div class="tarjeta-s__foto" style={`view-transition-name: foto-${slug}`}>
     <Foto src={imagen} alt={imagenAlt} sizes="(max-width: 900px) 90vw, 420px" anchos={[420, 640, 900]} />
   </div>

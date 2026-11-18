@@ -3,7 +3,7 @@ titulo: "Team building"
 tipo: servicio
 orden: 6
 etiqueta: "Equipos"
-titular: "Team building que une de verdad a tu equipo"
+titular: "Team building que *une de verdad* a tu equipo"
 resumen: "Actividades dinámicas y participativas para reforzar la cohesión, motivar al equipo y mejorar la colaboración. Diseñadas a medida para cada empresa."
 imagen: "498A3934.jpg"
 imagenAlt: "Participantes cocinando juntos con delantales verdes en un taller gastronómico"

@@ -128,6 +128,19 @@ document.addEventListener('keydown', (e) => {
 });
 document.querySelectorAll('[data-menu] a').forEach((a) => a.addEventListener('click', cerrarMenu));
 
+/* ---------- Submenú de Servicios ---------- */
+document.querySelectorAll<HTMLElement>('[data-sub]').forEach((li) => {
+  const b = li.querySelector<HTMLButtonElement>('[data-sub-boton]');
+  b?.addEventListener('click', () => {
+    const abrir = !li.classList.contains('abierto');
+    li.classList.toggle('abierto', abrir);
+    b.setAttribute('aria-expanded', String(abrir));
+  });
+  li.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && li.classList.contains('abierto')) { li.classList.remove('abierto'); b?.setAttribute('aria-expanded', 'false'); b?.focus(); }
+  });
+});
+
 /* ---------- Inclinación 3D en tarjetas (solo ratón) ---------- */
 if (conMovimiento() && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
@@ -162,5 +175,44 @@ if (interruptor) {
   });
 }
 
-/* ---------- Enlaces externos de Instagram, etc. ya marcados en HTML ---------- */
+/* ---------- Cursor propio y botones magnéticos (solo con ratón) ---------- */
+if (conMovimiento() && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const cursor = document.createElement('div');
+  cursor.className = 'cursor';
+  cursor.setAttribute('aria-hidden', 'true');
+  cursor.innerHTML = '<span class="cursor__texto"></span>';
+  document.body.append(cursor);
+  const texto = cursor.firstElementChild as HTMLElement;
+  let x = innerWidth / 2, y = innerHeight / 2, cx = x, cy = y, moviendo = false;
+  const mover = () => {
+    cx += (x - cx) * 0.2;
+    cy += (y - cy) * 0.2;
+    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    if (Math.abs(x - cx) > 0.1 || Math.abs(y - cy) > 0.1) requestAnimationFrame(mover);
+    else moviendo = false;
+  };
+  window.addEventListener('pointermove', (e) => {
+    x = e.clientX; y = e.clientY;
+    cursor.classList.add('activo');
+    if (!moviendo) { moviendo = true; requestAnimationFrame(mover); }
+    const t = e.target as Element | null;
+    const conTexto = t?.closest<HTMLElement>('[data-cursor]');
+    const enlace = t?.closest('a, button, summary, label, input, textarea, select');
+    cursor.classList.toggle('con-texto', !!conTexto);
+    cursor.classList.toggle('sobre-enlace', !conTexto && !!enlace);
+    cursor.classList.toggle('oculto', !!t?.closest('input, textarea, select'));
+    if (conTexto) texto.textContent = conTexto.dataset.cursor ?? '';
+  }, { passive: true });
+  document.documentElement.addEventListener('pointerleave', () => cursor.classList.remove('activo'));
+
+  document.querySelectorAll<HTMLElement>('.boton').forEach((b) => {
+    b.addEventListener('pointermove', (e) => {
+      const r = b.getBoundingClientRect();
+      b.style.setProperty('--bx', `${(e.clientX - r.left - r.width / 2) * 0.22}px`);
+      b.style.setProperty('--by', `${(e.clientY - r.top - r.height / 2) * 0.35}px`);
+    });
+    b.addEventListener('pointerleave', () => { b.style.setProperty('--bx', '0px'); b.style.setProperty('--by', '0px'); });
+  });
+}
+
 export {};

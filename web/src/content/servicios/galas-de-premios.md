@@ -3,7 +3,7 @@ titulo: "Galas de premios"
 tipo: servicio
 orden: 5
 etiqueta: "Premios y reconocimientos"
-titular: "Galas que reconocen el talento y dejan huella"
+titular: "Galas que reconocen el talento y *dejan huella*"
 resumen: "Diseñamos y producimos galas de premios que ponen en valor el talento y refuerzan la imagen de marca, de la idea a la producción."
 imagen: "Premiosonda-vinea-2024.jpg"
 imagenAlt: "Interior del Gran Teatre del Liceu con el escenario iluminado durante la gala"

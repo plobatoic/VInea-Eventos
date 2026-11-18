@@ -3,7 +3,7 @@ titulo: "Eventos corporativos"
 tipo: servicio
 orden: 1
 etiqueta: "Empresas"
-titular: "Eventos de empresa bien pensados, de principio a fin"
+titular: "Eventos de empresa *bien pensados*, de principio a fin"
 resumen: "Convenciones, jornadas, presentaciones de producto y eventos MICE en Barcelona. Nos encargamos de todo el proceso, de la idea a la ejecución."
 imagen: "30-aniversario-Montana-Colors-scaled.jpg"
 imagenAlt: "Una mujer con vestido verde habla ante un salón lleno de asistentes"

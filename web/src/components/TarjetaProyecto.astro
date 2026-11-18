@@ -16,7 +16,7 @@ interface Props {
 const { slug, titulo, resumen, imagen, imagenAlt, lugar, cliente, date, cifra, grande = false } = Astro.props;
 ---
 
-<a class:list={['tarjeta-p', { 'tarjeta-p--grande': grande }]} href={`/proyectos/${slug}/`} data-tilt>
+<a class:list={['tarjeta-p', { 'tarjeta-p--grande': grande }]} href={`/proyectos/${slug}/`} data-tilt data-cursor="Ver">
   <div class="tarjeta-p__foto" style={`view-transition-name: proyecto-${slug}`}>
     <Foto src={imagen} alt={imagenAlt ?? titulo} sizes={grande ? '(max-width: 900px) 92vw, 60vw' : '(max-width: 900px) 92vw, 30vw'} anchos={[480, 800, 1200]} />
     {

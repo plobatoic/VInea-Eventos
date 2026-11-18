@@ -3,7 +3,7 @@ titulo: "Padel Experience Barcelona"
 tipo: experiencia
 orden: 11
 etiqueta: "Pádel · Barcelona"
-titular: "Juega. Mejora. Vive Barcelona."
+titular: "Juega. Mejora. *Vive Barcelona.*"
 resumen: "Entrena en Bela Padel Center y vive Barcelona a tu manera. Vinea organiza tu experiencia, del primer partido a los mejores momentos fuera de pista."
 imagen: "landing-padel-01.webp"
 imagenAlt: "Jugador de pádel entrenando en una pista azul de Bela Padel Center"

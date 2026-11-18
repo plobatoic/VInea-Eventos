@@ -3,7 +3,7 @@ titulo: "Navidad en Vinea"
 tipo: experiencia
 orden: 10
 etiqueta: "Navidad"
-titular: "Esta Navidad, elige cómo celebrar"
+titular: "Esta Navidad, elige *cómo celebrar*"
 resumen: "Comidas y cenas especiales, celebraciones inmersivas y experiencias originales para cerrar el año con tu equipo. Cuatro propuestas hechas a medida."
 imagen: "landing-navidad-01.jpg"
 imagenAlt: "Cóctel al aire libre con farolillos y luces cálidas al anochecer"

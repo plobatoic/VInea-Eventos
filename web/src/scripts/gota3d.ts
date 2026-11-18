@@ -99,6 +99,8 @@ export interface EstadoGota {
   rx: number; ry: number; rz: number;
   escala: number; ox: number; oy: number;
   ondula: number; opacidad: number;
+  /** 0 = quieta (alineada con el logo), 1 = viva (sigue al ratón y flota) */
+  vivo: number;
 }
 
 export function crearGota(canvas: HTMLCanvasElement, estado: EstadoGota) {
@@ -174,12 +176,13 @@ export function crearGota(canvas: HTMLCanvasElement, estado: EstadoGota) {
     const t = (ahora - t0) / 1000;
     raton.sx += (raton.x - raton.sx) * 0.05;
     raton.sy += (raton.y - raton.sy) * 0.05;
-    const flotar = Math.sin(t * 0.8) * 0.05;
+    const v = estado.vivo;
+    const flotar = Math.sin(t * 0.8) * 0.05 * v;
     gl.uniform2f(uRes, w, h);
     gl.uniform1f(uTime, t);
     gl.uniformMatrix3fv(uM, false, matriz(
-      estado.rx + raton.sy * 0.45 + Math.sin(t * 0.5) * 0.06,
-      estado.ry + raton.sx * 0.6 + Math.sin(t * 0.37) * 0.1,
+      estado.rx + (raton.sy * 0.45 + Math.sin(t * 0.5) * 0.06) * v,
+      estado.ry + (raton.sx * 0.6 + Math.sin(t * 0.37) * 0.1) * v,
       estado.rz,
     ));
     gl.uniform1f(uScale, estado.escala);

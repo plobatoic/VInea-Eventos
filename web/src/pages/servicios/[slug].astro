@@ -154,7 +154,7 @@ if (d.faq.length) {
         </div>
         <ul class="galeria__pista">
           {d.galeria.map((g, i) => (
-            <li class={`galeria__item galeria__item--${i % 4}`} data-reveal="escala" style={`--d:${(i % 4) * 90}`}>
+            <li class={`galeria__item galeria__item--${i % 4}`} data-reveal="foto" style={`--d:${(i % 4) * 90}`}>
               <Foto src={g.src} alt={g.alt} sizes="(max-width: 760px) 80vw, 36vw" anchos={[480, 800, 1100]} />
             </li>
           ))}

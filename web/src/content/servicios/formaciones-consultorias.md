@@ -3,7 +3,7 @@ titulo: "Formaciones y consultorías"
 tipo: servicio
 orden: 9
 etiqueta: "Turismo y eventos"
-titular: "Formación y consultoría práctica para turismo y eventos"
+titular: "Formación y consultoría *práctica* para turismo y eventos"
 resumen: "Formaciones y consultorías para empresas del sector turismo y eventos que quieren mejorar su propuesta y su gestión. Accesibilidad y sostenibilidad incluidas. Primera consulta gratis."
 imagen: "Lara-y-Mirian-Vinea-Eventos-scaled.jpg"
 imagenAlt: "Lara y Mirian durante una formación en la Cambra de Comerç de Barcelona"

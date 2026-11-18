@@ -3,7 +3,7 @@ titulo: "Personal para eventos"
 tipo: servicio
 orden: 8
 etiqueta: "Red de profesionales"
-titular: "Refuerzo profesional para tu equipo de eventos"
+titular: "Refuerzo *profesional* para tu equipo de eventos"
 resumen: "Una red de profesionales freelance especializados en eventos que se adapta a cada proyecto. Apoyo en organización, producción y coordinación."
 imagen: "proveedores-de-freelance.jpg"
 imagenAlt: "Tres profesionales sonriendo en un selfi durante una feria"

@@ -1,7 +1,7 @@
 ---
 titulo: "Accesibilidad e inclusión"
 etiqueta: "Nuestro compromiso"
-titular: "Eventos que se viven con todos los sentidos y para todas las personas"
+titular: "Eventos para *todas las personas*, con todos los sentidos"
 resumen: "La accesibilidad y la inclusión son nuestro sello. Colaboramos con CASMACS, formamos en lengua de signos y diseñamos eventos sin barreras."
 imagen: "Lara-y-Mirian-Vinea-Eventos-scaled.jpg"
 imagenAlt: "Lara y Mirian durante una charla en la Cambra de Comerç de Barcelona"

@@ -1,7 +1,7 @@
 ---
 titulo: "Nuestra esencia"
 etiqueta: "Quiénes somos"
-titular: "Dos profesionales con pasión por los eventos y el turismo"
+titular: "Dos profesionales con *pasión* por los eventos y el turismo"
 resumen: "Somos Mirian y Lara, dos profesionales que comparten la pasión por la organización de eventos y el turismo estratégico. Nos mueve un enfoque accesible y sostenible."
 imagen: "Vinea-Eventos-y-turismo-Lara-y-Mirian-e1721218109219.jpg"
 imagenAlt: "Lara y Mirian sonríen juntas en una terraza blanca junto al mar"

@@ -3,7 +3,7 @@ titulo: "Ferias"
 tipo: servicio
 orden: 4
 etiqueta: "Ferias y exposiciones"
-titular: "Ferias que dan visibilidad y generan oportunidades"
+titular: "Ferias que dan visibilidad y generan *oportunidades*"
 resumen: "Diseñamos y organizamos ferias y exposiciones para empresas, marcas e instituciones que quieren mostrar sus productos y generar oportunidades de negocio."
 imagen: "vinea-eventos-fira-arros.jpg"
 imagenAlt: "Un cocinero hace una demostración ante el público en la Fira de l'Arròs de Pals"
