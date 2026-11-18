@@ -145,29 +145,23 @@ $resto     = array_keys( $por_nom ); // el muro usa todas las fotos de la galer�
 	</div>
 </section>
 
-<!-- ============ 5. LA ESENCIA DE VINEA: Mirian y Lara salen de la gota ============
-     La ventana con forma de gota de Vinea muestra su sala real (fondo de su foto de los Premios Ondas,
-     reconstruido sin ellas). Ellas, recortadas, asoman por encima del borde de la gota.
-     Animación CSS de una sola vez al llegar (solo transform/opacity) y un leve paralaje con el ratón. -->
+<!-- ============ 5. LA ESENCIA DE VINEA: composición editorial ============
+     Foto de Lara y Mirian (de su web) a sangre hasta el borde de la pantalla, con la curva de la gota
+     de Vinea, y la tarjeta de texto superpuesta. Entrada de una vez al aparecer: la foto se descubre
+     como un telón y hace un acercamiento lento (solo transform). -->
 <?php $esencia_dir = get_template_directory_uri() . '/assets/esencia/'; ?>
 <section class="ese" data-ese aria-labelledby="esencia-titulo">
-	<div class="contenedor ese__grid">
-		<div class="ese__texto">
-			<h2 id="esencia-titulo" class="ese__titulo" data-split><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
-			<p class="inicio-esencia__texto" data-reveal><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
-			<a class="boton" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>" data-reveal><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
+	<figure class="ese__foto">
+		<div class="ese__telon">
+			<img src="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?>" srcset="<?php echo esc_url( $esencia_dir . 'lara-y-mirian-820.webp' ); ?> 820w, <?php echo esc_url( $esencia_dir . 'lara-y-mirian-1400.webp' ); ?> 1400w" sizes="(max-width: 900px) 100vw, 62vw" width="1400" height="1867" alt="Lara y Mirian, fundadoras de Vinea Eventos" loading="lazy" decoding="async">
 		</div>
-		<div class="ese__obra">
-			<span class="ese__sombra" aria-hidden="true"></span>
-			<span class="ese__eco" aria-hidden="true"></span>
-			<div class="ese__gota" aria-hidden="true">
-				<span class="ese__sala" style="background-image:url('<?php echo esc_url( $esencia_dir . 'sala.webp' ); ?>')"></span>
-				<img class="ese__ellas" src="<?php echo esc_url( $esencia_dir . 'mirian-y-lara.webp' ); ?>" width="784" height="1000" alt="" loading="lazy" decoding="async">
-			</div>
-			<img class="ese__ellas ese__ellas--fuera" src="<?php echo esc_url( $esencia_dir . 'mirian-y-lara.webp' ); ?>" width="784" height="1000" alt="Mirian y Lara, fundadoras de Vinea Eventos" loading="lazy" decoding="async">
-			<span class="ese__chispa ese__chispa--a" aria-hidden="true"></span>
-			<span class="ese__chispa ese__chispa--b" aria-hidden="true"></span>
-			<span class="ese__chispa ese__chispa--c" aria-hidden="true"></span>
+	</figure>
+	<div class="contenedor ese__capa">
+		<div class="ese__tarjeta">
+			<span class="ese__gota" aria-hidden="true"></span>
+			<h2 id="esencia-titulo" class="ese__titulo"><?php echo esc_html( $v( 'esencia_titulo' ) ); ?></h2>
+			<p class="ese__p"><?php echo esc_html( $v( 'esencia_texto' ) ); ?></p>
+			<a class="boton boton--naranja" href="<?php echo esc_url( $v( 'esencia_boton_url', '/descubre-esencia-vinea-eventos/' ) ); ?>"><?php echo esc_html( $v( 'esencia_boton_texto', 'nuestra esencia' ) ); ?> <span class="flecha" aria-hidden="true">→</span></a>
 		</div>
 	</div>
 </section>

@@ -31,22 +31,13 @@ if (hero && movimiento) {
   }, { passive: true });
 }
 
-/* La esencia: entrada al aparecer y leve paralaje con el ratón (solo variables CSS) */
+/* La esencia: entrada de una vez al aparecer */
 const ese = document.querySelector<HTMLElement>('[data-ese]');
 if (ese) {
   const io2 = new IntersectionObserver(([en]) => {
-    if (en.isIntersecting) { ese.classList.add('visible'); io2.disconnect(); setTimeout(() => ese.classList.add('listo'), 2000); }
-  }, { threshold: 0.3 });
+    if (en.isIntersecting) { ese.classList.add('visible'); io2.disconnect(); }
+  }, { threshold: 0.25 });
   io2.observe(ese);
-  if (movimiento && matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    let raf = 0, x = 0, y = 0;
-    ese.addEventListener('pointermove', (ev) => {
-      const r = ese.getBoundingClientRect();
-      x = (ev.clientX - r.left) / r.width - 0.5; y = (ev.clientY - r.top) / r.height - 0.5;
-      if (!raf) raf = requestAnimationFrame(() => { raf = 0; ese.style.setProperty('--mx', x.toFixed(3)); ese.style.setProperty('--my', y.toFixed(3)); });
-    }, { passive: true });
-    ese.addEventListener('pointerleave', () => { ese.style.setProperty('--mx', '0'); ese.style.setProperty('--my', '0'); });
-  }
 }
 
 /* Reseñas de Google: «Leer más» en las largas y «Ver más reseñas» */
