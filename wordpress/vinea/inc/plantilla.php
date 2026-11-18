@@ -284,7 +284,7 @@ function vinea_parte_cabecera( array $args = array() ): void {
 	$img      = $con_foto ? vinea_img( $a['imagen'], 'large', array( 'prioridad' => true ) ) : '';
 	$con_foto = '' !== $img;
 	?>
-<section class="cab<?php echo $con_foto ? '' : ' cab--sin-foto'; ?>">
+<section class="cab<?php echo $con_foto ? '' : ' cab--sin-foto'; ?>" data-cab>
 	<div class="gota-deco cab__gota" aria-hidden="true"></div>
 	<div class="contenedor cab__grid">
 		<div class="cab__texto">
@@ -307,9 +307,18 @@ function vinea_parte_cabecera( array $args = array() ): void {
 			<div class="acciones" data-reveal style="--d:500"><a class="boton" href="<?php echo esc_url( $b['url'] ); ?>"><?php echo esc_html( $b['texto'] ); ?> <span class="flecha" aria-hidden="true">→</span></a></div>
 			<?php } ?>
 		</div>
-		<?php if ( $con_foto ) : ?>
-			<div class="cab__foto"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
-		<?php endif; ?>
+		<div class="cab__obra" aria-hidden="<?php echo $con_foto ? 'false' : 'true'; ?>">
+			<svg class="sello" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="sello-c" d="M100 100m-80 0a80 80 0 1 1 160 0a80 80 0 1 1-160 0"/></defs><text><textPath href="#sello-c">Vinea Eventos y Turismo · Barcelona · Vinea Eventos y Turismo ·</textPath></text><path class="sello__gota" d="M86 82h18a18 18 0 1 1-18 18V84q0-2 0-2z"/></svg>
+			<span class="orbita" aria-hidden="true"><span></span></span>
+			<span class="mini mini--a" aria-hidden="true"></span>
+			<span class="mini mini--b" aria-hidden="true"></span>
+			<span class="mini mini--c" aria-hidden="true"></span>
+			<?php if ( $con_foto ) : ?>
+				<div class="cab__foto"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
+			<?php else : ?>
+				<span class="cab__gotaxl" aria-hidden="true"></span>
+			<?php endif; ?>
+		</div>
 	</div>
 </section>
 	<?php
@@ -338,6 +347,9 @@ function vinea_tarjeta_proyecto( $post, bool $grande = false ): void {
 	$cat  = vinea_categoria_principal( $post );
 	$meta = ( '' !== $cat ? $cat . ' · ' : '' ) . vinea_mes_anio( $post );
 	$img  = vinea_img( vinea_imagen_post( $post ), 'medium_large', array( 'sizes' => '(min-width: 1024px) 33vw, (min-width: 600px) 50vw, 100vw' ) );
+	if ( '' === $img && function_exists( 'vinea_ilustracion' ) ) {
+		$img = vinea_ilustracion( get_the_title( $post ) ); // Sin foto (también rota en el original): ilustración de la gota.
+	}
 	?>
 <a class="tarjeta-p<?php echo $grande ? ' tarjeta-p--grande' : ''; ?>" href="<?php echo esc_url( get_permalink( $post ) ); ?>" data-tilt data-cursor="Ver">
 	<div class="tarjeta-p__foto"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput ?></div>

@@ -86,6 +86,8 @@ css += bloque('src/pages/contacto.astro', '.pg-contacto');
 css += bloque('src/pages/404.astro', '.pg-404');
 css += fs.readFileSync(path.join(WP, 'estilos/wp.css'), 'utf8');
 css += fs.readFileSync(path.join(WP, 'estilos/tema2.css'), 'utf8');
+css += fs.readFileSync(path.join(WP, 'estilos/interior.css'), 'utf8');
+css += fs.readFileSync(path.join(WP, 'estilos/portada-original.css'), 'utf8');
 // Dentro de un ámbito, los selectores que empiezan por .movimiento/.portal-animado/html deben ir delante del ámbito
 css = css.replace(/(\.pg-[a-z0-9-]+) \{\n([\s\S]*?)\n\}\n/g, (todo, ambito, cuerpo) =>
   `${ambito} {\n${cuerpo.replace(/(^|\n|,)\s*(\.movimiento|\.sin-movimiento|\.portal-animado|\.gota-3d|\.pista-horizontal|\.menu-abierto|html(?:[:.\[][^\s,{]*)?)\s+/g, (m, sep, raiz) => `${sep} ${raiz} & `)}\n}\n`);
@@ -101,7 +103,7 @@ await esbuild.build({
 
 // --- JavaScript
 await esbuild.build({
-  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), entrada: path.join(WP, 'fuentes/entrada.ts') },
+  entryPoints: { sitio: path.join(WEB, 'src/scripts/sitio.ts'), entrada: path.join(WP, 'fuentes/entrada.ts'), original: path.join(WP, 'fuentes/portada-original.ts') },
   outdir: path.join(TEMA, 'assets/js'),
   bundle: true, minify: true, format: 'iife', nodePaths: [path.join(WEB, 'node_modules')], target: ['es2020'], logLevel: 'warning',
 });

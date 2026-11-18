@@ -35,7 +35,7 @@ function vinea_encolar(): void {
 			$ruta = VINEA_DIR . '/assets/css/' . $f;
 			wp_enqueue_style( 'vinea-' . $id, VINEA_URL . '/assets/css/' . $f, array( 'vinea' ), file_exists( $ruta ) ? (string) filemtime( $ruta ) : VINEA_VERSION );
 		}
-		foreach ( array( 'entrada' => 'entrada.js', 'portada' => 'portada.js' ) as $id => $f ) {
+		foreach ( array( 'entrada' => 'entrada.js', 'portada' => 'portada.js', 'original' => 'original.js' ) as $id => $f ) {
 			$ruta = VINEA_DIR . '/assets/js/' . $f;
 			wp_enqueue_script(
 				'vinea-' . $id,

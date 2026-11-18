@@ -22,6 +22,8 @@ foreach ( array(
 	'plantilla',
 	'redirecciones',
 	'afinado',
+	'eventos',
+	'pulido',
 	'admin',
 	'importador',
 ) as $vinea_archivo ) {
